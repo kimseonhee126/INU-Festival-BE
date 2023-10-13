@@ -133,4 +133,5 @@ dist
 # Development Settings
 .prettierrc
 
+# Mysql passwd
 .config.json
