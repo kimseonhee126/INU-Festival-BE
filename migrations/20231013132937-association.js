@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    queryInterface.addConstraint('BoothDay', {
+    queryInterface.addConstraint('BoothDays', {
       fields: ['booth_id'],
       type: 'foreign key',
       name: 'booth_id_fk',
@@ -15,6 +15,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    queryInterface.removeConstraint('BoothDay', 'booth_id_fk');
+    queryInterface.removeConstraint('BoothDays', 'booth_id_fk');
   }
 };
