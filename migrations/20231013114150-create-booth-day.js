@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('Now'),
       },
-      booth_id: {
+      boothId: {
         type: Sequelize.INTEGER,
       }
     });

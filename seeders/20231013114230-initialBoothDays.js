@@ -14,13 +14,13 @@ module.exports = {
           id: 1,
           day: '화',
           time: '13:00 ~ 17:00',
-          booth_id: boothRows[0].id,
+          boothId: boothRows[0].id,
         },
         {
           id: 2,
           day: '수',
           time: '14:00 ~ 17:00',
-          booth_id: boothRows[0].id,
+          boothId: boothRows[0].id,
         },
       ]
     )
