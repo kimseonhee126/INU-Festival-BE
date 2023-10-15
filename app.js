@@ -10,6 +10,7 @@ app.use(express.json());
 app.use('/img', express.static('public/img'));
 
 const { Booth } = db; //db.Booth
+const { BoothDay } = db; //db.BoothDay
 
 // 인트로 페이지
 app.get('/', async (req, res) => {
@@ -17,15 +18,52 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/booths', async (req, res) => {
-    const { name } = req.query;
-    if (name) { // http://localhost:3000/booths?name=총학부스
-        const boothOfName = await Booth.findAll({
-            where: { name },
-        });
-        res.send(boothOfName);
-    } else {
-        const booths = await Booth.findAll();
-        res.send(booths);
+    try {
+        const { name } = req.query;
+        if (name) {
+            // http://localhost:3000/booths?name=총학부스
+            const boothOfName = await Booth.findAll({
+                where: { name },
+            });
+            res.send(boothOfName);
+        } else {
+
+            const selectedKeys = ['id', 'day', 'time'];
+            const selectedKeys2 = ['id', 'name', 'boothDays'];
+
+            const selectedData = myBoothDays.map((item) => {
+                const selectedObject = {};
+                selectedKeys.forEach((key) => {
+                    selectedObject[key] = item[key];
+                });
+                return selectedObject;
+            });
+
+            var allBooths = await Booth.findAll();
+
+            const selectedData2 = allBooths.map((item) => {
+                const selectedObject2 = {};
+                selectedKeys2.forEach((key) => {
+                    selectedObject2[key] = item[key];
+                });
+                return selectedObject2;
+            });
+
+            for (let i = 0; i < allBooths.length; i++) {
+                const boothId = allBooths[i].id;
+
+                var myBoothDays = await BoothDay.findAll({
+                    where: { boothId: boothId },
+                });
+                
+                allBooths[i].boothDays = JSON.stringify(selectedData);
+                // console.log(allBooths[i].boothDays);
+            }
+
+            console.log(JSON.stringify(selectedObject2));
+        }
+    } catch (err) {
+        console.error('ERROR : ', err);
     }
 });
 
@@ -33,3 +71,5 @@ app.get('/booths', async (req, res) => {
 app.listen(3000, () => {
     console.log('Server is running on 3000');
 });
+
+

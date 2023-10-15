@@ -22,6 +22,12 @@ module.exports = {
           time: '14:00 ~ 17:00',
           boothId: boothRows[0].id,
         },
+        {
+          id: 3,
+          day: '목',
+          time: '14:00 ~ 17:00',
+          boothId: boothRows[1].id,
+        },
       ]
     )
   },

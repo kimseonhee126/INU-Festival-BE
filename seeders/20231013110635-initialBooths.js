@@ -14,6 +14,14 @@ module.exports = {
           description: '총학생회 부스입니다.',
           liked: 0,
         },
+        {
+          id: 2,
+          name: '다크호스',
+          category: '비주점',
+          department: '탁구부',
+          description: '탁구 부스입니다.',
+          liked: 300,
+        },
       ]
     )
   },
