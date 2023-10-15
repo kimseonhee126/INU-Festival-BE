@@ -19,19 +19,20 @@ app.get('/', async (req, res) => {
 
 app.get('/booths', async (req, res) => {
     try {
-        const { name } = req.query;
-        if (name) {
-            // http://localhost:3000/booths?name=총학부스
-            const boothOfName = await Booth.findAll({
-                where: { name },
+        const allBooths = await Booth.findAll();
+        
+        const filteredBooths = [];
+
+        for (let i = 0; i < allBooths.length; i++) {
+            const boothId = allBooths[i].id;
+
+            const myBoothDays = await BoothDay.findAll({
+                where: { boothId: boothId },
             });
-            res.send(boothOfName);
-        } else {
 
             const selectedKeys = ['id', 'day', 'time'];
-            const selectedKeys2 = ['id', 'name', 'boothDays'];
 
-            const selectedData = myBoothDays.map((item) => {
+            const filteredBoothDays = myBoothDays.map((item) => {
                 const selectedObject = {};
                 selectedKeys.forEach((key) => {
                     selectedObject[key] = item[key];
@@ -39,33 +40,22 @@ app.get('/booths', async (req, res) => {
                 return selectedObject;
             });
 
-            var allBooths = await Booth.findAll();
+            const selectedKeys2 = ['id', 'name', 'category', 'department', 'description', 'liked'];
 
-            const selectedData2 = allBooths.map((item) => {
-                const selectedObject2 = {};
-                selectedKeys2.forEach((key) => {
-                    selectedObject2[key] = item[key];
-                });
-                return selectedObject2;
+            const selectedObject2 = {};
+            selectedKeys2.forEach((key) => {
+                selectedObject2[key] = allBooths[i][key];
             });
 
-            for (let i = 0; i < allBooths.length; i++) {
-                const boothId = allBooths[i].id;
-
-                var myBoothDays = await BoothDay.findAll({
-                    where: { boothId: boothId },
-                });
-                
-                allBooths[i].boothDays = JSON.stringify(selectedData);
-                // console.log(allBooths[i].boothDays);
-            }
-
-            console.log(JSON.stringify(selectedObject2));
+            selectedObject2.boothDays = filteredBoothDays;
+            filteredBooths[i] = selectedObject2;
         }
+        res.send({ booths: filteredBooths });
     } catch (err) {
-        console.error('ERROR : ', err);
+        console.error('ERROR: ', err);
     }
 });
+
 
 // Running the Server: 포트번호는 3000
 app.listen(3000, () => {

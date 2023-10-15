@@ -1,44 +1,37 @@
 {
-    "booths": [ 
+    "booths": [
         {
             "id": 1,
             "name": "총학부스",
             "category": "비주점",
             "department": "총학생회",
-            "description": "총학부스입니다.",
-            "image": "??",
-            "liked": 500,
-            "BoothDays": [
+            "description": "총학생회 부스입니다.",
+            "liked": 0,
+            "boothDays": [
                 {
-                    "id":1,
-                    "day": "화요일",
-                    "time": "10:00 ~ 18:00"
+                    "id": 1,
+                    "day": "화",
+                    "time": "13:00 ~ 17:00"
                 },
                 {
-                    "id":2,
-                    "day": "수요일",
-                    "time": "12:00 ~ 17:00"
+                    "id": 2,
+                    "day": "수",
+                    "time": "14:00 ~ 17:00"
                 }
             ]
         },
         {
             "id": 2,
-            "name": "총학부스2",
+            "name": "다크호스",
             "category": "비주점",
-            "department": "총학생회",
-            "description": "총학부스입니다.",
-            "image": "??",
-            "liked": 500,
-            "BoothDay": [
+            "department": "탁구부",
+            "description": "탁구 부스입니다.",
+            "liked": 300,
+            "boothDays": [
                 {
-                    "id":3,
-                    "day": "화요일",
-                    "time": "10:00 ~ 18:00"
-                },
-                {
-                    "id":4,
-                    "day": "수요일",
-                    "time": "12:00 ~ 17:00"
+                    "id": 3,
+                    "day": "목",
+                    "time": "14:00 ~ 17:00"
                 }
             ]
         }
