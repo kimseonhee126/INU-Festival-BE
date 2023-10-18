@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "express": "^4.18.2",
-    "mysql2": "^3.6.1",
+    "mysql2": "^3.6.2",
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.6.1"
   },
@@ -9,11 +9,19 @@
   "description": "인천대학교 대동제를 위한 웹 사이트 백엔드 레포입니다.",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INU-CapstoneDesign/INU-Festival-BE.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/INU-CapstoneDesign/INU-Festival-BE/issues"
+  },
+  "homepage": "https://github.com/INU-CapstoneDesign/INU-Festival-BE#readme"
 }
