@@ -3,6 +3,8 @@ const app = express();
 const sequelize = require('sequelize');
 const db = require('./models');
 const { Perform } = db;
+const { Booth } = db; //db.Booth
+const { BoothDay } = db; //db.BoothDay
 
 // main 화면
 app.get('/', async(req, res) => {
@@ -11,14 +13,12 @@ app.get('/', async(req, res) => {
 
 // 미들웨어 사용 -> Public 폴더를 정적 파일로 제공
 app.use('/img', express.static('public/img'));
+
 // 전체 공연 정보
 app.get('/perform', async(req, res) => {
     const performs = await Perform.findAll();
     res.send(performs);
 });
-
-const { Booth } = db; //db.Booth
-const { BoothDay } = db; //db.BoothDay
 
 // 인트로 페이지
 app.get('/', async (req, res) => {
@@ -78,6 +78,6 @@ app.get('/booths', async (req, res) => {
 });
 
 // Running the Server: 포트번호는 5000
-app.listen(5000, async(req, res) => {
-    console.log('5000 server is running');
+app.listen(3000, async(req, res) => {
+    console.log('3000 server is running');
 });
