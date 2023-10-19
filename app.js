@@ -77,7 +77,7 @@ app.get('/booths', async (req, res) => {
     }
 });
 
-// server open
-app.listen(5000, async(req, res) => {
-    console.log('5000 server is running');
+// Running the Server: 포트번호는 5000
+app.listen(3000, async(req, res) => {
+    console.log('3000 server is running');
 });
