@@ -135,4 +135,4 @@ dist
 .prettierrc
 
 # Mysql passwd
-config.json
+config/

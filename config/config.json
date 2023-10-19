@@ -1,11 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "wktlr011226!",
-    "database": "festival_v2",
+    "password": "root1234@",
+    "database": "FESTIVAL",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "port": 8080
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
