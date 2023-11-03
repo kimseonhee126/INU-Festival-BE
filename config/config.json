@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "root1234@",
-    "database": "festival_v2",
+    "database": "FESTIVAL",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
