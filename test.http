@@ -1,0 +1,11 @@
+# Node.js API
+###
+GET http://localhost:3000/
+###
+GET http://localhost:3000/booths
+###
+GET http://localhost:3000/perform
+###
+GET http://localhost:3000/perform/student
+###
+GET http://localhost:3000/perform/celeb
