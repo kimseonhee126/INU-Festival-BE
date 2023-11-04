@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "adminBE",
-    "password": "adminBE1!adminBE1!",
+    "username": "root",
+    "password": "wktlr011226!",
     "database": "festival_v2",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 8080
   },
   "test": {
     "username": "root",

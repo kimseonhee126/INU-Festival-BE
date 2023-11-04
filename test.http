@@ -1,11 +1,24 @@
 # Node.js API
+
+# 메인 페이지 접속
 ###
-GET http://localhost:3000/
+GET http://localhost:5000/
+
+# GET 요청: 메인 페이지 - 오늘의 라인업
 ###
-GET http://localhost:3000/booths
+GET http://localhost:5000/lineup
+
+# GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###
-GET http://localhost:5000/perform
+GET http://localhost:5000/ranking
+
+# GET 요청: 메인 페이지 - 한 줄 외치기 -> 아직 미완성
+
+
+# 그냥 연습...신경 ㄴㄴ
 ###
-GET http://localhost:3000/perform/student
+GET http://localhost:5000/perform/celeb
 ###
-GET http://localhost:3000/perform/celeb
+GET http://localhost:5000/perform/student
+###
+GET http://localhost:5000/perform/celeb
