@@ -25,17 +25,20 @@ app.get('/', async (req, res) => {
     res.send('희희낙낙 홈');
 });
 
-// 재학생 공연 정보
-app.get('/perform/student', async(req, res) => {
-    // const { student } = req.query;
-    const studentPerform = await Perform.findAll({ where: { category: '동아리' }});
-});
-
-// 연예인 공연 정보
-app.get('/perform/celeb', async(req, res) => {
-    // const { student } = req.query;
-    const studentPerform = await Perform.findAll({ where: { category: '연예인' }});
-    res.send(studentPerform)
+// 공연 정보
+app.get('/perform', async(req, res) => {
+    
+    try {
+        const studentPerform = await Perform.findAll({
+            attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
+        });
+    
+        res.send(studentPerform);
+      }
+      catch (err) {
+        console.error('데이터를 가져오는 중 오류 발생:', err);
+        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+      }
 });
 
 app.get('/booths', async (req, res) => {
@@ -78,6 +81,6 @@ app.get('/booths', async (req, res) => {
 });
 
 // Running the Server: 포트번호는 5000
-app.listen(3000, async(req, res) => {
-    console.log('3000 server is running');
+app.listen(5000, async(req, res) => {
+    console.log('5000 server is running');
 });

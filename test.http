@@ -4,7 +4,7 @@ GET http://localhost:3000/
 ###
 GET http://localhost:3000/booths
 ###
-GET http://localhost:3000/perform
+GET http://localhost:5000/perform
 ###
 GET http://localhost:3000/perform/student
 ###
