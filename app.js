@@ -25,20 +25,33 @@ app.get('/', async (req, res) => {
     res.send('희희낙낙 홈');
 });
 
-// 재학생 공연 정보
-app.get('/perform/student', async(req, res) => {
-    // const { student } = req.query;
-    const studentPerform = await Perform.findAll({ where: { category: '동아리' }});
+/* --------------------------------------------------------------------------------------------------------
+메인 화면에 있는 동작 작성
+1. 오늘의 라인업
+2. 한 줄 외치기
+3. 부스 랭킹 Top 5
+-----------------------------------------------------------------------------------------------------------
+*/
+
+// 메인페이지 - 오늘의 라인업
+app.get('/lineup', async(req, res) => {
+    
+    try {
+        const celebPerform = await Perform.findAll({
+            where: { category : '연예인' },
+            attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
+        });
+    
+        res.send(celebPerform);
+      }
+      catch (err) {
+        console.error('데이터를 가져오는 중 오류 발생:', err);
+        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+      }
 });
 
-// 연예인 공연 정보
-app.get('/perform/celeb', async(req, res) => {
-    // const { student } = req.query;
-    const studentPerform = await Perform.findAll({ where: { category: '연예인' }});
-    res.send(studentPerform)
-});
-
-app.get('/booths', async (req, res) => {
+// 메인페이지 - 부스 랭킹 Top 5
+app.get('/ranking', async (req, res) => {
     try {
         const allBooths = await Booth.findAll();
         
@@ -77,7 +90,40 @@ app.get('/booths', async (req, res) => {
     }
 });
 
+// 메인 페이지 - 한 줄 외치기 
+// 코드 없습니다
+
+/* --------------------------------------------------------------------------------------------------------
+지도에 있는 동작 작성
+
+-----------------------------------------------------------------------------------------------------------
+*/
+
+
+/* --------------------------------------------------------------------------------------------------------
+타임 테이블에 있는 동작 작성
+1. 타임 테이블 - 오늘의 라인업
+2. 타임 테이블 - 전체 공연 정보
+-----------------------------------------------------------------------------------------------------------
+*/
+
+// 타임 테이블 - 전체 공연 정보
+app.get('/perform', async(req, res) => {
+    
+    try {
+        const studentPerform = await Perform.findAll({
+            attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
+        });
+    
+        res.send(studentPerform);
+      }
+      catch (err) {
+        console.error('데이터를 가져오는 중 오류 발생:', err);
+        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+      }
+});
+
 // Running the Server: 포트번호는 5000
-app.listen(3000, async(req, res) => {
-    console.log('3000 server is running');
+app.listen(5000, async(req, res) => {
+    console.log('5000 server is running');
 });

@@ -15,8 +15,8 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "wktlr011226!",
+    "database": "festival_v2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
