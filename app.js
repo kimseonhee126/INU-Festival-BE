@@ -56,7 +56,7 @@ app.get('/lineup', async(req, res) => {
 app.get('/ranking', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'img'],
             order: [['liked', 'DESC']], // liked 속성을 기준으로 내림차순으로 정렬
             limit: 10, // 상위 10개 결과만 반환
         });
