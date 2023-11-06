@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const { Perform } = db;
@@ -13,6 +14,7 @@ app.get('/', async(req, res) => {
 
 // 미들웨어 사용 -> Public 폴더를 정적 파일로 제공
 app.use('/img', express.static('public/img'));
+app.use(cors());
 
 // 전체 공연 정보
 app.get('/perform', async(req, res) => {

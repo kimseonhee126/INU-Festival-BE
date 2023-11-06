@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "mysql2": "^3.6.2",
     "sequelize": "^6.33.0",
@@ -23,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/INU-CapstoneDesign/INU-Festival-BE/issues"
   },
-  "homepage": "https://github.com/INU-CapstoneDesign/INU-Festival-BE#readme"
+  "homepage": "https://github.com/INU-CapstoneDesign/INU-Festival-BE#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.15"
+  }
 }
