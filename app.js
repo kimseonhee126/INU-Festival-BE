@@ -39,12 +39,12 @@ app.get('/', async (req, res) => {
 app.get('/lineup', async(req, res) => {
     
     try {
-        const celebPerform = await Perform.findAll({
+        const lineups = await Perform.findAll({
             where: { category : '연예인' },
             attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
         });
     
-        res.send(celebPerform);
+        res.send(lineups);
     }
     catch (err) {
         console.error('데이터를 가져오는 중 오류 발생:', err);

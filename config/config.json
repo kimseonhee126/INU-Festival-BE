@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "root",
-    "password": "root1!",
+    "password": "wktlr011226!",
     "database": "festival_v2",
-    "host": "43.201.95.140",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
