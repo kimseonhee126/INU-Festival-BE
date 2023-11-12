@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasMany(models.OneLine, {foreignKey: "studentID"})
     }
   }
   User.init({
@@ -20,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    studentID: DataTypes.INTEGER
+    studentID: {
+      type: DataTypes.INTEGER,
+    },
   }, {
     sequelize,
     modelName: 'User',

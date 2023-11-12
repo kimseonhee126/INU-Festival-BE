@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "wktlr011226!",
-    "database": "festival_v2",
+    "password": "root1!",
+    "database": "FESTIVAL",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
@@ -16,7 +16,7 @@
   "production": {
     "username": "root",
     "password": "root1!",
-    "database": "festival_v2",
+    "database": "FESTIVAL",
     "host": "43.201.95.140",
     "dialect": "mysql"
   }

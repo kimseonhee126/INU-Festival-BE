@@ -4,8 +4,11 @@ const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const { Perform } = db;
-const { Booth } = db; //db.Booth
-const { BoothDay } = db; //db.BoothDay
+const { Booth } = db;       //db.Booth
+const { BoothDay } = db;    //db.BoothDay
+const { Keywords } = db;     // db.Keyword
+const { User } = db;        // db.User
+const { OneLine } = db;     // db.OneLine
 
 // main 화면
 app.get('/', async(req, res) => {
@@ -31,6 +34,8 @@ app.get('/', async (req, res) => {
 메인 화면에 있는 동작 작성
 1. 오늘의 라인업
 2. 한 줄 외치기
+    # 학번, 한 줄, 이모지
+    # 키워드
 3. 부스 랭킹 Top 5
 -----------------------------------------------------------------------------------------------------------
 */
@@ -81,9 +86,56 @@ app.get('/ranking', async (req, res) => {
     }
 });
 
+/* 
+메인 페이지 - 한 줄 외치기
+    # 학번, 한 줄, 이모지
+*/
+app.get('/shout', async(req, res) => {
+    try {
+        const onelines = await OneLine.findAll({
+            attributes: ['id', 'content', 'emoji', 'studentID'],
+        });
+        // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
+        const transformedOnelines = onelines.map((oneline) => ({
+            id: String(oneline.id),
+            content: oneline.content,
+            emoji: oneline.emoji,
+            studentID: String(oneline.studentID),
+        }));
 
-// 메인 페이지 - 한 줄 외치기 
-// 코드 없습니다
+        res.send(transformedOnelines);
+    }
+    catch (err) {
+        console.log('ERROR: ', err);
+        res.send('500 ERROR!!');
+    }
+});
+
+/* 
+메인 페이지 - 한 줄 외치기
+    # 키워드
+*/
+app.get('/keyword', async(req, res) => {
+    try {
+        const allKeywords = await Keywords.findAll({
+            attributes: ['id', 'word'],
+        });
+
+        const someKeywords = allKeywords.slice(0, 4);
+
+        // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
+        const keywords = someKeywords.map((keyword) => ({
+            id: String(keyword.id),
+            word: keyword.word,
+        }));
+
+        res.send(keywords);
+    }
+    catch (err) {
+        console.log('Error: ', err);
+        res.send('500 error');
+    }
+});
 
 /* --------------------------------------------------------------------------------------------------------
 지도에 있는 동작 작성
