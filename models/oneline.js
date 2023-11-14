@@ -18,9 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     content: DataTypes.STRING,
     emoji: DataTypes.STRING,
-    studentID: {
-      type: DataTypes.INTEGER,
-    },
   }, {
     sequelize,
     modelName: 'OneLine',

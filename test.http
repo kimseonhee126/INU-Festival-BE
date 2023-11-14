@@ -12,7 +12,7 @@ GET http://localhost:5000/lineup
 ###
 GET http://localhost:5000/ranking
 
-# GET 요청: 메인 페이지 - 한 줄 외치기 `키워드`
+# GET 요청: 메인 페이지 - 한 줄 외치기
 ###
 GET http://localhost:5000/shout
 
@@ -20,6 +20,9 @@ GET http://localhost:5000/shout
 ###
 GET http://localhost:5000/keyword
 
+# GET 요청: 유저 목록
+###
+GET http://localhost:5000/user
 
 # 그냥 연습...신경 ㄴㄴ
 ###

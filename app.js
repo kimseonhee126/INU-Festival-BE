@@ -48,8 +48,7 @@ app.get('/lineup', async(req, res) => {
             where: { category : '연예인' },
             attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
         });
-    
-        res.send(lineups);
+        res.send({lineups:lineups});
     }
     catch (err) {
         console.error('데이터를 가져오는 중 오류 발생:', err);
@@ -63,7 +62,7 @@ app.get('/ranking', async (req, res) => {
         const allBooths = await Booth.findAll({
             attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'img'],
             order: [['liked', 'DESC']], // liked 속성을 기준으로 내림차순으로 정렬
-            limit: 10, // 상위 10개 결과만 반환
+            limit: 5, // 상위 5개 결과만 반환
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
@@ -93,17 +92,25 @@ app.get('/ranking', async (req, res) => {
 app.get('/shout', async(req, res) => {
     try {
         const onelines = await OneLine.findAll({
-            attributes: ['id', 'content', 'emoji', 'studentID'],
+            attributes: ['id', 'content', 'emoji'],
         });
+        
         // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
-        const transformedOnelines = onelines.map((oneline) => ({
-            id: String(oneline.id),
-            content: oneline.content,
-            emoji: oneline.emoji,
-            studentID: String(oneline.studentID),
+        const transformedOnelines = await Promise.all(onelines.map(async (oneline) => {
+            const user = await User.findOne({
+                where: { id: oneline.id },
+            });
+        
+            return {
+                id: String(oneline.id),
+                content: oneline.content,
+                emoji: oneline.emoji,
+                studentID: String(user.studentID),
+            };
         }));
+        
 
-        res.send(transformedOnelines);
+        res.send({shouts:transformedOnelines});
     }
     catch (err) {
         console.log('ERROR: ', err);
@@ -121,7 +128,7 @@ app.get('/keyword', async(req, res) => {
             attributes: ['id', 'word'],
         });
 
-        const someKeywords = allKeywords.slice(0, 4);
+        const someKeywords = allKeywords.slice(0, 10);
 
         // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
         const keywords = someKeywords.map((keyword) => ({
@@ -129,7 +136,7 @@ app.get('/keyword', async(req, res) => {
             word: keyword.word,
         }));
 
-        res.send(keywords);
+        res.send({keywords:keywords});
     }
     catch (err) {
         console.log('Error: ', err);
@@ -160,6 +167,22 @@ app.get('/perform', async(req, res) => {
         });
     
         res.send(studentPerform);
+    }
+    catch (err) {
+        console.error('데이터를 가져오는 중 오류 발생:', err);
+        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+    }
+});
+
+// 타임 테이블 - 전체 공연 정보
+app.get('/user', async(req, res) => {
+    
+    try {
+        const Users = await User.findAll({
+            attributes: ['id', 'studentID'],
+        });
+    
+        res.send(Users);
     }
     catch (err) {
         console.error('데이터를 가져오는 중 오류 발생:', err);

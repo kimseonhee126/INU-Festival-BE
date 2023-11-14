@@ -14,15 +14,15 @@ module.exports = {
       },
     });
 
-    // OneLines 테이블에 studentID 컬럼 추가하기
-    await queryInterface.addColumn("OneLines", "studentID", {
-        type: Sequelize.INTEGER,
-    });
+    // // OneLines 테이블에 studentID 컬럼 추가하기
+    // await queryInterface.addColumn("OneLines", "studentID", {
+    //     type: Sequelize.INTEGER,
+    // });
     // User - OneLine FK 설정
     await queryInterface.addConstraint('OneLines', {
-      fields: ['studentID'],
+      fields: ['userId'],
       type: 'foreign key',
-      name: 'studentIDFK',
+      name: 'userIdFK',
       references: {
         table: 'Users',
         field: 'id',
@@ -32,6 +32,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('BoothDays', 'boothIdFk');
-    await queryInterface.removeConstraint('OneLines', 'studentIDFK');
+    await queryInterface.removeConstraint('OneLines', 'userIdFK');
   }
 };
