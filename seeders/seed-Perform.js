@@ -64,7 +64,7 @@ module.exports = {
           time: '21:30',
           category: '연예인',
           detail: '...',
-          img: 'BOL.jepg',
+          img: 'BOL.jpeg',
         }
       ]
     )
