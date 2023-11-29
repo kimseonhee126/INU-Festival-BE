@@ -3,11 +3,13 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+    // 시퀀스를 다시 시작하는 로직 추가
+    await queryInterface.sequelize.query('ALTER TABLE Booths AUTO_INCREMENT = 1;');
+
     await queryInterface.bulkInsert(
       'Booths',
       [
         {
-          id: 1,
           name: '총학부스',
           category: '비주점',
           department: '총학생회',
@@ -16,7 +18,6 @@ module.exports = {
           img: 'temp.img',
         },
         {
-          id: 2,
           name: '다크2호스',
           category: '비주점',
           department: '탁구부',
@@ -25,7 +26,6 @@ module.exports = {
           img: 'temp.img',
         },
         {
-          id: 3,
           name: '다크3호스',
           category: '비주점',
           department: '탁구부',
@@ -34,7 +34,6 @@ module.exports = {
           img: 'temp.img',
         },
         {
-          id: 4,
           name: '다크4호스',
           category: '비주점',
           department: '탁구부',
@@ -43,7 +42,6 @@ module.exports = {
           img: 'temp.img',
         },
         {
-          id: 5,
           name: '다크5호스',
           category: '비주점',
           department: '탁구부',
@@ -52,7 +50,6 @@ module.exports = {
           img: 'temp.img',
         },
         {
-          id: 6,
           name: '다크ege호스',
           category: '비주점',
           department: '탁구부',
