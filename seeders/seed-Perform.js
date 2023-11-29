@@ -54,7 +54,7 @@ module.exports = {
           time: '21:00',
           category: '연예인',
           detail: '...',
-          img: 'temp.img',
+          img: 'DAMONS.png',
         },
         {
           id: 6,
@@ -64,7 +64,7 @@ module.exports = {
           time: '21:30',
           category: '연예인',
           detail: '...',
-          img: 'temp.img',
+          img: 'BOL.jpeg',
         }
       ]
     )
