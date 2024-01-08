@@ -41,11 +41,17 @@ app.get('/', async (req, res) => {
 */
 
 // 메인페이지 - 오늘의 라인업
-app.get('/lineup', async(req, res) => {
-    
+app.get('/lineups/:day', async(req, res) => {
+    if (req.params.day == 'tue') {
+        req.params.day = '화요일';
+    } else if (req.params.day == 'wed') {
+        req.params.day = '수요일';
+    } else {
+        req.params.day = '목요일';
+    }
     try {
         const lineups = await Perform.findAll({
-            where: { category : '연예인' },
+            where: { category : '연예인', day: req.params.day},
             attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
         });
         res.send({lineups:lineups});
