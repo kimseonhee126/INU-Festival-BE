@@ -164,11 +164,18 @@ app.get('/keyword', async(req, res) => {
 -----------------------------------------------------------------------------------------------------------
 */
 
-// 타임 테이블 - 전체 공연 정보
-app.get('/perform', async(req, res) => {
-    
+// 타임 테이블 - 요일별 전체 공연 정보
+app.get('/performs/:day', async(req, res) => {
+    if (req.params.day == 'tue') {
+        req.params.day = '화요일';
+    } else if (req.params.day == 'wed') {
+        req.params.day = '수요일';
+    } else {
+        req.params.day = '목요일';
+    }
     try {
         const studentPerform = await Perform.findAll({
+            where: { day: req.params.day},
             attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
         });
     
@@ -180,7 +187,7 @@ app.get('/perform', async(req, res) => {
     }
 });
 
-// 타임 테이블 - 전체 공연 정보
+// 유저정보 가져오기
 app.get('/user', async(req, res) => {
     
     try {
