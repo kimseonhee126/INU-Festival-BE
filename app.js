@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const moment = require("moment");
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
@@ -9,8 +10,9 @@ const { BoothDay } = db;    //db.BoothDay
 const { Keywords } = db;     // db.Keyword
 const { User } = db;        // db.User
 const { OneLine } = db;     // db.OneLine
+const { Notice } = db;      // db.Notice
 
-// main 화면
+// 테스트용
 app.get('/', async(req, res) => {
     res.send('status 200 Ok');
 });
@@ -18,17 +20,6 @@ app.get('/', async(req, res) => {
 // 미들웨어 사용 -> Public 폴더를 정적 파일로 제공
 app.use('/img', express.static('public/img'));
 app.use(cors());
-
-// 전체 공연 정보
-app.get('/perform', async(req, res) => {
-    const performs = await Perform.findAll();
-    res.send(performs);
-});
-
-// 인트로 페이지
-app.get('/', async (req, res) => {
-    res.send('희희낙낙 홈');
-});
 
 /* --------------------------------------------------------------------------------------------------------
 메인 화면에 있는 동작 작성
@@ -40,7 +31,7 @@ app.get('/', async (req, res) => {
 -----------------------------------------------------------------------------------------------------------
 */
 
-// 메인페이지 - 오늘의 라인업
+// 타임테이블 조회
 app.get('/timetable', async (req, res) => {
     try {
         const performs = await Perform.findAll({
@@ -63,6 +54,28 @@ app.get('/timetable', async (req, res) => {
     }
 });
 
+// 타임테이블 조회
+app.get('/notices', async (req, res) => {
+    try {
+        const notices = await Notice.findAll({
+            attributes: ['id', 'title','category', 'content', 'img', 'updatedAt'],
+        });
+
+        const notices2 = notices.map(notice => ({
+            id: String(notice.id),
+            title: notice.title,
+            category: notice.category,
+            content: notice.content,
+            img: notice.img,
+            updatedAt: moment(notice.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        }));
+
+        res.json({ notices: notices2});
+    } catch (error) {
+        console.error('데이터를 가져오는 중 오류 발생:', error);
+        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+    }
+});
 
 // 메인페이지 - 부스 랭킹 Top 5
 app.get('/ranking', async (req, res) => {
@@ -164,16 +177,12 @@ app.get('/user', async(req, res) => {
             attributes: ['id', 'studentID', 'createdAt'],
         });
 
-        // Users 배열의 각 요소에 대해 createdAt를 수정
-        const usersWithKoreanTime = Users.map(user => {
-            return {
-                createdAt: moment(user.createdAt).utcOffset(9).format('YYYY-MM-DD HH:mm:ss')
-            };
-        });
-
-        const koreanTime = moment(createdAt).utcOffset(9).format('YYYY-MM-DD HH:mm:ss');
-    
-        res.send(Users);
+        const Users2 = Users.map((user) => ({
+            id: String(user.id),
+            studentID: String(user.studentID),
+            createdAt: moment(user.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        }));
+        res.send(Users2);
     }
     catch (err) {
         console.error('데이터를 가져오는 중 오류 발생:', err);
