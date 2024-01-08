@@ -1,16 +1,8 @@
 # Node.js API
 
-# 메인 페이지 접속
-###
-GET http://localhost:5000/
-
 # GET 요청: 메인 페이지 - 오늘의 라인업
 ###
-GET http://localhost:5000/lineups/tue
-
-# GET 요청: 메인 페이지 - 요일별 공연 목록
-###
-GET http://localhost:5000/performs/tue
+GET http://localhost:5000/timetable
 
 # GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###

@@ -23,7 +23,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     day: DataTypes.STRING,
-    time: DataTypes.STRING
+    time: DataTypes.STRING,
+    boothId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+          model: 'Booth', // Booth 모델을 참조
+          key: 'id',     // Booth 모델의 id 필드를 외래 키로 설정
+      },
+    },
   }, {
     sequelize,
     modelName: 'BoothDay',
