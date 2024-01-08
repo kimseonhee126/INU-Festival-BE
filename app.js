@@ -41,26 +41,28 @@ app.get('/', async (req, res) => {
 */
 
 // 메인페이지 - 오늘의 라인업
-app.get('/lineups/:day', async(req, res) => {
-    if (req.params.day == 'tue') {
-        req.params.day = '화요일';
-    } else if (req.params.day == 'wed') {
-        req.params.day = '수요일';
-    } else {
-        req.params.day = '목요일';
-    }
+app.get('/timetable', async (req, res) => {
     try {
-        const lineups = await Perform.findAll({
-            where: { category : '연예인', day: req.params.day},
-            attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
+        const performs = await Perform.findAll({
+            attributes: ['id', 'name','date', 'time', 'category', 'detail', 'img'],
         });
-        res.send({lineups:lineups});
-    }
-    catch (err) {
-        console.error('데이터를 가져오는 중 오류 발생:', err);
+
+        const performs2 = performs.map(perform => ({
+            id: String(perform.id),
+            name: perform.name,
+            date: perform.date,
+            category: perform.category,
+            detail: perform.detail,
+            img: perform.img,
+        }));
+
+        res.json({ performs: performs2});
+    } catch (error) {
+        console.error('데이터를 가져오는 중 오류 발생:', error);
         res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
     }
 });
+
 
 // 메인페이지 - 부스 랭킹 Top 5
 app.get('/ranking', async (req, res) => {
@@ -95,34 +97,24 @@ app.get('/ranking', async (req, res) => {
 메인 페이지 - 한 줄 외치기
     # 학번, 한 줄, 이모지
 */
-app.get('/shout', async(req, res) => {
+app.get('/shout', async (req, res) => {
     try {
-        const onelines = await OneLine.findAll({
-            attributes: ['id', 'content', 'emoji'],
-        });
-        
-        // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
-        const transformedOnelines = await Promise.all(onelines.map(async (oneline) => {
-            const user = await User.findOne({
-                where: { id: oneline.id },
-            });
-        
-            return {
-                id: String(oneline.id),
-                content: oneline.content,
-                emoji: oneline.emoji,
-                studentID: String(user.studentID),
-            };
-        }));
-        
+        const Onelines = await Promise.all((await OneLine.findAll({
+            attributes: ['id', 'content', 'emoji', 'userId'],
+        })).map(async (oneline) => ({
+            id: String(oneline.id),
+            content: oneline.content,
+            emoji: oneline.emoji,
+            studentID: String((await User.findOne({ where: { id: oneline.userId } }))?.studentID || ''),
+        })));
 
-        res.send({shouts:transformedOnelines});
-    }
-    catch (err) {
-        console.log('ERROR: ', err);
-        res.send('500 ERROR!!');
+        res.json({ shouts: Onelines });
+    } catch (error) {
+        console.error('ERROR:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 /* 
 메인 페이지 - 한 줄 외치기
@@ -164,36 +156,22 @@ app.get('/keyword', async(req, res) => {
 -----------------------------------------------------------------------------------------------------------
 */
 
-// 타임 테이블 - 요일별 전체 공연 정보
-app.get('/performs/:day', async(req, res) => {
-    if (req.params.day == 'tue') {
-        req.params.day = '화요일';
-    } else if (req.params.day == 'wed') {
-        req.params.day = '수요일';
-    } else {
-        req.params.day = '목요일';
-    }
-    try {
-        const studentPerform = await Perform.findAll({
-            where: { day: req.params.day},
-            attributes: ['id', 'name', 'date', 'day', 'time', 'category', 'detail', 'img'],
-        });
-    
-        res.send(studentPerform);
-    }
-    catch (err) {
-        console.error('데이터를 가져오는 중 오류 발생:', err);
-        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
-    }
-});
-
 // 유저정보 가져오기
 app.get('/user', async(req, res) => {
     
     try {
         const Users = await User.findAll({
-            attributes: ['id', 'studentID'],
+            attributes: ['id', 'studentID', 'createdAt'],
         });
+
+        // Users 배열의 각 요소에 대해 createdAt를 수정
+        const usersWithKoreanTime = Users.map(user => {
+            return {
+                createdAt: moment(user.createdAt).utcOffset(9).format('YYYY-MM-DD HH:mm:ss')
+            };
+        });
+
+        const koreanTime = moment(createdAt).utcOffset(9).format('YYYY-MM-DD HH:mm:ss');
     
         res.send(Users);
     }
