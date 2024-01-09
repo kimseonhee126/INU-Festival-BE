@@ -118,7 +118,7 @@ app.get('/shout', async (req, res) => {
             id: String(oneline.id),
             content: oneline.content,
             emoji: oneline.emoji,
-            studentID: String((await User.findOne({ where: { id: oneline.userId } }))?.studentID || ''),
+            studentID: String((await User.findOne({ where: { id: oneline.userId } })).studentID),
         })));
 
         res.json({ shouts: Onelines });
