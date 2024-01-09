@@ -3,11 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    // 
-    const users = await queryInterface.sequelize.query(`SELECT id from Users;`);
-    const userRows = users[0];
-    console.log(userRows);
-
     await queryInterface.bulkInsert(
       'notices',
       [
