@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
-const { Perform } = db;
+const { Perform } = db;     // db.Perform
 const { Booth } = db;       //db.Booth
 const { BoothDay } = db;    //db.BoothDay
 const { Keywords } = db;     // db.Keyword
@@ -191,6 +191,6 @@ app.get('/user', async(req, res) => {
 });
 
 // Running the Server: 포트번호는 5000
-app.listen(5000, async(req, res) => {
-    console.log('5000 server is running');
+app.listen(4000, async(req, res) => {
+    console.log('4000 server is running');
 });
