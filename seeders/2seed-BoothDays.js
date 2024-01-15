@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     // id를 1부터 다시 시작하는 로직 추가
-    await queryInterface.sequelize.query('ALTER TABLE Booths AUTO_INCREMENT = 1;');
+    await queryInterface.sequelize.query('ALTER TABLE BoothDays AUTO_INCREMENT = 1;');
 
     // foreign key constraint를 위해 booth 테이블의 id를 가져온다.
     const booths = await queryInterface.sequelize.query(`SELECT id from Booths;`);

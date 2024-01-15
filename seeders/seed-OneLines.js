@@ -3,10 +3,10 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    // 
+    // id를 1부터 다시 시작하는 로직 추가
+    await queryInterface.sequelize.query('ALTER TABLE OneLines AUTO_INCREMENT = 1;');
     const users = await queryInterface.sequelize.query(`SELECT id from Users;`);
     const userRows = users[0];
-    console.log(userRows);
 
     await queryInterface.bulkInsert(
       'OneLines',
