@@ -12,6 +12,16 @@ module.exports = {
       studentID: {
         type: Sequelize.INTEGER,
       },
+      // snsId, nick, provider 새로 추가했엉~!
+      snsId: {
+        type: Sequelize.STRING(30),
+      },
+      nick: {
+        type: Sequelize.STRING
+      },
+      provider: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

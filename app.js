@@ -1,10 +1,24 @@
 const express = require('express');
-const app = express();
+const session = require('express-session');
 const moment = require("moment");
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
-const { Perform } = db;     // db.Perform
+const passport = require('passport');
+const dotenv = require('dotenv');
+const passportConfig = require('./passport');
+const authRouter = require('./passport/auth.js');
+
+// express 사용하기
+const app = express();
+
+// .env 파일 사용하기 위해
+dotenv.config();
+
+// passport 사용하기 위해
+passportConfig();
+
+const { Perform } = db;
 const { Booth } = db;       //db.Booth
 const { BoothDay } = db;    //db.BoothDay
 const { Keywords } = db;     // db.Keyword
@@ -20,6 +34,24 @@ app.get('/', async(req, res) => {
 // 미들웨어 사용 -> Public 폴더를 정적 파일로 제공
 app.use('/img', express.static('public/img'));
 app.use(cors());
+// 세션 관련 미들웨어 사용
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+    },
+}));
+// passport 초기화
+app.use(passport.initialize())
+// passport index.js에 있는 'deserializeUser'함수 호출
+app.use(passport.session())
+
+/* ----------------------------- 라우터 연결 ------------------------------ */
+// /auth 라우터 연결
+app.use('/auth', authRouter);
 
 /* --------------------------------------------------------------------------------------------------------
 메인 화면에 있는 동작 작성
@@ -190,7 +222,8 @@ app.get('/user', async(req, res) => {
     }
 });
 
-// Running the Server: 포트번호는 5000
-app.listen(4000, async(req, res) => {
-    console.log('4000 server is running');
+// Running the Server: 포트번호는 4000
+// kakao developer에서 port번호 4000으로 설정해서...번호 바꿨어...
+app.listen(process.env.PORT, (req, res) => {
+    console.log(`Server is running on ${process.env.PORT}`);
 });
