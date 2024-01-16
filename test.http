@@ -20,6 +20,10 @@ GET http://localhost:5000/keyword
 ###
 GET http://localhost:5000/user
 
+# GET 요청: 공지 목록
+###
+GET http://localhost:5000/notices
+
 # 그냥 연습...신경 ㄴㄴ
 ###
 GET http://localhost:5000/perform/celeb
