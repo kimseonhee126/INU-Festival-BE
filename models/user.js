@@ -24,6 +24,19 @@ module.exports = (sequelize, DataTypes) => {
     studentID: {
       type: DataTypes.INTEGER,
     },
+    // nick, provider, snsId 다 allowNull: true 조건이 있어야 하는데 이거 카카오로 로그인해서...학번이랑 동시에 저장하는 방법이...ㅠㅠ
+    nick: {
+      type: DataTypes.STRING(15),
+      allowNull: false,
+    },
+    provider: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    snsId: {
+      type: DataTypes.STRING(30),
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'User',
