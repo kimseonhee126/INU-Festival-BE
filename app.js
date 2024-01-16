@@ -68,15 +68,17 @@ app.use('/auth', authRouter);
 app.get('/timetable', async (req, res) => {
     try {
         const performs = await Perform.findAll({
-            attributes: ['id', 'name','date', 'time', 'category', 'detail', 'img'],
+            attributes: ['id', 'name','day', 'time', 'category', 'detail', 'img'],
         });
 
         const performs2 = performs.map(perform => ({
             id: String(perform.id),
             name: perform.name,
-            date: perform.date,
             category: perform.category,
             detail: perform.detail,
+            day: perform.day,
+            startTime: perform.time.split(' ~ ')[0],
+            endTime: perform.time.split(' ~ ')[1],
             img: perform.img,
         }));
 
