@@ -153,6 +153,33 @@ app.get('/ranking', async (req, res) => {
     }
 });
 
+// 메인페이지 - 부스 전체목록 조회하기
+app.get('/booths', async (req, res) => {
+    try {
+        const allBooths = await Booth.findAll({
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'img'],
+        });
+
+        const Booths = await Promise.all(allBooths.map(async (booth) => {
+            const boothId = booth.id;
+
+            const myBoothDays = await BoothDay.findAll({
+                where: { boothId: boothId },
+                attributes: ['id', 'day', 'time'],
+            });
+
+            return {
+                ...booth.get({ plain: true }),
+                boothDays: myBoothDays.map(day => day.get({ plain: true })),
+            };
+        }));
+
+        res.send({ booths: Booths });
+    } catch (err) {
+        console.error('ERROR: ', err);
+    }
+});
+
 /* 
 메인 페이지 - 한 줄 외치기
     # 학번, 한 줄, 이모지
