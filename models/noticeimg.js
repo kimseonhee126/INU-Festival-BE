@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   NoticeImg.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     img: DataTypes.STRING,
     noticeId: {
       type: DataTypes.INTEGER,

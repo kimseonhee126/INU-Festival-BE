@@ -10,17 +10,17 @@ module.exports = {
       [
         {
           "title": "알콜존 안내",
-          "category": "공지",
+          "category": "공지사항",
           "content": "알콜존 안내입니다~ 위치는~ 시간은...",
         },
         {
           "title": "셔틀버스 안내",
-          "category": "공지",
+          "category": "공지사항",
           "content": "셔틀버스 안내입니다~ 위치는~ 시간은...",
         },
         {
           "title": "푸드존 안내",
-          "category": "공지",
+          "category": "공지사항",
           "content": "푸드존 안내입니다~ 위치는~ 시간은...",
         },
         {
