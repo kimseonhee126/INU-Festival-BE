@@ -51,9 +51,9 @@ const onelineRouter = require('./router/oneline/oneline.js');
 
 app.use('/auth', authRouter);               // 카카오 로그인 -> 로그인
 app.use('/timetable', timetableRouter);     // timetable 분리
-app.use('/booth', boothRouter);             // booth 분리
+app.use('/booths', boothRouter);             // booth 분리
 app.use('/notices', noticeRouter);          // notice 분리
-app.use('/keyword', keywordRouter);         // keyword 분리
+app.use('/keywords', keywordRouter);         // keyword 분리
 app.use('/shout', onelineRouter);           // oneline 분리
 
 // Running the Server: 포트번호는 4000
