@@ -1,6 +1,6 @@
 const passport = require('passport');
 const kakao = require('./kakaoStrategy');
-const User = require('../models').User;
+const User = require('../../models').User;
 
 module.exports = () => {
     // 로그인 할 때 사용하는 .serializeUser

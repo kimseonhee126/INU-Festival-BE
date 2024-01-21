@@ -1,13 +1,11 @@
 const express = require('express');
 const session = require('express-session');
-const moment = require("moment");
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const passport = require('passport');
 const dotenv = require('dotenv');
-const passportConfig = require('./passport');
-const authRouter = require('./passport/auth.js');
+const passportConfig = require('./router/passport');
 
 // express 사용하기
 const app = express();
@@ -18,10 +16,7 @@ dotenv.config();
 // passport 사용하기 위해
 passportConfig();
 
-const { Perform } = db;
-const { Booth } = db;       //db.Booth
-const { BoothDay } = db;    //db.BoothDay
-const { Keywords } = db;     // db.Keyword
+// 이것도 없애야 하는데...일단 냅두자...카카오 로그인...
 const { User } = db;        // db.User
 const { OneLine } = db;     // db.OneLine
 const { Notice } = db;      // db.Notice
@@ -45,24 +40,27 @@ app.use(session({
         secure: false,
     },
 }));
+
 // passport 초기화
 app.use(passport.initialize())
 // passport index.js에 있는 'deserializeUser'함수 호출
 app.use(passport.session())
 
-/* ----------------------------- 라우터 연결 ------------------------------ */
+/* ----------------------------- 라우터 분리 ------------------------------ */
 // /auth 라우터 연결
-app.use('/auth', authRouter);
+const authRouter = require('./router/passport/auth.js');
+const timetableRouter = require('./router/perform/perform.js');
+const boothRouter = require('./router/booth/booth.js');
+const noticeRouter = require('./router/notice/notice.js');
+const keywordRouter = require('./router/keyword/keyword.js');
+const onelineRouter = require('./router/oneline/oneline.js');
 
-/* --------------------------------------------------------------------------------------------------------
-메인 화면에 있는 동작 작성
-1. 오늘의 라인업
-2. 한 줄 외치기
-    # 학번, 한 줄, 이모지
-    # 키워드
-3. 부스 랭킹 Top 5
------------------------------------------------------------------------------------------------------------
-*/
+app.use('/auth', authRouter);               // 카카오 로그인 -> 로그인
+app.use('/timetable', timetableRouter);     // timetable 분리
+app.use('/booth', boothRouter);             // booth 분리
+app.use('/notices', noticeRouter);          // notice 분리
+app.use('/keyword', keywordRouter);         // keyword 분리
+app.use('/shout', onelineRouter);           // oneline 분리
 
 // 타임테이블 조회
 app.get('/timetable', async (req, res) => {
@@ -265,7 +263,6 @@ app.get('/user', async(req, res) => {
 });
 
 // Running the Server: 포트번호는 4000
-// kakao developer에서 port번호 4000으로 설정해서...번호 바꿨어...
 app.listen(process.env.PORT, (req, res) => {
     console.log(`Server is running on ${process.env.PORT}`);
 });

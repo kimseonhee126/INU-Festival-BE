@@ -2,7 +2,7 @@
 
 # GET 요청: 메인 페이지 - 오늘의 라인업
 ###
-GET http://localhost:5000/timetable
+GET http://localhost:4000/timetable
 
 # GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###
