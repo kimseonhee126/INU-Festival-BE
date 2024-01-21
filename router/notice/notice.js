@@ -4,28 +4,40 @@ const moment = require("moment");
 const db = require('../../models');
 
 const { Notice } = db;      // db.Notice
+const { NoticeImg } = db;   // db.NoticeImg
 
 // 공지사항 조회
 router.get('/', async (req, res) => {
     try {
         const notices = await Notice.findAll({
-            attributes: ['id', 'title','category', 'content', 'img', 'updatedAt'],
+            attributes: ['id', 'title','category', 'content', 'updatedAt'],
         });
+        const notices2 = await Promise.all(notices.map(async (notice) => {
+            const noticeId = notice.id;
 
-        const notices2 = notices.map(notice => ({
+            const noticeImgs = await NoticeImg.findAll({
+                where: { noticeId: noticeId },
+                attributes: ['id', 'img'],
+            });
+
+            return {
+                ...notice.get({ plain: true }),
+                noticeImgs: noticeImgs.map(day => day.get({ plain: true })),
+            };
+        }));
+        const notices3 = notices2.map(notice => ({
             id: String(notice.id),
-            title: notice.title,
             category: notice.category,
+            title: notice.title,
             content: notice.content,
-            img: notice.img,
             updatedAt: moment(notice.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+            noticeImgs: notice.noticeImgs,
         }));
 
-        res.json({ notices: notices2});
+        res.json({ notices: notices3});
     } catch (error) {
         console.error('데이터를 가져오는 중 오류 발생:', error);
         res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
     }
 });
-
 module.exports = router;
