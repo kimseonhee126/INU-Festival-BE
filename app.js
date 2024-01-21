@@ -1,13 +1,11 @@
 const express = require('express');
 const session = require('express-session');
-const moment = require("moment");
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const passport = require('passport');
 const dotenv = require('dotenv');
-const passportConfig = require('./passport');
-const authRouter = require('./passport/auth.js');
+const passportConfig = require('./router/passport');
 
 // express 사용하기
 const app = express();
@@ -18,13 +16,8 @@ dotenv.config();
 // passport 사용하기 위해
 passportConfig();
 
-const { Perform } = db;
-const { Booth } = db;       //db.Booth
-const { BoothDay } = db;    //db.BoothDay
-const { Keywords } = db;     // db.Keyword
+// 이것도 없애야 하는데...일단 냅두자...카카오 로그인...
 const { User } = db;        // db.User
-const { OneLine } = db;     // db.OneLine
-const { Notice } = db;      // db.Notice
 
 // 테스트용
 app.get('/', async(req, res) => {
@@ -44,162 +37,28 @@ app.use(session({
         secure: false,
     },
 }));
+
 // passport 초기화
 app.use(passport.initialize())
 // passport index.js에 있는 'deserializeUser'함수 호출
 app.use(passport.session())
 
-/* ----------------------------- 라우터 연결 ------------------------------ */
+/* ----------------------------- 라우터 분리 ------------------------------ */
 // /auth 라우터 연결
-app.use('/auth', authRouter);
+const authRouter = require('./router/passport/auth.js');
+const timetableRouter = require('./router/perform/perform.js');
+const boothRouter = require('./router/booth/booth.js');
+const noticeRouter = require('./router/notice/notice.js');
+const keywordRouter = require('./router/keyword/keyword.js');
+const onelineRouter = require('./router/oneline/oneline.js');
 
-/* --------------------------------------------------------------------------------------------------------
-메인 화면에 있는 동작 작성
-1. 오늘의 라인업
-2. 한 줄 외치기
-    # 학번, 한 줄, 이모지
-    # 키워드
-3. 부스 랭킹 Top 5
------------------------------------------------------------------------------------------------------------
-*/
+app.use('/auth', authRouter);               // 카카오 로그인 -> 로그인
+app.use('/timetable', timetableRouter);     // timetable 분리
+app.use('/booth', boothRouter);             // booth 분리
+app.use('/notices', noticeRouter);          // notice 분리
+app.use('/keyword', keywordRouter);         // keyword 분리
+app.use('/shout', onelineRouter);           // oneline 분리
 
-// 타임테이블 조회
-app.get('/timetable', async (req, res) => {
-    try {
-        const performs = await Perform.findAll({
-            attributes: ['id', 'name','date', 'time', 'category', 'detail', 'img'],
-        });
-
-        const performs2 = performs.map(perform => ({
-            id: String(perform.id),
-            name: perform.name,
-            date: perform.date,
-            category: perform.category,
-            detail: perform.detail,
-            img: perform.img,
-        }));
-
-        res.json({ performs: performs2});
-    } catch (error) {
-        console.error('데이터를 가져오는 중 오류 발생:', error);
-        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
-    }
-});
-
-// 타임테이블 조회
-app.get('/notices', async (req, res) => {
-    try {
-        const notices = await Notice.findAll({
-            attributes: ['id', 'title','category', 'content', 'img', 'updatedAt'],
-        });
-
-        const notices2 = notices.map(notice => ({
-            id: String(notice.id),
-            title: notice.title,
-            category: notice.category,
-            content: notice.content,
-            img: notice.img,
-            updatedAt: moment(notice.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-        }));
-
-        res.json({ notices: notices2});
-    } catch (error) {
-        console.error('데이터를 가져오는 중 오류 발생:', error);
-        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
-    }
-});
-
-// 메인페이지 - 부스 랭킹 Top 5
-app.get('/ranking', async (req, res) => {
-    try {
-        const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'img'],
-            order: [['liked', 'DESC']], // liked 속성을 기준으로 내림차순으로 정렬
-            limit: 5, // 상위 5개 결과만 반환
-        });
-
-        const Booths = await Promise.all(allBooths.map(async (booth) => {
-            const boothId = booth.id;
-
-            const myBoothDays = await BoothDay.findAll({
-                where: { boothId: boothId },
-                attributes: ['id', 'day', 'time'],
-            });
-
-            return {
-                ...booth.get({ plain: true }),
-                boothDays: myBoothDays.map(day => day.get({ plain: true })),
-            };
-        }));
-
-        res.send({ booths: Booths });
-    } catch (err) {
-        console.error('ERROR: ', err);
-    }
-});
-
-/* 
-메인 페이지 - 한 줄 외치기
-    # 학번, 한 줄, 이모지
-*/
-app.get('/shout', async (req, res) => {
-    try {
-        const Onelines = await Promise.all((await OneLine.findAll({
-            attributes: ['id', 'content', 'emoji', 'userId'],
-        })).map(async (oneline) => ({
-            id: String(oneline.id),
-            content: oneline.content,
-            emoji: oneline.emoji,
-            studentID: String((await User.findOne({ where: { id: oneline.userId } })).studentID),
-        })));
-
-        res.json({ shouts: Onelines });
-    } catch (error) {
-        console.error('ERROR:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
-
-/* 
-메인 페이지 - 한 줄 외치기
-    # 키워드
-*/
-app.get('/keyword', async(req, res) => {
-    try {
-        const allKeywords = await Keywords.findAll({
-            attributes: ['id', 'word'],
-        });
-
-        const someKeywords = allKeywords.slice(0, 10);
-
-        // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
-        const keywords = someKeywords.map((keyword) => ({
-            id: String(keyword.id),
-            word: keyword.word,
-        }));
-
-        res.send({keywords:keywords});
-    }
-    catch (err) {
-        console.log('Error: ', err);
-        res.send('500 error');
-    }
-});
-
-/* --------------------------------------------------------------------------------------------------------
-지도에 있는 동작 작성
-
------------------------------------------------------------------------------------------------------------
-*/
-
-
-/* --------------------------------------------------------------------------------------------------------
-타임 테이블에 있는 동작 작성
-1. 타임 테이블 - 오늘의 라인업
-2. 타임 테이블 - 전체 공연 정보
------------------------------------------------------------------------------------------------------------
-*/
 
 // 유저정보 가져오기
 app.get('/user', async(req, res) => {
@@ -223,7 +82,6 @@ app.get('/user', async(req, res) => {
 });
 
 // Running the Server: 포트번호는 4000
-// kakao developer에서 port번호 4000으로 설정해서...번호 바꿨어...
 app.listen(process.env.PORT, (req, res) => {
     console.log(`Server is running on ${process.env.PORT}`);
 });

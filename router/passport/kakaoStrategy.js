@@ -1,6 +1,6 @@
 const passport = require('passport');
 const kakaoStrategy = require('passport-kakao').Strategy;
-const User = require('../models').User;
+const User = require('../../models').User;
 // .env 파일 사용하기 위해
 const dotenv = require('dotenv');
 dotenv.config();
