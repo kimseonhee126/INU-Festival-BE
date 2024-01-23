@@ -12,7 +12,7 @@ const { Perform } = db;     // db.Perform 사용하기
 router.get('/', async (req, res) => {
     try {
         const performs = await Perform.findAll({
-            attributes: ['id', 'name','day', 'time', 'category', 'detail', 'img'],
+            attributes: ['id', 'name','date', 'time', 'category', 'detail', 'img'],
         });
 
         const performs2 = performs.map(perform => ({
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
             name: perform.name,
             category: perform.category,
             detail: perform.detail,
-            day: perform.day,
+            date: perform.date,
             startTime: perform.time.split(' ~ ')[0],
             endTime: perform.time.split(' ~ ')[1],
             img: perform.img,
