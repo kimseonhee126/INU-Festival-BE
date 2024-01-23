@@ -15,6 +15,9 @@ module.exports = {
       date: {
         type: Sequelize.STRING(50)
       },
+      day: {
+        type: Sequelize.STRING(20)
+      },
       time: {
         type: Sequelize.STRING(100)
       },
