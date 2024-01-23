@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   Perform.init({
     name: DataTypes.STRING,
     date: DataTypes.STRING,
+    day: DataTypes.STRING,
     time: DataTypes.STRING,
     category: DataTypes.STRING,
     detail: DataTypes.STRING,
