@@ -35,6 +35,7 @@ module.exports = () => {
                 const newUser = await User.create({
                     nick: profile.displayName,
                     snsId: profile.id,
+                    token: accessToken,
                     // email: profile._json?.kakao_account?.email,
                     provider: 'kakao',
                 });

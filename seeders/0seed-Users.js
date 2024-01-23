@@ -10,43 +10,48 @@ module.exports = {
       [
         {
           id: 1,
-          studentID: 202000001,
+          nick: '거북이',
+          provider: '카카오',
         },
         {
           id: 2,
-          studentID: 202000002
+          nick: '고양이',
+          provider: '카카오',
         },
         {
           id: 3,
-          studentID: 202000003
+          nick: '물고기',
+          provider: '카카오',
         },
         {
           id: 4,
-          studentID: 202000004
+          nick: '강아지',
+          provider: '카카오',
         },
         {
           id: 5,
-          studentID: 202000005
+          nick: '토끼',
+          provider: '카카오',
         },
         {
           id: 6,
-          studentID: 202000006
+          nick: '너구리',
+          provider: '카카오',
         },
         {
           id: 7,
-          studentID: 202000007
+          nick: '다람쥐',
+          provider: '카카오',
         },
         {
           id: 8,
-          studentID: 202000008
+          nick: '여우',
+          provider: '카카오',
         },
         {
           id: 9,
-          studentID: 202000009
-        },
-        {
-          id: 10,
-          studentID: 202000010
+          nick: '북극곰',
+          provider: '카카오',
         },
       ]
     )

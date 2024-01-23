@@ -13,9 +13,6 @@ const app = express();
 // .env 파일 사용하기 위해
 dotenv.config();
 
-// passport 사용하기 위해
-passportConfig();
-
 // 테스트용
 app.get('/', async(req, res) => {
     res.send('status 200 Ok');
@@ -35,6 +32,8 @@ app.use(session({
     },
 }));
 
+// passport 사용하기 위해
+passportConfig();
 // passport 초기화
 app.use(passport.initialize())
 // passport index.js에 있는 'deserializeUser'함수 호출
@@ -49,12 +48,12 @@ const noticeRouter = require('./router/notice/notice.js');
 const keywordRouter = require('./router/keyword/keyword.js');
 const onelineRouter = require('./router/oneline/oneline.js');
 
-app.use('/auth', authRouter);               // 카카오 로그인 -> 로그인
-app.use('/timetable', timetableRouter);     // timetable 분리
-app.use('/booths', boothRouter);             // booth 분리
-app.use('/notices', noticeRouter);          // notice 분리
-app.use('/keywords', keywordRouter);         // keyword 분리
-app.use('/shout', onelineRouter);           // oneline 분리
+app.use('/auth', authRouter);                   // 카카오 로그인 -> 로그인
+app.use('/timetable', timetableRouter);         // timetable 분리
+app.use('/booths', boothRouter);                // booth 분리
+app.use('/notices', noticeRouter);              // notice 분리
+app.use('/keywords', keywordRouter);            // keyword 분리
+app.use('/shout', onelineRouter);               // oneline 분리
 
 // Running the Server: 포트번호는 4000
 app.listen(process.env.PORT, (req, res) => {

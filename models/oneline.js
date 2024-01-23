@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class OneLine extends Model {
     static associate(models) {
       // define association here
-      models.OneLine.belongsTo(models.User, {foreignKey: "studentID"})
+      models.OneLine.belongsTo(models.User, {foreignKey: "userId"})
     }
   }
   OneLine.init({

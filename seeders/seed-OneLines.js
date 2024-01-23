@@ -6,6 +6,7 @@ module.exports = {
     // id를 1부터 다시 시작하는 로직 추가
     await queryInterface.sequelize.query('ALTER TABLE OneLines AUTO_INCREMENT = 1;');
     const users = await queryInterface.sequelize.query(`SELECT id from Users;`);
+    // console.log(users)
     const userRows = users[0];
 
     await queryInterface.bulkInsert(
@@ -69,7 +70,7 @@ module.exports = {
           id:10,
           content: ':)',
           emoji: "sad.png",
-          userId: userRows[9].id,
+          userId: userRows[0].id,
         },
       ]
     )

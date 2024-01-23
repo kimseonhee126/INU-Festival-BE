@@ -4,8 +4,7 @@
     "password": "root1!",
     "database": "FESTIVAL",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "timezone": "+09:00"
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",

@@ -9,18 +9,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      studentID: {
-        type: Sequelize.INTEGER,
+      nick: {
+        type: Sequelize.STRING(15),
       },
-      // snsId, nick, provider 새로 추가했엉~!
       snsId: {
         type: Sequelize.STRING(30),
       },
-      nick: {
-        type: Sequelize.STRING
-      },
       provider: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(10),
+      },
+      rank: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+      },
+      token: {
+        type: Sequelize.STRING(100),
       },
       createdAt: {
         allowNull: false,
