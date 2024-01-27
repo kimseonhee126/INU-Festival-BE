@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      token: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      rank: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+      },
       nick: {
         type: Sequelize.STRING(15),
       },
@@ -18,12 +26,11 @@ module.exports = {
       provider: {
         type: Sequelize.STRING(10),
       },
-      rank: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1,
+      studentId: {
+        type: Sequelize.STRING(20),
       },
-      token: {
-        type: Sequelize.STRING(100),
+      barcode: {
+        type: Sequelize.STRING(50),
       },
       createdAt: {
         allowNull: false,
