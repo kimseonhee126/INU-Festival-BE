@@ -19,7 +19,7 @@ const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 // request로 받아오기
 const requestData = {
     studentId: '202100249',
-    password: 'wktlr011226!'
+    password: '####'
 };
 
 router.get('/', async (req, res) => {
