@@ -4,6 +4,9 @@ const router = express.Router();
 const axios = require('axios');
 const User = require('../../models').User;
 
+// JSON 미들웨어 사용
+router.use(express.json());
+// 세션 미들웨어 사용
 router.use(session({
   resave: false,
   saveUninitialized: false,
@@ -16,15 +19,9 @@ router.use(session({
 
 const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 
-// request로 받아오기
-const requestData = {
-    studentId: '202100249',
-    password: '####'
-};
-
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-      const { studentId, password } = requestData;
+      const { studentId, password } = req.body;
   
       // axios를 사용하여 로그인 API에 POST 요청 보내기
       const response = await axios.post(apiUrl, { studentId, password });

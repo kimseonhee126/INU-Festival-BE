@@ -6,7 +6,7 @@ const User = require('../../models').User;
 
 const { Booth } = db;       //db.Booth
 
-// 미들웨어 사용
+// JSON 미들웨어 사용
 router.use(express.json());
 // 세션 관련 미들웨어 사용
 router.use(session({

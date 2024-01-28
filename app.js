@@ -80,7 +80,7 @@ const boothRouter = require('./router/booth/booth.js');
 const noticeRouter = require('./router/notice/notice.js');
 const keywordRouter = require('./router/keyword/keyword.js');
 const onelineRouter = require('./router/oneline/oneline.js');
-const adminRouter = require('./router/admin/booth.js');
+const adminBoothRouter = require('./router/admin/booth.js');
 
 app.use('/auth', kakaoRouter);                   // 카카오 로그인
 app.use('/lms', lmsRouter);                      // lms 로그인
@@ -89,7 +89,7 @@ app.use('/booths', boothRouter);                 // booth 분리
 app.use('/notices', noticeRouter);               // notice 분리
 app.use('/keywords', keywordRouter);             // keyword 분리
 app.use('/shout', onelineRouter);                // oneline 분리
-app.use('/admin', adminRouter);                  // Booth 관리자 페이지
+app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
 
 // Running the Server: 포트번호는 4000
 app.listen(process.env.PORT, (req, res) => {
