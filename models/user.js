@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     provider: {
       type: DataTypes.STRING(10),
+      defaultValue: 'LMS',
     },
     studentId: {
       type: DataTypes.STRING(20),
