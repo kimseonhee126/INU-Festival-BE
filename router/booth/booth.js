@@ -4,6 +4,9 @@ const db = require('../../models');
 
 const { realDays } = require('../../app');
 
+// JSON 미들웨어 사용
+router.use(express.json());
+
 const { Booth } = db;       //db.Booth
 const { BoothDay } = db;    //db.BoothDay
 const { BoothImg } = db;   //db.Booth
@@ -123,6 +126,27 @@ router.get('/:id', async (req, res) => {
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
+    }
+});
+
+// 부스 좋아요
+
+router.post('/liked/:id', async (req, res) => {
+    try {
+        const boothId = req.params.id;
+        const likeCount = req.body.likeCount;
+        const booth = await Booth.findOne({ where: { id: boothId } });
+
+        const liked = booth.liked;
+
+        if (!booth) {
+            return res.status(404).send({ message: 'Booth not found' });
+        }
+        await booth.update({ liked: liked + likeCount });
+        res.send({ booth: booth.get({ plain: true }) });
+    } catch (err) {
+        console.error('ERROR: ', err);
+        res.status(500).send({ message: 'Server error' });
     }
 });
 

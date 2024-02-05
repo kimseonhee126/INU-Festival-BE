@@ -39,6 +39,16 @@ Content-Type: application/json
     "img": "temp.png"
 }
 
+# POST 요청: 좋아요 추가
+###
+POST http://localhost:4000/booth/liked/1
+Content-Type: application/json
+
+{
+    "likeCount": 22
+}
+
+
 # PUT 요청 : 관리자 부스 수정
 ###
 PUT http://localhost:4000/admin/booth
