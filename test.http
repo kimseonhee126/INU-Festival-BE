@@ -6,7 +6,7 @@ GET http://localhost:4000/timetable
 
 # GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###
-GET http://localhost:4000/ranking
+GET http://localhost:4000/booth/ranking
 
 # GET 요청: 메인 페이지 - 한 줄 외치기
 ###
@@ -16,17 +16,19 @@ GET http://localhost:4000/shout
 ###
 GET http://localhost:4000/keyword
 
-# GET 요청: 유저 목록
-###
-GET http://localhost:4000/user
-
 # GET 요청: 공지 목록
 ###
-GET http://localhost:4000/notices
+GET http://localhost:4000/notice
 
 # GET 요청: 부스 댓글 목록
 ###
 GET http://localhost:4000/booth/comment/1
+
+# GET 요청: 부스 필터 카테고리 목록
+###
+GET http://localhost:4000/booth/category
+
+###
 
 # POST 요청: 관리자 부스 추가
 ###

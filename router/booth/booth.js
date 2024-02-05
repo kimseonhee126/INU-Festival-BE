@@ -14,6 +14,20 @@ const { BoothImg } = db;   //db.Booth
 const { Comment } = db;   //db.Comment
 const { User } = db;     //db.User
 
+// 카테고리 조회하기
+router.get('/category', async (req, res) => {
+    try {
+        const categories = {
+            days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
+            filters: ["주점", "비주점", "푸드트럭"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+        }
+        res.json({ categories });
+    } catch (error) {
+        console.error('ERROR:', error);
+        res.status(500).send({ message: 'An error occurred while fetching categories' });
+    }
+});
+
 // 메인페이지 - 부스 랭킹 Top 5
 router.get('/ranking', async (req, res) => {
     try {
@@ -176,7 +190,6 @@ router.get('/comment/:id', async (req, res) => {
     }
 });
 
-
 // 부스 좋아요 업데이트하기
 router.put('/liked/:id', async (req, res) => {
     try {
@@ -201,59 +214,47 @@ router.put('/liked/:id', async (req, res) => {
 router.post('/comment/:id', async (req, res) => {
     try {
         /*------------------------------------------------------ */
-        // // 편집 권한 있는 user인지 확인하기 위해 session 검색
-        // const sessionId = req.session.studentId;
-        // const user = await User.findOne({ where: { studentId: sessionId } });
-        // const userRank = user.rank;
-
-        // if (userRank != 1) {
-        //     try {
-        //         const boothId = req.params.id;
-        //         const booth = await Booth.findOne({ where: { id: boothId } });
-        
-        //         if (!booth) {
-        //             return res.status(404).send({ message: 'Booth not found' });
-        //         }
-        
-        //         const newComment = req.body;
-        
-        //         const comment = Booth.build(newComment);
-        //         await comment.save();
-        //         // 확인용 출력
-        //         console.log(`newComment : ${newComment.content}\n`);
-        //         res.send(`${newComment.content}.`);
-        //     }
-        //     catch(err) {
-        //         console.error('ERROR: ', err);
-        //         res.status(500).send({ message: 'Server error' });
-        //     };
-        // }
-        // else {
-        //     // 편집 권한이 없으면 메시지 뜨게 하기!!
-        //     console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
-        //     res.send(`${sessionId}는 편집할 권한이 없습니다.`);
-        // }
-        /*------------------------------------------------------ */
-
-        const boothId = req.params.id;
-        const booth = await Booth.findOne({ where: { id: boothId } });
-
-        if (!booth) {
-            return res.status(404).send({ message: 'Booth not found' });
+        // 편집 권한 있는 user인지 확인하기 위해 session 검색
+        if (!req.session.studentId) {
+            return res.status(400).send({ message: '로그인 먼저 하세요!' });
         }
+        const sessionId = req.session.studentId;
+        const user = await User.findOne({ where: { studentId: sessionId } });
+        const userRank = user.rank;
 
-        const newComment = req.body;
-
-        const comment = Comment.build(newComment);
-        await comment.save();
-        // 확인용 출력
-        res.send({ comment: comment.get({ plain: true }) });
-
+        if (userRank != 1) {
+            try {
+                const boothId = req.params.id;
+                const booth = await Booth.findOne({ where: { id: boothId } });
+        
+                if (!booth) {
+                    return res.status(404).send({ message: 'Booth not found' });
+                }
+        
+                const newComment = req.body;
+        
+                const comment = Comment.build(newComment);
+                await comment.save();
+                // 확인용 출력
+                console.log(`newComment : ${newComment.content}\n`);
+                res.send(`${newComment.content}.`);
+            }
+            catch(err) {
+                console.error('ERROR: ', err);
+                res.status(500).send({ message: 'Server error' });
+            };
+        }
+        else {
+            // 편집 권한이 없으면 메시지 뜨게 하기!!
+            console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
+            res.send(`${sessionId}는 편집할 권한이 없습니다.`);
+        }
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' });
     }
 });
+
 
 
 
