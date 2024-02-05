@@ -13,31 +13,31 @@ module.exports = {
       'NoticeImgs',
       [
         {
-          img: 'temp.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[0].id,
         },
         {
-          img: 'temp2.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[0].id,
         },
         {
-          img: 'temp3.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[1].id,
         },
         {
-          img: 'temp4.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[1].id,
         },
         {
-          img: 'temp5.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[2].id,
         },
         {
-          img: 'temp6.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[2].id,
         },
         {
-          img: 'temp7.img',
+          img: 'BOL.jpeg',
           noticeId: noticeRows[3].id,
         },
       ]

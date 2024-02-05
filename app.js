@@ -7,6 +7,14 @@ const passport = require('passport');
 const dotenv = require('dotenv');
 const passportConfig = require('./router/passport');
 
+const realDays =['월', '화', '수'];
+const realDates = ['2024-05-01', '2024-05-02', '2024-05-03']
+
+module.exports = {
+  realDays,
+  realDates,
+};
+
 // express 사용하기
 const app = express();
 
@@ -39,6 +47,11 @@ app.get('/', (req, res) => {
       // 로그인 안 되어 있으면 상태 메시지 출력
       res.status(200).send('Status 200 OK');
     }
+});
+
+// 요일과 날짜
+app.get('/days', (req, res) => {
+    res.send({ days: realDays, dates: realDates });
 });
 
 // 로그아웃
@@ -85,9 +98,9 @@ const adminBoothRouter = require('./router/admin/booth.js');
 app.use('/auth', kakaoRouter);                   // 카카오 로그인
 app.use('/lms', lmsRouter);                      // lms 로그인
 app.use('/timetable', timetableRouter);          // timetable 분리
-app.use('/booths', boothRouter);                 // booth 분리
-app.use('/notices', noticeRouter);               // notice 분리
-app.use('/keywords', keywordRouter);             // keyword 분리
+app.use('/booth', boothRouter);                 // booth 분리
+app.use('/notice', noticeRouter);               // notice 분리
+app.use('/keyword', keywordRouter);             // keyword 분리
 app.use('/shout', onelineRouter);                // oneline 분리
 app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
 

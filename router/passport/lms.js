@@ -21,6 +21,7 @@ const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 
 router.post('/', async (req, res) => {
     try {
+      console.log('POST /passport/lms')
       const { studentId, password } = req.body;
   
       // axios를 사용하여 로그인 API에 POST 요청 보내기
