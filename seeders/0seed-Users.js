@@ -10,43 +10,66 @@ module.exports = {
       [
         {
           id: 1,
-          studentID: 202000001,
+          token: 'temptemp',
+          nick: '거북이',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 2,
-          studentID: 202000002
+          token: 'temptemp',
+          nick: '고양이',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 3,
-          studentID: 202000003
+          token: 'temptemp',
+          nick: '물고기',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 4,
-          studentID: 202000004
+          token: 'temptemp',
+          nick: '강아지',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 5,
-          studentID: 202000005
+          token: 'temptemp',
+          nick: '토끼',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 6,
-          studentID: 202000006
+          token: 'temptemp',
+          nick: '너구리',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 7,
-          studentID: 202000007
+          token: 'temptemp',
+          nick: '다람쥐',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 8,
-          studentID: 202000008
+          token: 'temptemp',
+          nick: '여우',
+          provider: '카카오',
+          snsId: '12341234',
         },
         {
           id: 9,
-          studentID: 202000009
-        },
-        {
-          id: 10,
-          studentID: 202000010
+          token: 'temptemp',
+          nick: '북극곰',
+          provider: '카카오',
+          snsId: '12341234',
         },
       ]
     )

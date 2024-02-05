@@ -17,7 +17,9 @@ router.get('/', async (req, res) => {
             id: String(oneline.id),
             content: oneline.content,
             emoji: oneline.emoji,
-            studentID: String((await User.findOne({ where: { id: oneline.userId } })).studentID),
+            snsId: String((await User.findOne(
+                { where: { id: oneline.userId } }
+                )).snsId),
         })));
 
         res.json({ shouts: Onelines });

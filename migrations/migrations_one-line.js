@@ -15,6 +15,9 @@ module.exports = {
       emoji: {
         type: Sequelize.STRING(20)
       },
+      userId: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -24,9 +27,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
-      },
-      userId: {
-        type: Sequelize.INTEGER,
       },
     });
   },
