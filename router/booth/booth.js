@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../models');
+const moment = require("moment");
 
 const { realDays } = require('../../app');
 
@@ -10,6 +11,8 @@ router.use(express.json());
 const { Booth } = db;       //db.Booth
 const { BoothDay } = db;    //db.BoothDay
 const { BoothImg } = db;   //db.Booth
+const { Comment } = db;   //db.Comment
+const { User } = db;     //db.User
 
 // 메인페이지 - 부스 랭킹 Top 5
 router.get('/ranking', async (req, res) => {
@@ -107,6 +110,18 @@ router.get('/:id', async (req, res) => {
             attributes: ['id', 'url'],
         });
 
+        const myBoothComments = await Comment.findAll({
+            where: { boothId: boothId },
+        });
+
+        const myBoothComments2 = myBoothComments.map(comment => ({
+            id: String(comment.id),
+            content: comment.content,
+            userId: comment.userId,
+            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        }));
+
         // 변환 로직 추가: boothDay의 day 숫자를 요일 문자열로 변환
         const boothDaysWithRealDay = myBoothDays.map(boothDay => {
             const dayIndex = boothDay.day - 1; // 배열 인덱스를 위해 1 감소
@@ -120,6 +135,7 @@ router.get('/:id', async (req, res) => {
             ...booth.get({ plain: true }),
             boothDays: boothDaysWithRealDay,
             boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
+            boothComments: myBoothComments2,
         };
 
         res.send({ booth: boothResponse });
@@ -129,9 +145,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// 부스 좋아요
-
-router.post('/liked/:id', async (req, res) => {
+// 부스 좋아요 업데이트하기
+router.put('/liked/:id', async (req, res) => {
     try {
         const boothId = req.params.id;
         const likeCount = req.body.likeCount;
@@ -149,6 +164,65 @@ router.post('/liked/:id', async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 });
+
+// 부스 댓글 추가하기
+router.post('/comment/:id', async (req, res) => {
+    try {
+        /*------------------------------------------------------ */
+        // // 편집 권한 있는 user인지 확인하기 위해 session 검색
+        // const sessionId = req.session.studentId;
+        // const user = await User.findOne({ where: { studentId: sessionId } });
+        // const userRank = user.rank;
+
+        // if (userRank != 1) {
+        //     try {
+        //         const boothId = req.params.id;
+        //         const booth = await Booth.findOne({ where: { id: boothId } });
+        
+        //         if (!booth) {
+        //             return res.status(404).send({ message: 'Booth not found' });
+        //         }
+        
+        //         const newComment = req.body;
+        
+        //         const comment = Booth.build(newComment);
+        //         await comment.save();
+        //         // 확인용 출력
+        //         console.log(`newComment : ${newComment.content}\n`);
+        //         res.send(`${newComment.content}.`);
+        //     }
+        //     catch(err) {
+        //         console.error('ERROR: ', err);
+        //         res.status(500).send({ message: 'Server error' });
+        //     };
+        // }
+        // else {
+        //     // 편집 권한이 없으면 메시지 뜨게 하기!!
+        //     console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
+        //     res.send(`${sessionId}는 편집할 권한이 없습니다.`);
+        // }
+        /*------------------------------------------------------ */
+
+        const boothId = req.params.id;
+        const booth = await Booth.findOne({ where: { id: boothId } });
+
+        if (!booth) {
+            return res.status(404).send({ message: 'Booth not found' });
+        }
+
+        const newComment = req.body;
+
+        const comment = Comment.build(newComment);
+        await comment.save();
+        // 확인용 출력
+        res.send({ comment: comment.get({ plain: true }) });
+
+    } catch (err) {
+        console.error('ERROR: ', err);
+        res.status(500).send({ message: 'Server error' });
+    }
+});
+
 
 
 module.exports = router;

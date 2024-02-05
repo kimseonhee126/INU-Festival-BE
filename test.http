@@ -37,9 +37,20 @@ Content-Type: application/json
     "liked": 0
 }
 
-# POST 요청: 좋아요 추가
+# POST 요청: 부스 댓글 추가
 ###
-POST http://localhost:4000/booth/liked/1
+POST http://localhost:4000/booth/comment/1
+Content-Type: application/json
+
+{
+    "content": "test1",
+    "boothId": 1,
+    "userId": 1
+}
+
+# PUT 요청: 좋아요 추가
+###
+PUT http://localhost:4000/booth/liked/1
 Content-Type: application/json
 
 {
