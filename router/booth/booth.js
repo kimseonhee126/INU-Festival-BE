@@ -60,5 +60,32 @@ router.get('/all', async (req, res) => {
         console.error('ERROR: ', err);
     }
 });
+// 부스 하나 조회하기
+router.get('/all', async (req, res) => {
+    try {
+        const allBooths = await Booth.findAll({
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'img'],
+        });
+
+        const Booths = await Promise.all(allBooths.map(async (booth) => {
+            const boothId = booth.id;
+
+            const myBoothDays = await BoothDay.findAll({
+                where: { boothId: boothId },
+                attributes: ['id', 'day', 'time'],
+            });
+
+            return {
+                ...booth.get({ plain: true }),
+                boothDays: myBoothDays.map(day => day.get({ plain: true })),
+            };
+        }));
+
+        res.send({ booths: Booths });
+    } catch (err) {
+        console.error('ERROR: ', err);
+    }
+});
 
 module.exports = router;
+

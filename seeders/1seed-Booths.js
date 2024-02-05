@@ -15,7 +15,6 @@ module.exports = {
           department: '총학생회',
           description: '총학생회 부스입니다.',
           liked: 0,
-          img: 'temp.img',
         },
         {
           name: '다크2호스',
@@ -23,7 +22,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 555,
-          img: 'temp.img',
         },
         {
           name: '다크3호스',
@@ -31,7 +29,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 354,
-          img: 'temp.img',
         },
         {
           name: '다크4호스',
@@ -39,7 +36,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 777,
-          img: 'temp.img',
         },
         {
           name: '다크5호스',
@@ -47,7 +43,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 2500,
-          img: 'temp.img',
         },
         {
           name: '다크ege호스',
@@ -55,7 +50,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 2000,
-          img: 'temp.img',
         },
         {
           name: '다크iuit호스',
@@ -63,7 +57,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 25345,
-          img: 'temp.img',
         },
         {
           name: '다크uuuu호스',
@@ -71,7 +64,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 3543,
-          img: 'temp.img',
         },
         {
           name: '다크yyyy호스',
@@ -79,7 +71,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 2345,
-          img: 'temp.img',
         },
         {
           name: '다크asdfsd호스',
@@ -87,7 +78,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 452,
-          img: 'temp.img',
         },
         {
           name: '다크sagdfssa호스',
@@ -95,7 +85,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 1000,
-          img: 'temp.img',
         },
         {
           name: '다크afsd호스',
@@ -103,7 +92,6 @@ module.exports = {
           department: '탁구부',
           description: '탁구 부스입니다.',
           liked: 1000,
-          img: 'temp.img',
         },
       ]
     )
