@@ -5,6 +5,8 @@ const db = require('../../models');
 const { OneLine } = db;     // db.OneLine
 const { User } = db;        // db.User
 
+router.use(express.urlencoded({ extended: false }));
+
 /* 
 메인 페이지 - 한 줄 외치기
     # 학번, 한 줄, 이모지

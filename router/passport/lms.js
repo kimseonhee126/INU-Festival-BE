@@ -19,6 +19,7 @@ router.use(session({
 
 const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 
+// request 올라가라..!!
 router.post('/', async (req, res) => {
     try {
       console.log('POST /passport/lms')
