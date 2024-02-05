@@ -145,6 +145,38 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// 부스 하나 댓글 모두 조회하기
+router.get('/comment/:id', async (req, res) => {
+    try {
+        const boothId = req.params.id; 
+        const booth = await Booth.findOne({
+            where: { id: boothId }, 
+        });
+
+        if (!booth) {
+            return res.status(404).send({ message: 'Booth not found' });
+        }
+
+        const myBoothComments = await Comment.findAll({
+            where: { boothId: boothId },
+        });
+
+        const boothComments = myBoothComments.map(comment => ({
+            id: String(comment.id),
+            content: comment.content,
+            userId: String(comment.userId),
+            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        }));
+
+        res.send({ boothComments });
+    } catch (err) {
+        console.error('ERROR: ', err);
+        res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
+    }
+});
+
+
 // 부스 좋아요 업데이트하기
 router.put('/liked/:id', async (req, res) => {
     try {

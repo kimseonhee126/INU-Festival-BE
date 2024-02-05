@@ -24,6 +24,10 @@ GET http://localhost:4000/user
 ###
 GET http://localhost:4000/notices
 
+# GET 요청: 부스 댓글 목록
+###
+GET http://localhost:4000/booth/comment/1
+
 # POST 요청: 관리자 부스 추가
 ###
 POST http://localhost:4000/admin/booth
