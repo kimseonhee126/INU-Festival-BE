@@ -83,7 +83,7 @@ const onelineRouter = require('./router/oneline/oneline.js');
 const adminBoothRouter = require('./router/admin/booth.js');
 
 app.use('/auth', kakaoRouter);                   // 카카오 로그인
-app.use('/lms', lmsRouter);                      // lms 로그인
+app.use('/login/lms', lmsRouter);                // lms 로그인
 app.use('/timetable', timetableRouter);          // timetable 분리
 app.use('/booths', boothRouter);                 // booth 분리
 app.use('/notices', noticeRouter);               // notice 분리

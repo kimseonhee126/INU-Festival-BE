@@ -37,6 +37,7 @@ router.post('/booth', async(req, res) => {
         if (userRank != 1) {
             // 새로운 부스 만들기
             const newBooth = req.body;
+            console.log(newBooth.name);
 
             // 새로운 부스 저장하기
             try {
