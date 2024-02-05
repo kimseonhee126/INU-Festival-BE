@@ -30,13 +30,11 @@ POST http://localhost:4000/admin/booth
 Content-Type: application/json
 
 {
-    "id": 13,
     "name": "test1",
     "category": "비주점",
     "department": "희희낙락",
     "description": "test1",
-    "liked": 10,
-    "img": "temp.png"
+    "liked": 0
 }
 
 # POST 요청: 좋아요 추가
@@ -46,6 +44,16 @@ Content-Type: application/json
 
 {
     "likeCount": 22
+}
+
+# POST 요청: 로그인
+###
+POST http://localhost:4000/login/lms
+Content-Type: application/json
+
+{
+    "studentId": "201901284",
+    "password": "rootroot1!"    
 }
 
 

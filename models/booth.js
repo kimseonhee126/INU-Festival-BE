@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
     department: DataTypes.STRING,
     description: DataTypes.STRING,
     liked: DataTypes.INTEGER,
-    img: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Booth',

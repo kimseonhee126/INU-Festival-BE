@@ -33,11 +33,31 @@ module.exports = {
         field: 'id',
       },
     });
+    await queryInterface.addConstraint('Comments', {
+      fields: ['boothId'],
+      type: 'foreign key',
+      name: 'boothIdFk2',
+      references: {
+        table: 'Booths',
+        field: 'id',
+      },
+    });
+    await queryInterface.addConstraint('Comments', {
+      fields: ['userId'],
+      type: 'foreign key',
+      name: 'userIdFk2',
+      references: {
+        table: 'Users',
+        field: 'id',
+      },
+    });
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('BoothDays', 'boothIdFk');
     await queryInterface.removeConstraint('OneLines', 'snsIdFK');
     await queryInterface.removeConstraint('NoticeImgs', 'noticeIdFK');
+    await queryInterface.removeConstraint('Comments', 'boothIdFk2');
+    await queryInterface.removeConstraint('Comments', 'userIdFk2');
   }
 };
