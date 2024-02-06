@@ -48,7 +48,11 @@ router.post('/', async (req, res) => {
 
         // 세션에 학번 저장
         req.session.studentId = studentId;
+        req.session.token = rememberMeToken;
+        console.log('----------------- 세션에 학번 저장 시작 --------------')
         console.log(req.session.studentId);
+        console.log(req.session.token);
+        console.log('----------------- 세션에 학번 저장 끝 --------------')
 
         // 콘솔에 출력
         console.log('학번 : ', studentId);
