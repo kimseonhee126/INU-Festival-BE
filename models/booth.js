@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     category: DataTypes.STRING,
     department: DataTypes.STRING,
+    location: DataTypes.STRING,
     description: DataTypes.STRING,
     liked: DataTypes.INTEGER,
   }, {

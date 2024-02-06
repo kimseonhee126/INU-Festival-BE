@@ -32,7 +32,7 @@ router.get('/category', async (req, res) => {
 router.get('/ranking', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'location','liked'],
             order: [['liked', 'DESC']],
             limit: 5,
         });
@@ -43,6 +43,11 @@ router.get('/ranking', async (req, res) => {
             const myBoothDays = await BoothDay.findAll({
                 where: { boothId: boothId },
                 attributes: ['id', 'day', 'time'],
+            });
+
+            const myBoothImgs = await BoothImg.findAll({
+                where: { boothId: boothId },
+                attributes: ['id', 'url'],
             });
 
             const boothDaysWithRealDay = myBoothDays.map(boothDay => {
@@ -56,6 +61,7 @@ router.get('/ranking', async (req, res) => {
             return {
                 ...booth.get({ plain: true }),
                 boothDays: boothDaysWithRealDay,
+                boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
             };
         }));
 
@@ -70,7 +76,7 @@ router.get('/ranking', async (req, res) => {
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'location','description', 'liked'],
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
@@ -79,6 +85,11 @@ router.get('/all', async (req, res) => {
             const myBoothDays = await BoothDay.findAll({
                 where: { boothId: boothId },
                 attributes: ['id', 'day', 'time'],
+            });
+
+            const myBoothImgs = await BoothImg.findAll({
+                where: { boothId: boothId },
+                attributes: ['id', 'url'],
             });
 
             const boothDaysWithRealDay = myBoothDays.map(boothDay => {
@@ -92,6 +103,7 @@ router.get('/all', async (req, res) => {
             return {
                 ...booth.get({ plain: true }),
                 boothDays: boothDaysWithRealDay,
+                boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
             };
         }));
 
@@ -107,7 +119,7 @@ router.get('/:id', async (req, res) => {
         const boothId = req.params.id; 
         const booth = await Booth.findOne({
             where: { id: boothId }, 
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'location','description', 'liked'],
         });
 
         if (!booth) {
@@ -131,7 +143,6 @@ router.get('/:id', async (req, res) => {
         const myBoothComments2 = myBoothComments.map(comment => ({
             id: String(comment.id),
             content: comment.content,
-            userId: comment.userId,
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         }));
@@ -162,9 +173,9 @@ router.get('/:id', async (req, res) => {
 // 부스 하나 댓글 모두 조회하기
 router.get('/comment/:id', async (req, res) => {
     try {
-        const boothId = req.params.id; 
+        const boothId = req.params.id;
         const booth = await Booth.findOne({
-            where: { id: boothId }, 
+            where: { id: boothId },
         });
 
         if (!booth) {
@@ -173,22 +184,35 @@ router.get('/comment/:id', async (req, res) => {
 
         const myBoothComments = await Comment.findAll({
             where: { boothId: boothId },
+            include: [{
+                model: User,
+                attributes: ['studentId', 'snsId'], 
+            }],
         });
 
-        const boothComments = myBoothComments.map(comment => ({
-            id: String(comment.id),
-            content: comment.content,
-            userId: String(comment.userId),
-            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-        }));
+        const boothComments = myBoothComments.map(comment => {
+            const studentId = comment.User.studentId ? String(comment.User.studentId) : undefined;
+            const snsId = !studentId ? String(comment.User.snsId) : undefined;
+
+            return {
+                ...(studentId && { studentId }), // studentId가 있으면 이 필드를 추가
+                ...(snsId && { snsId }), // studentId가 없고 snsId가 있으면 이 필드를 추가
+                content: comment.content,
+                userId: String(comment.userId),
+                createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+                updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+            };
+        });
 
         res.send({ boothComments });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
+        res.status(500).send({ message: 'Server error' });
     }
 });
+
+
+
 
 // 부스 좋아요 업데이트하기
 router.put('/liked/:id', async (req, res) => {
