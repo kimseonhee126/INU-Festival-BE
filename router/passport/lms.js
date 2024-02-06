@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
       const existUser = await User.findOne({ where: { barcode } });
 
       if (existUser) {
-        //
+        // 
         req.session.studentId = existUser.studentId;
         console.log(`사용자 ${existUser.studentId}로 로그인되었습니다.\n`);
       }
