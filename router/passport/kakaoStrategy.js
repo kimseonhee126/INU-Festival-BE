@@ -1,9 +1,20 @@
+const express = require('express');
+const session = require('express-session');
 const passport = require('passport');
 const kakaoStrategy = require('passport-kakao').Strategy;
 const User = require('../../models').User;
 // .env 파일 사용하기 위해
 const dotenv = require('dotenv');
 dotenv.config();
+
+const app = express();
+
+// 세션 설정
+app.use(session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
 module.exports = () => {
     passport.use(new kakaoStrategy({
