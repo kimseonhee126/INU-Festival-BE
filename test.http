@@ -1,11 +1,52 @@
 # Node.js API
+
+# GET 요청: 메인 페이지 - 오늘의 라인업
 ###
-GET http://localhost:3000/
+GET http://localhost:4000/timetable
+
+# GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###
-GET http://localhost:3000/booths
+GET http://localhost:4000/ranking
+
+# GET 요청: 메인 페이지 - 한 줄 외치기
 ###
-GET http://localhost:3000/perform
+GET http://localhost:4000/shout
+
+# GET 요청: 메인 페이지 - 한 줄 외치기 `키워드`
 ###
-GET http://localhost:3000/perform/student
+GET http://localhost:4000/keyword
+
+# GET 요청: 유저 목록
 ###
-GET http://localhost:3000/perform/celeb
+GET http://localhost:4000/user
+
+# GET 요청: 공지 목록
+###
+GET http://localhost:4000/notices
+
+# POST 요청: 관리자 부스 추가
+###
+POST http://localhost:4000/admin/booth
+Content-Type: application/json
+
+{
+    "id": 13,
+    "name": "test1",
+    "category": "비주점",
+    "department": "희희낙락",
+    "description": "test1",
+    "liked": 10,
+    "img": "temp.png"
+}
+
+# PUT 요청 : 관리자 부스 수정
+###
+PUT http://localhost:4000/admin/booth
+
+# 그냥 연습...신경 ㄴㄴ
+###
+GET http://localhost:5000/perform/celeb
+###
+GET http://localhost:5000/perform/student
+###
+GET http://localhost:5000/perform/celeb

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class BoothDay extends Model {
+  class NoticeImg extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,31 +11,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      BoothDay.belongsTo(models.Booth);
-      models.Booth.hasMany(BoothDay);
+      NoticeImg.belongsTo(models.Notice);
+      models.Notice.hasMany(NoticeImg);
     }
   }
-  BoothDay.init({
+  NoticeImg.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    day: DataTypes.STRING,
-    time: DataTypes.STRING,
-    boothId: {
+    img: DataTypes.STRING,
+    noticeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-          model: 'Booth', // Booth 모델을 참조
+          model: 'Notice', // Notice 모델을 참조
           key: 'id',     // Booth 모델의 id 필드를 외래 키로 설정
       },
     },
   }, {
     sequelize,
-    modelName: 'BoothDay',
+    modelName: 'NoticeImg',
   });
-
-  return BoothDay;
+  return NoticeImg;
 };
