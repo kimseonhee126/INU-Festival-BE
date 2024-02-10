@@ -19,7 +19,7 @@
     "username": "root",
     "password": "root1!",
     "database": "FESTIVAL",
-    "host": "43.201.95.140",
+    "host": "3.35.50.94",
     "dialect": "mysql",
     "timezone": "+09:00"
   }
