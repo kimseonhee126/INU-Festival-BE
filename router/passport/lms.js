@@ -6,6 +6,7 @@ const User = require('../../models').User;
 
 // JSON 미들웨어 사용
 router.use(express.json());
+
 // 세션 미들웨어 사용
 router.use(session({
   resave: false,
@@ -19,8 +20,41 @@ router.use(session({
 
 const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 
+router.get('/me', async(req, res) => {
+  // 
+  try{
+    const token = req.body.accessToken;
+    console.log(`token 값으로 User 찾기 : ${token}`);
+
+    const findUser = await User.findOne({ where: { token } });
+
+    let id = '';
+    let name = '';
+    
+    if (!findUser) {
+      return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
+    }
+
+    if (findUser.provider === 'LMS') {
+      id = findUser.barcode;
+      name = findUser.studentId;
+    }
+    else {
+      id = findUser.snsId;
+      name = findUser.nick;
+    }
+
+    res.status(200).json({ id, name });
+
+  } catch(err) {
+    // 에러 출력
+    console.error('에러: ', err.message);
+    res.status(500).json({ message: '서버 내부 오류' });
+  }
+});
+
 // request 올라가라..!!
-router.post('/', async (req, res) => {
+router.post('/lms', async (req, res) => {
     try {
       const { studentId, password } = req.body;
   
@@ -30,13 +64,16 @@ router.post('/', async (req, res) => {
       // API 응답에서 필요한 정보 추출
       const { rememberMeToken, barcode } = response.data;
 
+      // response로 보낼 변수명 변경
+      const accessToken = rememberMeToken;
+
       // 이미 user가 존재한다면
       const existUser = await User.findOne({ where: { barcode } });
 
       if (existUser) {
-        //
-        req.session.studentId = existUser.studentId;
-        console.log(`사용자 ${existUser.studentId}로 로그인되었습니다.\n`);
+        console.log(`이미 있는 유저 : ${existUser.token}, ${existUser.studentId}`);
+        // 클라이언트로 보냄
+        return res.status(200).json({ accessToken });
       }
       else {
         // Sequelize를 사용하여 User 테이블에 데이터 삽입
@@ -48,19 +85,16 @@ router.post('/', async (req, res) => {
 
         // 세션에 학번 저장
         req.session.studentId = studentId;
-        console.log(req.session.studentId);
-
-        // 콘솔에 출력
-        console.log('학번 : ', studentId);
-        console.log('rememberMeToken:', rememberMeToken);
-        console.log('barcode:', barcode);
-        console.log(`학번 : ${studentId} 데이터가 저장되었습니다.`);
+        req.session.token = rememberMeToken;
       }
-      // 클라이언트에 응답
-      res.status(200).redirect('/');
+
+      console.log(`새로운 유저 : ${accessToken}, ${studentId}`);    // 확인용
+      // 클라이언트로 보냄
+      return res.status(200).json({ accessToken });
     } catch (error) {
+      // 토큰 발급 No
       console.error('에러:', error.message);
-      res.status(500).json({ success: false, message: '서버 내부 오류' });
+      res.status(403).json({ success: false, message: '서버 내부 오류!! 토큰 없음' });
     }
 });
 

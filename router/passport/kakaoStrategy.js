@@ -1,9 +1,20 @@
+const express = require('express');
+const session = require('express-session');
 const passport = require('passport');
 const kakaoStrategy = require('passport-kakao').Strategy;
 const User = require('../../models').User;
 // .env 파일 사용하기 위해
 const dotenv = require('dotenv');
 dotenv.config();
+
+const app = express();
+
+// 세션 설정
+app.use(session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
 module.exports = () => {
     passport.use(new kakaoStrategy({
@@ -15,7 +26,6 @@ module.exports = () => {
     }, async(accessToken, refreshToken, profile, done) => {
         // console 창에 프로필 뜨는지 확인
         console.log('accessToken : ', accessToken);
-        // console.log('kakao profile: ', profile);
 
         // 기존에 카카오를 통해 회원가입 한 적 있는지 조회
         try {
@@ -23,9 +33,6 @@ module.exports = () => {
             const existUser = await User.findOne({
                 where: { snsId: profile.id, provider: 'kakao' },
             });
-
-            // console.log('findOne User : ', existUser);
-            // console.log("findOne User's id : ", existUser?.snsId);
 
             if (existUser) {
                 done(null, existUser);
