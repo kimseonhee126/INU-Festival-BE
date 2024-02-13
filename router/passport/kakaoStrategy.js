@@ -26,7 +26,6 @@ module.exports = () => {
     }, async(accessToken, refreshToken, profile, done) => {
         // console 창에 프로필 뜨는지 확인
         console.log('accessToken : ', accessToken);
-        // console.log('kakao profile: ', profile);
 
         // 기존에 카카오를 통해 회원가입 한 적 있는지 조회
         try {
@@ -34,9 +33,6 @@ module.exports = () => {
             const existUser = await User.findOne({
                 where: { snsId: profile.id, provider: 'kakao' },
             });
-
-            // console.log('findOne User : ', existUser);
-            // console.log("findOne User's id : ", existUser?.snsId);
 
             if (existUser) {
                 done(null, existUser);
