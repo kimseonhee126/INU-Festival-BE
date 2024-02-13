@@ -23,29 +23,27 @@ const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 router.get('/me', async(req, res) => {
   // 
   try{
-    const token = req.body.accessToken;
+    const token = req.headers['authorization'];
     console.log(`token 값으로 User 찾기 : ${token}`);
 
     const findUser = await User.findOne({ where: { token } });
 
-    let id = '';
-    let name = '';
-    
     if (!findUser) {
       return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
     }
+    
+    let id = '';
+    let name = '';
 
     if (findUser.provider === 'LMS') {
       id = findUser.barcode;
       name = findUser.studentId;
+    } else {
+      id = findUser.barcode;
+      name = findUser.studentId;
     }
-    else {
-      id = findUser.snsId;
-      name = findUser.nick;
-    }
-
     res.status(200).json({ id, name });
-
+  
   } catch(err) {
     // 에러 출력
     console.error('에러: ', err.message);
