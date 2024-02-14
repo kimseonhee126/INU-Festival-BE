@@ -38,9 +38,11 @@ router.get('/me', async(req, res) => {
     if (findUser.provider === 'LMS') {
       id = findUser.barcode;
       name = findUser.studentId;
-    } else {
-      id = findUser.barcode;
-      name = findUser.studentId;
+
+      console.log('lms id, name : ', id, name);
+    } else if (findUser.provider === 'kakao') {
+      id = findUser.snsId;
+      name = findUser.nick;
     }
     res.status(200).json({ id, name });
   
