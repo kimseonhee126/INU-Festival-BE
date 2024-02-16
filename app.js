@@ -5,6 +5,7 @@ const sequelize = require('sequelize');
 const db = require('./models');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const User = require('./models').User;
 const passportConfig = require('./router/passport');
 
 const realDays =['월', '화', '수'];
@@ -14,8 +15,6 @@ module.exports = {
   realDays,
   realDates,
 };
-
-// fix app.js
 
 // express 사용하기
 const app = express();
@@ -39,16 +38,18 @@ app.use(session({
 
 // 테스트용
 app.get('/', (req, res) => {
-    // 세션에서 학번 가져오기
-    const showId = req.session.studentId;
-  
-    if (showId) {
-      // 로그인 되어 있으면 학번 출력
-      res.send(`환영합니다! 학번: ${showId}`);
+  try {
+    const showToken = req.session.user.token;
+
+    if (showToken) {
+      res.send(showToken);
     } else {
-      // 로그인 안 되어 있으면 상태 메시지 출력
-      res.status(200).send('Status 200 OK');
+      console.log(`로그인이 안되어 있습니다!`);
+      res.status(200)
     }
+  } catch(err) {
+    console.error('Error : ', err);
+  }
 });
 
 // 요일과 날짜
@@ -57,26 +58,33 @@ app.get('/days', (req, res) => {
 });
 
 // 로그아웃
-app.get('/logout', (req, res) => {
-    // 세션에서 학번 가져오기
-    const showId = req.session.studentId;
+app.get('/logout', async (req, res) => {
+  try {
+    const showToken = req.session.user.token;
 
-    try {
-      // 세션 제거
-      req.session.destroy((err) => {
-        if (err) {
-          console.error('세션 제거 실패:', err);
-          res.status(500).json({ success: false, message: '세션 제거 실패' });
+    // session 제거
+    req.session.destroy(async (err) => {
+      if (err) {
+        console.error('세션 제거 실패', err);
+        res.status(500).json({ success: false, message: '세션 제거 실패' });
+      } else {
+        console.log('세션 제거 성공');
+        const destroyUser = await User.findOne({ where: { token: showToken } });
+
+        if (destroyUser) {
+          await destroyUser.destroy();
+          console.log('사용자 정보 삭제 성공!');
         } else {
-          console.log('로그아웃 되었습니다.');
-          // 로그아웃 후 리다이렉션할 페이지나 메시지 등을 여기에 추가
-          res.status(200).send('로그아웃 성공');
+          console.log('사용자 정보가 없습니다.');
         }
-      });
-    } catch (error) {
-      console.error('에러:', error.message);
-      res.status(500).json({ success: false, message: '서버 내부 오류' });
-    }
+
+        res.status(200).send('로그아웃 성공');
+      }
+    });
+  } catch(err) {
+    console.error('Error : ', err);
+    res.status(500).json({ success: false, message: '서버 내부 오류' });
+  }
 });
   
 // passport 사용하기 위해

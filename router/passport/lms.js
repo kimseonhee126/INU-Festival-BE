@@ -23,29 +23,29 @@ const apiUrl = 'https://api.inu-cafeteria.app/student/login';
 router.get('/me', async(req, res) => {
   // 
   try{
+    // 토큰 받기
     const token = req.headers['authorization'];
     console.log(`token 값으로 User 찾기 : ${token}`);
-
+    // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token } });
 
     if (!findUser) {
       return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
     }
-    
-    let id = '';
-    let name = '';
 
+    // 세션 넘겨주기 -> LMS
     if (findUser.provider === 'LMS') {
-      id = findUser.barcode;
-      name = findUser.studentId;
-
-      console.log('lms id, name : ', id, name);
-    } else if (findUser.provider === 'kakao') {
-      id = findUser.snsId;
-      name = findUser.nick;
+      req.session.user = {
+        id: findUser.barcode,
+        name: findUser.studentId,
+      };
+    // 세션 넘겨주기 -> kakao
+    } else {
+      req.session.user = {
+        id: findUser.snsId,
+        name: findUser.nick,
+      };
     }
-    res.status(200).json({ id, name });
-  
   } catch(err) {
     // 에러 출력
     console.error('에러: ', err.message);
@@ -64,15 +64,19 @@ router.post('/lms', async (req, res) => {
       // API 응답에서 필요한 정보 추출
       const { rememberMeToken, barcode } = response.data;
 
-      // response로 보낼 변수명 변경
-      const accessToken = rememberMeToken;
-
       // 이미 user가 존재한다면
       const existUser = await User.findOne({ where: { barcode } });
 
       if (existUser) {
-        console.log(`이미 있는 유저 : ${existUser.token}, ${existUser.studentId}`);
-        // 클라이언트로 보냄
+        const accessToken = existUser.token;
+
+        // 세션에 저장하기
+        req.session.user = {
+          studentId: existUser.studentId,
+          token: existUser.token,
+        };
+
+        // 클라이언트로 토큰 보내기
         return res.status(200).json({ accessToken });
       }
       else {
@@ -86,11 +90,10 @@ router.post('/lms', async (req, res) => {
         // 세션에 학번 저장
         req.session.studentId = studentId;
         req.session.token = rememberMeToken;
-      }
 
-      console.log(`새로운 유저 : ${accessToken}, ${studentId}`);    // 확인용
-      // 클라이언트로 보냄
-      return res.status(200).json({ accessToken });
+        console.log(`새로운 유저 : ${accessToken}, ${studentId}`);    // 확인용
+        return res.status(200).json({ accessToken });
+      }
     } catch (error) {
       // 토큰 발급 No
       console.error('에러:', error.message);
