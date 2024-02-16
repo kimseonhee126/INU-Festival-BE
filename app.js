@@ -78,7 +78,7 @@ app.get('/logout', async (req, res) => {
           console.log('사용자 정보가 없습니다.');
         }
 
-        res.status(200).send('로그아웃 성공');
+        res.status(200).json({ success: false, message: '세션 제거 성공' });
       }
     });
   } catch(err) {
