@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const morgan = require('morgan');
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
@@ -24,8 +23,8 @@ module.exports = {
 app.use('/img', express.static('public/img'));
 // Cors 미들웨어 사용
 app.use(cors());
-// Morgan 미들웨어 사용
-app.use(morgan('dev'));
+// // Morgan 미들웨어 사용
+// app.use(morgan('dev'));
 // 세션 관련 미들웨어 사용
 app.use(session({
     resave: false,
