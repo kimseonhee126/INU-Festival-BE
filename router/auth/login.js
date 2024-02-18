@@ -2,7 +2,10 @@ const express = require('express');
 const session = require('express-session');
 const router = express.Router();
 const axios = require('axios');
+const dotenv = require('dotenv');
 const User = require('../../models').User;
+// .env 파일 사용하기 위해
+dotenv.config();
 
 // JSON 미들웨어 사용
 router.use(express.json());
@@ -11,23 +14,23 @@ router.use(express.json());
 router.use(session({
   resave: false,
   saveUninitialized: false,
-  secret: process.env.COOKIE_SECRET,
+  secret: `${process.env.COOKIE_SECRET}`,
   cookie: {
       httpOnly: true,
       secure: false,
   },
 }));
 
-const apiUrl = 'https://api.inu-cafeteria.app/student/login';
-
 router.get('/me', async(req, res) => {
   // 
   try{
     // 토큰 받기
     const token = req.headers['authorization'];
-    console.log(`token 값으로 User 찾기 : ${token}`);
+    const tokenValue = token ? token.split(' ')[1] : null;
+    
+    console.log(`token 값으로 User 찾기 : ${tokenValue}`);
     // 해당 토큰을 가지고 있는 user 찾기
-    const findUser = await User.findOne({ where: { token } });
+    const findUser = await User.findOne({ where: { token: tokenValue } });
 
     let id;
     let name;
@@ -73,7 +76,7 @@ router.post('/lms', async (req, res) => {
       const { studentId, password } = req.body;
   
       // axios를 사용하여 로그인 API에 POST 요청 보내기
-      const response = await axios.post(apiUrl, { studentId, password });
+      const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
   
       // API 응답에서 필요한 정보 추출
       const { rememberMeToken, barcode } = response.data;
@@ -88,12 +91,14 @@ router.post('/lms', async (req, res) => {
         req.session.user = {
           studentId: existUser.studentId,
           token: existUser.token,
+          provider: existUser.provider,
         };
 
         // 클라이언트로 토큰 보내기
         return res.status(200).json({ accessToken });
       }
       else {
+        const accessToken = rememberMeToken;
         // Sequelize를 사용하여 User 테이블에 데이터 삽입
         const newUser = await User.create({
           token: rememberMeToken,
@@ -101,9 +106,12 @@ router.post('/lms', async (req, res) => {
           studentId: studentId,
         });
 
-        // 세션에 학번 저장
-        req.session.studentId = studentId;
-        req.session.token = rememberMeToken;
+        // 세션에 저장하기
+        req.session.user = {
+          studentId: newUser.studentId,
+          token: newUser.token,
+          provider: newUser.provider,
+        };
 
         console.log(`새로운 유저 : ${accessToken}, ${studentId}`);    // 확인용
         return res.status(200).json({ accessToken });
