@@ -39,6 +39,7 @@ app.use(session({
 /* ----------------------------- 라우터 분리 ------------------------------ */
 // const kakaoRouter = require('./router/auth/auth.js');
 const loginRouter = require('./router/auth/login.js');
+const logoutRouter = require('./router/auth/logout.js');
 const timetableRouter = require('./router/perform/perform.js');
 const boothRouter = require('./router/booth/booth.js');
 const noticeRouter = require('./router/notice/notice.js');
@@ -47,7 +48,8 @@ const onelineRouter = require('./router/oneline/oneline.js');
 const adminBoothRouter = require('./router/admin/booth.js');
 
 // app.use('/auth', kakaoRouter);                   // 카카오 로그인
-app.use('/login', loginRouter);                   // lms 로그인
+app.use('/user', loginRouter);                   // lms 로그인
+app.use('/logout', logoutRouter);                 // 로그아웃
 app.use('/timetable', timetableRouter);          // timetable 분리
 app.use('/booth', boothRouter);                 // booth 분리
 app.use('/notice', noticeRouter);               // notice 분리

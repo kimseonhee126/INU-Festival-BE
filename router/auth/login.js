@@ -123,6 +123,36 @@ router.post('/lms', async (req, res) => {
     }
 });
 
+router.get('/logout', async (req, res) => {
+  try {
+    const token = req.headers['authorization'];
+    const tokenValue = token ? token.split(' ')[1] : null;
+
+    // session 제거
+    req.session.destroy(async (err) => {
+      if (err) {
+        console.error('세션 제거 실패', err);
+        res.status(500).json({ success: false, message: '세션 제거 실패' });
+      } else {
+        console.log('세션 제거 성공');
+        const destroyUser = await User.findOne({ where: { token: tokenValue } });
+
+        if (destroyUser) {
+          await destroyUser.destroy();
+          console.log('사용자 정보 삭제 성공!');
+        } else {
+          console.log('사용자 정보가 없습니다.');
+        }
+
+        return res.status(200).json({ success: true, message: '로그아웃 성공' });
+      }
+    });
+  } catch(err) {
+    console.error('Error : ', err);
+    res.status(500).json({ success: false, message: '서버 내부 오류' });
+  }
+});
+
 // axios.post(apiUrl, requestData)
 //   .then(response => {
 //     // API 응답에서 rememberMeToken과 barcode를 추출
