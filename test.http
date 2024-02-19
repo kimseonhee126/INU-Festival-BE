@@ -6,7 +6,15 @@ GET http://localhost:4000/timetable
 
 # GET 요청: 메인 페이지 - 부스 랭킹 Top 5
 ###
-GET http://localhost:4000/ranking
+GET http://localhost:4000/booth/ranking
+
+# GET 요청: - 부스 전체
+###
+GET http://localhost:4000/booth/1
+
+# GET 요청: - 부스 하나
+###
+GET http://localhost:4000/booth/all
 
 # GET 요청: 메인 페이지 - 한 줄 외치기
 ###
@@ -16,13 +24,19 @@ GET http://localhost:4000/shout
 ###
 GET http://localhost:4000/keyword
 
-# GET 요청: 유저 목록
-###
-GET http://localhost:4000/user
-
 # GET 요청: 공지 목록
 ###
-GET http://localhost:4000/notices
+GET http://localhost:4000/notice
+
+# GET 요청: 부스 댓글 목록
+###
+GET http://localhost:4000/booth/comment/1
+
+# GET 요청: 부스 필터 카테고리 목록
+###
+GET http://localhost:4000/booth/category
+
+###
 
 # POST 요청: 관리자 부스 추가
 ###
@@ -30,14 +44,43 @@ POST http://localhost:4000/admin/booth
 Content-Type: application/json
 
 {
-    "id": 13,
     "name": "test1",
     "category": "비주점",
     "department": "희희낙락",
     "description": "test1",
-    "liked": 10,
-    "img": "temp.png"
+    "liked": 0
 }
+
+# POST 요청: 부스 댓글 추가
+###
+POST http://localhost:4000/booth/comment/1
+Content-Type: application/json
+
+{
+    "content": "test1",
+    "boothId": 1,
+    "userId": 1
+}
+
+# PUT 요청: 좋아요 추가
+###
+PUT http://localhost:4000/booth/liked/1
+Content-Type: application/json
+
+{
+    "likeCount": 22
+}
+
+# POST 요청: 로그인
+###
+POST http://localhost:4000/login/lms
+Content-Type: application/json
+
+{
+    "studentId": "201901284",
+    "password": "rootroot1!"    
+}
+
 
 # PUT 요청 : 관리자 부스 수정
 ###
