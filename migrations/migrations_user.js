@@ -13,6 +13,9 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
+      tokenExpireTime: {
+        type: Sequelize.STRING(15),
+      },
       rank: {
         type: Sequelize.INTEGER,
         defaultValue: 1,

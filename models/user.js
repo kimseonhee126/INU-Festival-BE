@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    tokenExpireTime: {
+      type: DataTypes.STRING(15),
+    },
     rank: {
       type: DataTypes.INTEGER,
       defaultValue: 1,
