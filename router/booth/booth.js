@@ -32,7 +32,7 @@ router.get('/category', async (req, res) => {
 router.get('/ranking', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'location','liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description','liked'],
             order: [['liked', 'DESC']],
             limit: 5,
         });
@@ -42,7 +42,7 @@ router.get('/ranking', async (req, res) => {
 
             const myBoothDays = await BoothDay.findAll({
                 where: { boothId: boothId },
-                attributes: ['id', 'day', 'time'],
+                attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
             });
 
             const myBoothImgs = await BoothImg.findAll({
@@ -76,7 +76,7 @@ router.get('/ranking', async (req, res) => {
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'location','description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
@@ -84,7 +84,7 @@ router.get('/all', async (req, res) => {
 
             const myBoothDays = await BoothDay.findAll({
                 where: { boothId: boothId },
-                attributes: ['id', 'day', 'time'],
+                attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
             });
 
             const myBoothImgs = await BoothImg.findAll({
@@ -119,7 +119,7 @@ router.get('/:id', async (req, res) => {
         const boothId = req.params.id; 
         const booth = await Booth.findOne({
             where: { id: boothId }, 
-            attributes: ['id', 'name', 'category', 'department', 'location','description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
         });
 
         if (!booth) {
@@ -128,7 +128,7 @@ router.get('/:id', async (req, res) => {
 
         const myBoothDays = await BoothDay.findAll({
             where: { boothId: boothId },
-            attributes: ['id', 'day', 'time'],
+            attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
         });
 
         const myBoothImgs = await BoothImg.findAll({
