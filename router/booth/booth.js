@@ -186,19 +186,17 @@ router.get('/comment/:id', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId', 'snsId'], 
+                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
             }],
         });
 
         const boothComments = myBoothComments.map(comment => {
-            const studentId = comment.User.studentId ? String(comment.User.studentId) : undefined;
-            const snsId = !studentId ? String(comment.User.snsId) : undefined;
+            // 사용자의 studentId가 있으면 그 값을 userId로 사용, 없으면 snsId를 userId로 사용
+            const userId = comment.User.studentId ? String(comment.User.studentId) : String(comment.User.snsId);
 
             return {
-                ...(studentId && { studentId }), // studentId가 있으면 이 필드를 추가
-                ...(snsId && { snsId }), // studentId가 없고 snsId가 있으면 이 필드를 추가
+                userId, // 새로운 userId 정의
                 content: comment.content,
-                userId: String(comment.userId),
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                 updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             };
@@ -210,6 +208,7 @@ router.get('/comment/:id', async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 });
+
 
 
 
@@ -237,15 +236,14 @@ router.put('/liked/:id', async (req, res) => {
 // 부스 댓글 추가하기
 router.post('/comment/:id', async (req, res) => {
     try {
-        /*------------------------------------------------------ */
         // 편집 권한 있는 user인지 확인하기 위해 session 검색
-        if (!req.session.studentId) {
+        if (!req.session.user) {
             return res.status(400).send({ message: '로그인 먼저 하세요!' });
         }
-        const sessionId = req.session.studentId;
+        const sessionId = req.session.user.studentId;
         const user = await User.findOne({ where: { studentId: sessionId } });
         const userRank = user.rank;
-
+        
         if (userRank != 1) {
             try {
                 const boothId = req.params.id;
@@ -257,11 +255,17 @@ router.post('/comment/:id', async (req, res) => {
         
                 const newComment = req.body;
         
-                const comment = Comment.build(newComment);
-                await comment.save();
-                // 확인용 출력
-                console.log(`newComment : ${newComment.content}\n`);
-                res.send(`${newComment.content}.`);
+                const comment = await Comment.create(newComment); // Comment 생성 및 저장
+                
+                // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
+                const formattedResponse = {
+                    ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
+                    userId: req.session.user.studentId,
+                    createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+                    updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+                };
+                
+                res.send(formattedResponse);
             }
             catch(err) {
                 console.error('ERROR: ', err);
@@ -269,7 +273,7 @@ router.post('/comment/:id', async (req, res) => {
             };
         }
         else {
-            // 편집 권한이 없으면 메시지 뜨게 하기!!
+            // 편집 권한이 없으면 메시지 뜨게 하기
             console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
             res.send(`${sessionId}는 편집할 권한이 없습니다.`);
         }
@@ -278,6 +282,7 @@ router.post('/comment/:id', async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 });
+
 
 
 

@@ -57,9 +57,9 @@ POST http://localhost:4000/booth/comment/1
 Content-Type: application/json
 
 {
-    "content": "test1",
+    "content": "새로운댓글1",
     "boothId": 1,
-    "userId": 1
+    "userId": 10
 }
 
 # PUT 요청: 좋아요 추가
@@ -73,7 +73,7 @@ Content-Type: application/json
 
 # POST 요청: 로그인
 ###
-POST http://localhost:4000/login/lms
+POST http://localhost:4000/user/lms
 Content-Type: application/json
 
 {
