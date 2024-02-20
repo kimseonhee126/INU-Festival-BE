@@ -72,55 +72,42 @@ router.get('/me', async(req, res) => {
 
 // request 올라가라..!!
 router.post('/lms', async (req, res) => {
-    try {
-      const { studentId, password } = req.body;
-  
-      // axios를 사용하여 로그인 API에 POST 요청 보내기
+  try {
+    const { studentId, password } = req.body;
+    const token = req.headers['authorization'];
+    const tokenValue = token ? token.split(' ')[1] : null;
+
+    // 기존에 등록된 사용자 찾기
+    const existUser = await User.findOne({ where: { token: tokenValue } });
+    if (!existUser) {
+      // LMS API에 로그인 요청 보내기
       const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
-  
-      // API 응답에서 필요한 정보 추출
-      const { rememberMeToken, barcode } = response.data;
+      
+      // API로부터 받은 토큰을 사용해 새 사용자 생성
+      const accessToken = response.data.rememberMeToken; 
+      await User.create({
+        token: accessToken,
+        studentId: studentId,
+        provider: 'LMS',
+      });
 
-      // 이미 user가 존재한다면
-      const existUser = await User.findOne({ where: { barcode } });
-
-      if (existUser) {
-        const accessToken = existUser.token;
-
-        // 세션에 저장하기
-        req.session.user = {
-          studentId: existUser.studentId,
-          token: existUser.token,
-          provider: existUser.provider,
-        };
-
-        // 클라이언트로 토큰 보내기
-        return res.status(200).json({ accessToken });
-      }
-      else {
-        const accessToken = rememberMeToken;
-        // Sequelize를 사용하여 User 테이블에 데이터 삽입
-        const newUser = await User.create({
-          token: rememberMeToken,
-          barcode: barcode,
-          studentId: studentId,
-        });
-
-        // 세션에 저장하기
-        req.session.user = {
-          studentId: newUser.studentId,
-          token: newUser.token,
-          provider: newUser.provider,
-        };
-
-        console.log(`새로운 유저 : ${accessToken}, ${studentId}`);    // 확인용
-        return res.status(200).json({ accessToken });
-      }
-    } catch (error) {
-      // 토큰 발급 No
-      console.error('에러:', error.message);
-      res.status(403).json({ success: false, message: '서버 내부 오류!! 토큰 없음' });
+      // 새로 받은 토큰으로 응답
+      return res.status(200).json({ accessToken });
+    } else {
+      // 이미 존재하는 사용자의 경우 기존 토큰으로 응답
+      return res.status(200).json({ token: tokenValue });
     }
+  } catch (error) {
+    console.error('에러:', error.message);
+    // API 요청 실패 또는 다른 에러에 대한 처리
+    if (error.response) {
+      // API로부터의 응답 에러 처리
+      res.status(error.response.status).json({ success: false, message: error.response.data.message || '외부 API 요청 에러' });
+    } else {
+      // 요청을 보내는 중 문제가 발생한 경우
+      res.status(500).json({ success: false, message: '서버 내부 오류' });
+    }
+  }
 });
 
 router.get('/logout', async (req, res) => {
@@ -128,30 +115,28 @@ router.get('/logout', async (req, res) => {
     const token = req.headers['authorization'];
     const tokenValue = token ? token.split(' ')[1] : null;
 
-    // session 제거
-    req.session.destroy(async (err) => {
-      if (err) {
-        console.error('세션 제거 실패', err);
-        res.status(500).json({ success: false, message: '세션 제거 실패' });
-      } else {
-        console.log('세션 제거 성공');
-        const destroyUser = await User.findOne({ where: { token: tokenValue } });
+    if (!tokenValue) {
+      return res.status(400).json({ success: false, message: '로그아웃 요청이 올바르지 않습니다.' });
+    }
 
-        if (destroyUser) {
-          await destroyUser.destroy();
-          console.log('사용자 정보 삭제 성공!');
-        } else {
-          console.log('사용자 정보가 없습니다.');
-        }
+    // 먼저 해당 토큰을 가진 사용자를 찾습니다.
+    const user = await User.findOne({ where: { token: tokenValue } });
 
-        return res.status(200).json({ success: true, message: '로그아웃 성공' });
-      }
-    });
-  } catch(err) {
+    if (!user) {
+      return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // 사용자를 찾았다면, 토큰을 초기화합니다.
+    await User.update({ token: "" }, { where: { id: user.id } });
+
+    // 성공적으로 로그아웃 처리가 완료되었음을 클라이언트에 알립니다.
+    return res.status(200).json({ success: true, message: '성공적으로 로그아웃 되었습니다.' });
+  } catch (err) {
     console.error('Error : ', err);
-    res.status(500).json({ success: false, message: '서버 내부 오류' });
+    res.status(500).json({ success: false, message: '로그아웃 처리 중 오류가 발생했습니다.' });
   }
 });
+
 
 // axios.post(apiUrl, requestData)
 //   .then(response => {

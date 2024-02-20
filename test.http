@@ -58,8 +58,8 @@ Content-Type: application/json
 
 {
     "content": "새로운댓글1",
-    "boothId": 1,
-    "userId": 10
+    "emoji": "happy",
+    "boothId": 1
 }
 
 # PUT 요청: 좋아요 추가
@@ -71,6 +71,8 @@ Content-Type: application/json
     "likeCount": 22
 }
 
+
+
 # POST 요청: 로그인
 ###
 POST http://localhost:4000/user/lms
@@ -80,6 +82,24 @@ Content-Type: application/json
     "studentId": "201901284",
     "password": "rootroot1!"    
 }
+
+# GET 요청: 부스 필터 카테고리 목록
+###
+GET http://localhost:4000/user/logout
+authorization: Bearer 1eed0056-accb-6ac0-f3fd-6db2104f0332
+
+
+# {
+#     "statusCode": 401,
+#     "error": "invalid_credentials",
+#     "message": "학번과 비밀번호를 확인해 주세요 😉"
+# }
+
+# {
+#     "rememberMeToken": "1eecfcfc-abcb-6a10-9e0b-6a59786c245c",
+#     "barcode": "1211407704"
+# }
+
 
 
 # PUT 요청 : 관리자 부스 수정

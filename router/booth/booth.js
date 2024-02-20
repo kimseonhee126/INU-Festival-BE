@@ -236,53 +236,36 @@ router.put('/liked/:id', async (req, res) => {
 // 부스 댓글 추가하기
 router.post('/comment/:id', async (req, res) => {
     try {
-        // 편집 권한 있는 user인지 확인하기 위해 session 검색
-        if (!req.session.user) {
+        if (!req.session.user) { // 로그인을 하지 않은 경우
             return res.status(400).send({ message: '로그인 먼저 하세요!' });
         }
-        const sessionId = req.session.user.studentId;
-        const user = await User.findOne({ where: { studentId: sessionId } });
-        const userRank = user.rank;
-        
-        if (userRank != 1) {
-            try {
-                const boothId = req.params.id;
-                const booth = await Booth.findOne({ where: { id: boothId } });
-        
-                if (!booth) {
-                    return res.status(404).send({ message: 'Booth not found' });
-                }
-        
-                const newComment = req.body;
-        
-                const comment = await Comment.create(newComment); // Comment 생성 및 저장
-                
-                // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
-                const formattedResponse = {
-                    ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
-                    userId: req.session.user.studentId,
-                    createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-                    updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-                };
-                
-                res.send(formattedResponse);
-            }
-            catch(err) {
-                console.error('ERROR: ', err);
-                res.status(500).send({ message: 'Server error' });
-            };
+        const boothId = req.params.id;
+        const booth = await Booth.findOne({ where: { id: boothId } });
+
+        if (!booth) {
+            return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
         }
-        else {
-            // 편집 권한이 없으면 메시지 뜨게 하기
-            console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
-            res.send(`${sessionId}는 편집할 권한이 없습니다.`);
-        }
+
+        const newComment = req.body;
+
+        const comment = await Comment.create(newComment); // Comment 생성 및 저장
+        
+        // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
+        const formattedResponse = {
+            ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
+            id: String(comment.id),
+            boothId: String(booth.id),
+            userId: req.session.user.studentId,
+            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        };
+        res.send(formattedResponse);
+
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' });
+        res.status(500).send({ message: '댓글 생성에 실패했습니다.' });
     }
 });
-
 
 
 

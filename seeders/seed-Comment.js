@@ -16,36 +16,43 @@ module.exports = {
       [
         {
           content: '좋아요!',
+          emoji: 'happy',
           boothId: boothRows[0].id,
           userId: userRows[0].id,
         },
         {
           content: '이 부스는 최고입니다.',
+          emoji: 'thrilling',
           boothId: boothRows[0].id,
           userId: userRows[1].id,
         },
         {
           content: '좋아요!',
+          emoji: 'funny',
           boothId: boothRows[1].id,
           userId: userRows[1].id,
         },
         {
           content: '이 부스는 최고입니다.',
+          emoji: 'excited',
           boothId: boothRows[1].id,
           userId: userRows[1].id,
         },
         {
           content: '좋아요!',
+          emoji: 'happy',
           boothId: boothRows[2].id,
           userId: userRows[2].id,
         },
         {
           content: '좋아요!',
+          emoji: 'thrilling',
           boothId: boothRows[3].id,
           userId: userRows[3].id,
         },
         {
           content: '좋아요!',
+          emoji: 'funny',
           boothId: boothRows[4].id,
           userId: userRows[4].id,
         },

@@ -55,7 +55,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('BoothDays', 'boothIdFk');
-    await queryInterface.removeConstraint('OneLines', 'snsIdFK');
+    await queryInterface.removeConstraint('OneLines', 'userIdFK');
     await queryInterface.removeConstraint('NoticeImgs', 'noticeIdFK');
     await queryInterface.removeConstraint('Comments', 'boothIdFk2');
     await queryInterface.removeConstraint('Comments', 'userIdFk2');
