@@ -18,9 +18,6 @@ module.exports = {
       department: {
         type: Sequelize.STRING
       },
-      location: {
-        type: Sequelize.STRING
-      },
       description: {
         type: Sequelize.STRING
       },

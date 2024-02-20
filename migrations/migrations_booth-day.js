@@ -15,6 +15,15 @@ module.exports = {
       time: {
         type: Sequelize.STRING
       },
+      location: {
+        type: Sequelize.STRING
+      },
+      x: {
+        type: Sequelize.STRING
+      },
+      y: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
