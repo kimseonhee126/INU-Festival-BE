@@ -79,22 +79,29 @@ router.post('/lms', async (req, res) => {
 
     // 기존에 등록된 사용자 찾기
     const existUser = await User.findOne({ where: { token: tokenValue } });
-    if (!existUser) {
-      // LMS API에 로그인 요청 보내기
-      const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
-      
-      // API로부터 받은 토큰을 사용해 새 사용자 생성
-      const accessToken = response.data.rememberMeToken; 
-      await User.create({
-        token: accessToken,
-        studentId: studentId,
-        provider: 'LMS',
-      });
+    const existUser2 = await User.findOne({ where: { studentId } });
+    if (!existUser) { // 해당 토큰을 가진 사용자가 없는 경우
+      if (!existUser2) { // 해당 토큰, 학번을 가진 사용자가 없는 경우
+        // LMS API에 로그인 요청 보내기
+        const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
+        
+        // API로부터 받은 토큰을 사용해 새 사용자 생성
+        const accessToken = response.data.rememberMeToken; 
+        await User.create({
+          token: accessToken,
+          studentId: studentId,
+          provider: 'LMS',
+        });
+        return res.status(200).json({ accessToken });
+      } else { // 해당 학번을 가진 사용자가 있는 경우 (토큰은 없는 경우) -> 로그아웃된 사용자
+        // 기존 사용자의 토큰을 업데이트
+        await User.update({ token: tokenValue }, { where: { studentId } });
+        return res.status(200).json({ token: tokenValue });
+      }
 
       // 새로 받은 토큰으로 응답
-      return res.status(200).json({ accessToken });
     } else {
-      // 이미 존재하는 사용자의 경우 기존 토큰으로 응답
+      // 이미 학번, 토큰 둘다 존재하는 사용자의 경우 기존 토큰으로 응답
       return res.status(200).json({ token: tokenValue });
     }
   } catch (error) {

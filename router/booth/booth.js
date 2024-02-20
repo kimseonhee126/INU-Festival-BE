@@ -236,19 +236,23 @@ router.put('/liked/:id', async (req, res) => {
 // 부스 댓글 추가하기
 router.post('/comment/:id', async (req, res) => {
     try {
-        if (!req.session.user) { // 로그인을 하지 않은 경우
-            return res.status(400).send({ message: '로그인 먼저 하세요!' });
+        const token = req.headers['authorization'];
+        const tokenValue = token ? token.split(' ')[1] : null;
+        const existUser = await User.findOne({ where: { token: tokenValue } });
+        if (!existUser) { // 로그인을 하지 않은 경우
+            return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
         }
         const boothId = req.params.id;
         const booth = await Booth.findOne({ where: { id: boothId } });
 
-        if (!booth) {
+        if (!booth) { // 부스가 존재하지 않는 경우
             return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
         }
-
-        const newComment = req.body;
-
-        const comment = await Comment.create(newComment); // Comment 생성 및 저장
+        
+        const comment = Comment.build(req.body);
+        // 필드별로 값을 할당
+        comment.userId = existUser.id;
+        await comment.save(); 
         
         // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
         const formattedResponse = {

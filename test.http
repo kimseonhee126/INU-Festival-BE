@@ -36,8 +36,6 @@ GET http://localhost:4000/booth/comment/1
 ###
 GET http://localhost:4000/booth/category
 
-###
-
 # POST 요청: 관리자 부스 추가
 ###
 POST http://localhost:4000/admin/booth
@@ -51,17 +49,6 @@ Content-Type: application/json
     "liked": 0
 }
 
-# POST 요청: 부스 댓글 추가
-###
-POST http://localhost:4000/booth/comment/1
-Content-Type: application/json
-
-{
-    "content": "새로운댓글1",
-    "emoji": "happy",
-    "boothId": 1
-}
-
 # PUT 요청: 좋아요 추가
 ###
 PUT http://localhost:4000/booth/liked/1
@@ -71,11 +58,22 @@ Content-Type: application/json
     "likeCount": 22
 }
 
+# POST 요청: 부스 댓글 추가
+###
+POST http://localhost:4000/booth/comment/1
+authorization: Bearer 1eed0068-e169-6590-c2bf-8f82fb5eaed1
+Content-Type: application/json
 
+{
+    "content": "새로운댓글1",
+    "emoji": "happy",
+    "boothId": 1
+}
 
 # POST 요청: 로그인
 ###
 POST http://localhost:4000/user/lms
+authorization: Bearer 1eed00e4-bd05-6c90-465e-bd688606f779
 Content-Type: application/json
 
 {
@@ -83,24 +81,15 @@ Content-Type: application/json
     "password": "rootroot1!"    
 }
 
-# GET 요청: 부스 필터 카테고리 목록
+# GET 요청: 로그인 정보 불러오기
+###
+GET http://localhost:4000/user/me
+authorization: Bearer 1eed00e4-bd05-6c90-465e-bd688606f779
+
+# GET 요청: 로그아웃
 ###
 GET http://localhost:4000/user/logout
-authorization: Bearer 1eed0056-accb-6ac0-f3fd-6db2104f0332
-
-
-# {
-#     "statusCode": 401,
-#     "error": "invalid_credentials",
-#     "message": "학번과 비밀번호를 확인해 주세요 😉"
-# }
-
-# {
-#     "rememberMeToken": "1eecfcfc-abcb-6a10-9e0b-6a59786c245c",
-#     "barcode": "1211407704"
-# }
-
-
+authorization: Bearer 1eed00e4-bd05-6c90-465e-bd688606f779
 
 # PUT 요청 : 관리자 부스 수정
 ###
