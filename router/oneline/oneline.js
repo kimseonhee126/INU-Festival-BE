@@ -1,34 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../models');
+const fs = require('fs')
 
 const { OneLine } = db;     // db.OneLine
 const { User } = db;        // db.User
 
 router.use(express.urlencoded({ extended: false }));
 
-/* 
-메인 페이지 - 한 줄 외치기
-    # 학번, 한 줄, 이모지
-*/
-router.get('/', async (req, res) => {
-    try {
-        const Onelines = await Promise.all((await OneLine.findAll({
-            attributes: ['id', 'content', 'emoji', 'userId'],
-        })).map(async (oneline) => ({
-            id: String(oneline.id),
-            content: oneline.content,
-            emoji: oneline.emoji,
-            snsId: String((await User.findOne(
-                { where: { id: oneline.userId } }
-                )).snsId),
-        })));
-
-        res.json({ shouts: Onelines });
-    } catch (error) {
-        console.error('ERROR:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+router.get("/", async (req, res) => {
+  fs.readFile("./static/index.html", function (err, data) {
+    if (err) {
+      res.send("에러");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(data);
+      res.end();
     }
+  });
 });
 
 module.exports = router;

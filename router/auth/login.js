@@ -101,7 +101,7 @@ router.post('/lms', async (req, res) => {
 
     } else {
       // 이미 학번, 토큰 둘다 존재하는 사용자의 경우 기존 토큰으로 응답
-      return res.status(200).json({ token: tokenValue });
+      return res.status(200).json({ accessToken: tokenValue });
     }
   } catch (error) {
     console.error('에러:', error.message);
