@@ -171,7 +171,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // 부스 하나 댓글 모두 조회하기
-router.get('/comment/:id', async (req, res) => {
+router.get('/:id/comment', async (req, res) => {
     try {
         const boothId = req.params.id;
         const booth = await Booth.findOne({
@@ -186,19 +186,17 @@ router.get('/comment/:id', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId', 'snsId'], 
+                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
             }],
         });
 
         const boothComments = myBoothComments.map(comment => {
-            const studentId = comment.User.studentId ? String(comment.User.studentId) : undefined;
-            const snsId = !studentId ? String(comment.User.snsId) : undefined;
+            // 사용자의 studentId가 있으면 그 값을 userId로 사용, 없으면 snsId를 userId로 사용
+            const userId = comment.User.studentId ? String(comment.User.studentId) : String(comment.User.snsId);
 
             return {
-                ...(studentId && { studentId }), // studentId가 있으면 이 필드를 추가
-                ...(snsId && { snsId }), // studentId가 없고 snsId가 있으면 이 필드를 추가
+                userId, // 새로운 userId 정의
                 content: comment.content,
-                userId: String(comment.userId),
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                 updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             };
@@ -211,11 +209,8 @@ router.get('/comment/:id', async (req, res) => {
     }
 });
 
-
-
-
 // 부스 좋아요 업데이트하기
-router.put('/liked/:id', async (req, res) => {
+router.put('/:id/liked', async (req, res) => {
     try {
         const boothId = req.params.id;
         const likeCount = req.body.likeCount;
@@ -235,50 +230,124 @@ router.put('/liked/:id', async (req, res) => {
 });
 
 // 부스 댓글 추가하기
-router.post('/comment/:id', async (req, res) => {
+router.post('/:id/comment', async (req, res) => {
     try {
-        /*------------------------------------------------------ */
-        // 편집 권한 있는 user인지 확인하기 위해 session 검색
-        if (!req.session.studentId) {
-            return res.status(400).send({ message: '로그인 먼저 하세요!' });
+        const token = req.headers['authorization'];
+        const tokenValue = token ? token.split(' ')[1] : null;
+        const existUser = await User.findOne({ where: { token: tokenValue } });
+        if (!existUser) { // 로그인을 하지 않은 경우
+            return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
         }
-        const sessionId = req.session.studentId;
-        const user = await User.findOne({ where: { studentId: sessionId } });
-        const userRank = user.rank;
+        const boothId = req.params.id;
+        const booth = await Booth.findOne({ where: { id: boothId } });
 
-        if (userRank != 1) {
-            try {
-                const boothId = req.params.id;
-                const booth = await Booth.findOne({ where: { id: boothId } });
-        
-                if (!booth) {
-                    return res.status(404).send({ message: 'Booth not found' });
-                }
-        
-                const newComment = req.body;
-        
-                const comment = Comment.build(newComment);
-                await comment.save();
-                // 확인용 출력
-                console.log(`newComment : ${newComment.content}\n`);
-                res.send(`${newComment.content}.`);
-            }
-            catch(err) {
-                console.error('ERROR: ', err);
-                res.status(500).send({ message: 'Server error' });
-            };
+        if (!booth) { // 부스가 존재하지 않는 경우
+            return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
         }
-        else {
-            // 편집 권한이 없으면 메시지 뜨게 하기!!
-            console.log(`${sessionId}는 편집할 권한이 없습니다.\n`);
-            res.send(`${sessionId}는 편집할 권한이 없습니다.`);
-        }
+
+        const comment = Comment.build(req.body);
+        // 필드별로 값을 할당
+        comment.userId = existUser.id;
+        await comment.save(); 
+
+        // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
+        const formattedResponse = {
+            ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
+            id: String(comment.id),
+            boothId: String(booth.id),
+            userId: existUser.studentId,
+            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        };
+        res.send(formattedResponse);
+
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' });
+        res.status(500).send({ message: '댓글 생성에 실패했습니다.' });
     }
 });
 
+//부스 댓글 수정하기
+router.put('/:bid/comment/:cid', async (req, res) => {
+    try {
+        const token = req.headers['authorization'];
+        const tokenValue = token ? token.split(' ')[1] : null;
+        const existUser = await User.findOne({ where: { token: tokenValue } });
+        if (!existUser) { // 로그인을 하지 않은 경우
+            return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
+        }
+        const boothId = req.params.bid;
+        const booth = await Booth.findOne({ where: { id: boothId } });
+
+        if (!booth) { // 부스가 존재하지 않는 경우
+            return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
+        }
+
+        const commentId = req.params.cid;
+        const comment = await Comment.findOne({ where: { id: commentId } });
+
+        if (!comment) { // 댓글이 존재하지 않는 경우
+            return res.status(404).send({ message: '해당 id를 가진 댓글이 없습니다.' });
+        }
+        
+        if (comment.userId !== existUser.id) { // 댓글 작성자가 아닌 경우
+            return res.status(403).send({ message: '댓글 작성자만 수정할 수 있습니다.' });
+        }
+
+        console.log(comment);
+
+        await comment.update(req.body);
+        console.log(comment);
+        const formattedResponse = {
+            id: String(comment.id),
+            content: comment.content,
+            emoji: comment.emoji,
+            boothId: String(booth.id),
+            userId: existUser.studentId,
+            createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        };
+        res.send(formattedResponse);
+    } catch (err) {
+        console.error('ERROR: ', err);
+        res.status(500).send({ message: '댓글 수정에 실패했습니다.' });
+    }
+});
+
+//부스 댓글 삭제하기
+router.delete('/:bid/comment/:cid', async (req, res) => {
+    try {
+        const token = req.headers['authorization'];
+        const tokenValue = token ? token.split(' ')[1] : null;
+        const existUser = await User.findOne({ where: { token: tokenValue } });
+        if (!existUser) { // 로그인을 하지 않은 경우
+            return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
+        }
+        const boothId = req.params.bid;
+        const booth = await Booth.findOne({ where: { id: boothId } });
+
+        if (!booth) { // 부스가 존재하지 않는 경우
+            return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
+        }
+
+        const commentId = req.params.cid;
+        const comment = await Comment.findOne({ where: { id: commentId } });
+
+        if (!comment) { // 댓글이 존재하지 않는 경우
+            return res.status(404).send({ message: '해당 id를 가진 댓글이 없습니다.' });
+        }
+        
+        if (comment.userId !== existUser.id) { // 댓글 작성자가 아닌 경우
+            return res.status(403).send({ message: '댓글 작성자만 삭제할 수 있습니다.' });
+        }
+
+        await comment.destroy();
+        res.send({ success: true, message: '댓글이 삭제되었습니다.' });
+    } catch (err) {
+        console.error('ERROR: ', err);
+        res.status(500).send({ message: '댓글 삭제에 실패했습니다.' });
+    }
+});
 
 
 
