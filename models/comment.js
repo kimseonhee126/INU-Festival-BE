@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     content: DataTypes.STRING,
+    emoji: DataTypes.STRING,
     boothId: {
       type: DataTypes.INTEGER,
       allowNull: false,

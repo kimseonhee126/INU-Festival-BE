@@ -12,6 +12,15 @@ module.exports = {
       content: {
         type: Sequelize.STRING
       },
+      emoji: {
+        type: Sequelize.STRING
+      },
+      boothId: {
+        type: Sequelize.INTEGER,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -22,12 +31,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       },
-      boothId: {
-        type: Sequelize.INTEGER,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-      }
     });
   },
   async down(queryInterface, Sequelize) {
