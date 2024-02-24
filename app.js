@@ -48,7 +48,7 @@ const onelineRouter = require('./router/oneline/oneline.js');
 const adminBoothRouter = require('./router/admin/booth.js');
 
 // app.use('/auth', kakaoRouter);                   // 카카오 로그인
-app.use('/user', loginRouter);                   // lms 로그인
+app.use('/user', loginRouter);                   // lms 로그인, 로그아웃
 app.use('/timetable', timetableRouter);          // timetable 분리
 app.use('/booth', boothRouter);                 // booth 분리
 app.use('/notice', noticeRouter);               // notice 분리
