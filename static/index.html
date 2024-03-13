@@ -41,43 +41,45 @@
     </div>
   </body>
   <script>
-    document
-      .getElementById("loginForm")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
 
-        var studentId = document.getElementById("studentId").value;
-        var password = document.getElementById("password").value;
+      var studentId = document.getElementById("studentId").value;
+      var password = document.getElementById("password").value;
+      const authToken = localStorage.getItem('authToken');
 
-        fetch("http://localhost:4000/user/lms", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 1eee1304-c2ab-6090-5ff4-cb9271313cf4",
-          },
-          body: JSON.stringify({
-            studentId: studentId,
-            password: password,
-          }),
+      fetch("http://localhost:4000/user/lms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          password: password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.accessToken) {
+            // 인증 토큰을 localStorage에 저장
+            localStorage.setItem('authToken', data.accessToken);
+
+            // 로그인 성공 시 메시지 입력창을 보여주고 로그인 폼을 숨김
+            document.getElementById("loginContainer").classList.add("hidden");
+            document
+              .getElementById("messageContainer")
+              .classList.remove("hidden");
+            document.getElementById("chat").classList.remove("hidden");
+            document
+              .querySelector(".logout")
+              .classList.remove("hidden");
+          } else {
+            // 로그인 실패 시 에러 메시지 표시
+            alert(data.message || "로그인 실패");
+          }
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.accessToken) {
-              // 로그인 성공 시 메시지 입력창을 보여주고 로그인 폼을 숨김
-              document.getElementById("loginContainer").classList.add("hidden");
-              document
-                .getElementById("messageContainer")
-                .classList.remove("hidden");
-              document.getElementById("chat").classList.remove("hidden");
-              document
-                .querySelector(".logout")
-                .classList.remove("hidden");
-            } else {
-              // 로그인 실패 시 에러 메시지 표시
-              alert(data.message || "로그인 실패");
-            }
-          })
-          .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error("Error:", error));
       });
     function send() {
       var message = document.getElementById("messageInput").value;
@@ -85,33 +87,33 @@
       // 메시지 전송 로직을 여기에 구현하세요.
     }
     function logout() {
-      console.log("logout");
       // 로그아웃 로직을 여기에 구현하세요.
+      const authToken = localStorage.getItem('authToken');
       fetch("http://localhost:4000/user/logout", {
         method: "GET",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 1eee1304-c2ab-6090-5ff4-cb9271313cf4",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
         },
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // 로그아웃 성공 시 돌아가기
-            document.getElementById("loginContainer").classList.remove("hidden");
-            document
-              .getElementById("messageContainer")
-              .classList.add("hidden");
-            document.getElementById("chat").classList.add("hidden");
-            document
-              .querySelector(".logout")
-              .classList.add("hidden");
-          } else {
-            // 로그인 실패 시 에러 메시지 표시
-            alert(data.message || "로그아웃 실패");
-          }
-        })
-        .catch((error) => console.error("Error:", error));
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // 로그아웃 성공 시 돌아가기
+          document.getElementById("loginContainer").classList.remove("hidden");
+          document
+            .getElementById("messageContainer")
+            .classList.add("hidden");
+          document.getElementById("chat").classList.add("hidden");
+          document
+            .querySelector(".logout")
+            .classList.add("hidden");
+        } else {
+          // 로그인 실패 시 에러 메시지 표시
+          alert(data.message || "로그아웃 실패");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
     }
   </script>
 </html>
