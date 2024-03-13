@@ -72,7 +72,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 1eed05c6-4377-69f0-5c35-6891ac906ab5'
+          'Authorization': 'Bearer 1eee12ab-2c56-6120-8093-bee53682f938'
       },
       body: JSON.stringify({
           studentId: studentId,
