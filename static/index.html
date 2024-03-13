@@ -53,7 +53,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer 1eed05c6-4377-69f0-5c35-6891ac906ab5",
+            Authorization: "Bearer 1eee1304-c2ab-6090-5ff4-cb9271313cf4",
           },
           body: JSON.stringify({
             studentId: studentId,
@@ -85,12 +85,33 @@
       // 메시지 전송 로직을 여기에 구현하세요.
     }
     function logout() {
+      console.log("logout");
       // 로그아웃 로직을 여기에 구현하세요.
-      fetch("http://localhost:4000/user/lms", {
+      fetch("http://localhost:4000/user/logout", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          Authorization
+            "Content-Type": "application/json",
+            Authorization: "Bearer 1eee1304-c2ab-6090-5ff4-cb9271313cf4",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // 로그아웃 성공 시 돌아가기
+            document.getElementById("loginContainer").classList.remove("hidden");
+            document
+              .getElementById("messageContainer")
+              .classList.add("hidden");
+            document.getElementById("chat").classList.add("hidden");
+            document
+              .querySelector(".logout")
+              .classList.add("hidden");
+          } else {
+            // 로그인 실패 시 에러 메시지 표시
+            alert(data.message || "로그아웃 실패");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
     }
   </script>
 </html>

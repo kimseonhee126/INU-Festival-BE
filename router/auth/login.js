@@ -72,48 +72,48 @@ router.get('/me', async(req, res) => {
 
 // request 올라가라..!!
 router.post('/lms', async (req, res) => {
-  try {
-    const { studentId, password } = req.body;
-    const token = req.headers['authorization'];
-    const tokenValue = token ? token.split(' ')[1] : null;
+    try {
+        const { studentId, password } = req.body;
+        // 토큰이 없을 수 있으므로..!! null 값일 수 있으므로..!!
+        const token = req.headers['authorization'];
+        const tokenValue = token ? token.split(' ')[1] : null;
 
-    // 기존에 등록된 사용자 찾기
-    const existUser = await User.findOne({ where: { token: tokenValue } });
-    const existUser2 = await User.findOne({ where: { studentId } });
-    if (!existUser) { // 해당 토큰을 가진 사용자가 없는 경우
-
-      // LMS API에 로그인 요청 보내기 -> 토큰 재발급 받기
-      const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
-      const accessToken = response.data.rememberMeToken; 
-
-      if (!existUser2) { // 해당 토큰, 학번을 가진 사용자가 없는 경우
-        // API로부터 받은 토큰을 사용해 새 사용자 생성
-        await User.create({
-          token: accessToken,
-          studentId: studentId,
-          provider: 'LMS',
-        });
-      } else { // 해당 학번을 가진 사용자가 있는 경우 (토큰은 없는 경우) -> 로그아웃된 사용자
-        // 해당 학번을 가진 사용자의 토큰을 업데이트
-        await User.update({ token: accessToken }, { where: { studentId } });
-      }
-      return res.status(200).json({ accessToken });
-
-    } else {
-      // 이미 학번, 토큰 둘다 존재하는 사용자의 경우 기존 토큰으로 응답
-      return res.status(200).json({ accessToken: tokenValue });
+        // token 값을 프론트로부터 받았다면! -> 기존에 등록된 사용자가 있다 그러나 토큰검사 필요함
+        const user = await User.findOne({ where: { token: tokenValue } });
+        if (user) {
+          res.status(200).json({ accessToken: tokenValue });
+        }
+        // 기존에 등록된 사용자가 있으면 -> 토큰값만 없는 경우(로그아웃 했다가 다시 로그인)
+        const existUser2 = await User.findOne({ where: { studentId } });
+        if (existUser2) {
+            const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
+            const accessToken = response.data.rememberMeToken;
+            await User.update({ token: accessToken }, { where: { studentId } });
+            return res.status(200).json({ accessToken });
+        } else {
+            const response = await axios.post(`${process.env.LMS_URL}`, { studentId, password });
+            const accessToken = response.data.rememberMeToken;
+            const barcode = response.data.barcode;
+            // 기존에 등록되지 않은 사용자라면 -> 로그인 한 적이 없는 경우
+            await User.create({
+                barcode: barcode,
+                token: accessToken,
+                studentId: studentId,
+                provider: 'LMS',
+            });
+            return res.status(200).json({ accessToken });
+        }
+    } catch(err) {
+        console.error('에러:', err.message);
+        // API 요청 실패 또는 다른 에러에 대한 처리
+        if (err.response) {
+            // API로부터의 응답 에러 처리
+            res.status(err.response.status).json({ success: false, message: err.response.data.message || '외부 API 요청 에러' });
+        } else {
+            // 요청을 보내는 중 문제가 발생한 경우
+            res.status(500).json({ success: false, message: '서버 내부 오류' });
+        }
     }
-  } catch (error) {
-    console.error('에러:', error.message);
-    // API 요청 실패 또는 다른 에러에 대한 처리
-    if (error.response) {
-      // API로부터의 응답 에러 처리
-      res.status(error.response.status).json({ success: false, message: error.response.data.message || '외부 API 요청 에러' });
-    } else {
-      // 요청을 보내는 중 문제가 발생한 경우
-      res.status(500).json({ success: false, message: '서버 내부 오류' });
-    }
-  }
 });
 
 router.get('/logout', async (req, res) => {
