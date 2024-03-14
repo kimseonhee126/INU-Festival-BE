@@ -10,10 +10,12 @@ socket.on('connect', function() {
 
 /* 서버로부터 데이터 받은 경우 */
 socket.on('update', function(data) {
-  var chat = document.getElementById('chat')
+  console.log(data)
+  console.log(`${data.emoji}:${data.studentId}: ${data.content}`)
+  const chat = document.getElementById('chat')
 
-  var message = document.createElement('div')
-  var node = document.createTextNode(`${data.emoji}:${data.studentId}: ${data.content}`)
+  const message = document.createElement('div')
+  const node = document.createTextNode(`${data.data.emoji}:${data.data.studentId}: ${data.data.content}`)
 
   message.classList.add('me')
   message.appendChild(node)
@@ -51,7 +53,7 @@ function send() {
       msg.appendChild(node)
       chat.appendChild(msg)
       // 서버로 message 이벤트 전달 + 데이터와 함께
-      socket.emit('message', {data: data})
+      socket.emit('message', {data})
     })
     .catch((error) => console.error("Error:", error));
 }
