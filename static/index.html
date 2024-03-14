@@ -14,6 +14,10 @@
   </head>
   <body>
     <div id="main">
+      <div id="chat" class="chat">
+        ## 채팅영역입니다. ##
+        <!-- 채팅 메시지 영역 -->
+      </div>
       <div id="loginContainer" class="login-container">
         <form id="loginForm">
           <input type="text" id="studentId" placeholder="Student ID" required />
@@ -26,9 +30,6 @@
           <button type="submit">Login</button>
         </form>
       </div>
-      <div id="chat" class="chat">
-        <!-- 채팅 메시지 영역 -->
-      </div>
       <div id="messageContainer" class="login-container hidden">
         <input type="text" id="test" placeholder="메시지를 입력해주세요.."/>
         <button onclick="send()">전송</button>
@@ -37,37 +38,38 @@
     </div>
   </body>
   <script>
-    const socket = io()
+    const authToken = localStorage.getItem('authToken');
 
     // 이전 채팅 메시지 불러오기
-    fetch('/messages')
+    fetch('shout/all_messages')
       .then(response => response.json())
-      // .then(messages => {
-      //   const chatContainer = document.getElementById('chat');
-      //   messages.forEach(message => {
-      //     const messageElement = document.createElement('div');
-      //     messageElement.textContent = `${message.userId}: ${message.content}`;
-      //     chatContainer.appendChild(messageElement);
-      //   });
-      // });
+      .then(messages => {
+        console.log(messages)
+        const chat = document.getElementById('chat');
+        messages.forEach(message => {
+          const msg = document.createElement('div');
+          var node = document.createTextNode(`${message.emoji}:${message.studentId}: ${message.content}`)
+          msg.classList.add('me')
+          msg.appendChild(node)
+          chat.appendChild(msg)
+        });
+      });
     
-    $('form').submit(function(e) {
-      e.preventDefault(); // 페이지 새로고침 방지
-      socket.emit('chat message', $('#input').val());
-      $('#input').val('');
-      return false;
-    });
+    // $('form').submit(function(e) {
+    //   e.preventDefault(); // 페이지 새로고침 방지
+    //   socket.emit('chat message', $('#input').val());
+    //   $('#input').val('');
+    //   return false;
+    // });
     
-    socket.on('chat message', function(msg) {
-      $('#messages').append($('<li>').text(msg.userId + ': ' + msg.content));
-    });
+    // socket.on('chat message', function(msg) {
+    //   $('#messages').append($('<li>').text(msg.userId + ': ' + msg.content));
+    // });
 
     document.getElementById("loginForm").addEventListener("submit", function (e) {
-      localStorage.setItem('authToken', '1234');
       e.preventDefault();
       var studentId = document.getElementById("studentId").value;
       var password = document.getElementById("password").value;
-      const authToken = localStorage.getItem('authToken');
 
       fetch("http://localhost:4000/user/lms", {
         method: "POST",
@@ -86,8 +88,6 @@
             // 인증 토큰을 localStorage에 저장
             localStorage.setItem('authToken', data.accessToken);
 
-            // 로그인 성공 시 
-
             //메시지 입력창을 보여주고 로그인 폼을 숨김
             document.getElementById("loginContainer").classList.add("hidden");
             document
@@ -103,10 +103,8 @@
           }
         })
         .catch((error) => console.error("Error:", error));
-      });
+    });
     function logout() {
-      // 로그아웃 로직을 여기에 구현하세요.
-      const authToken = localStorage.getItem('authToken');
       fetch("http://localhost:4000/user/logout", {
         method: "GET",
         headers: {
@@ -122,7 +120,6 @@
           document
             .getElementById("messageContainer")
             .classList.add("hidden");
-          document.getElementById("chat").classList.add("hidden");
           document
             .querySelector(".logout")
             .classList.add("hidden");
