@@ -85,7 +85,7 @@ io.sockets.on('connection', function(socket) {
 
   /* 접속 종료 */
   socket.on('disconnect', function() {
-    // socket.broadcast.emit('update', { type: 'disconnect', message: '사용자가 나갔습니다.' });
+    // console.log('user disconnected');
   })
 })
 

@@ -1,21 +1,11 @@
-//여기는 클라이언트 쪽 코드입니다.
 const socket = io()
-
-/* 접속 되었을 때 실행 */
-socket.on('connect', function() {
-
-  /* 서버에 새로운 유저가 왔다고 알림 */
-  // socket.emit('newUser', name)
-})
 
 /* 서버로부터 데이터 받은 경우 */
 socket.on('update', function(data) {
-  console.log(data)
-  console.log(`${data.emoji}:${data.studentId}: ${data.content}`)
+  // 받은 데이터(메세지)를 화면에 표시
   const chat = document.getElementById('chat')
-
   const message = document.createElement('div')
-  const node = document.createTextNode(`${data.data.emoji}:${data.data.studentId}: ${data.data.content}`)
+  const node = document.createTextNode(`${data.emoji}:${data.studentId}: ${data.content}`)
 
   message.classList.add('me')
   message.appendChild(node)
@@ -26,7 +16,6 @@ socket.on('update', function(data) {
 function send() {
   // 입력되어있는 데이터 가져오기
   var content = document.getElementById('test').value
-  console.log(`메세지는 : ${content}`)
   
   // 가져왔으니 데이터 빈칸으로 변경
   document.getElementById('test').value = ''
@@ -44,7 +33,6 @@ function send() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Success:", data);
       // 내가 전송할 메시지 클라이언트에게 표시
       let chat = document.getElementById('chat')
       let msg = document.createElement('div')
@@ -53,7 +41,7 @@ function send() {
       msg.appendChild(node)
       chat.appendChild(msg)
       // 서버로 message 이벤트 전달 + 데이터와 함께
-      socket.emit('message', {data})
+      socket.emit('message', data)
     })
     .catch((error) => console.error("Error:", error));
 }
