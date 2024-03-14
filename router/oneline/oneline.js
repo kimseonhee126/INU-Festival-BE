@@ -3,9 +3,6 @@ const router = express.Router();
 const db = require('../../models');
 const fs = require('fs')
 
-const { OneLine } = db;     // db.OneLine
-const { User } = db;        // db.User
-
 router.use(express.urlencoded({ extended: false }));
 
 router.get("/", async (req, res) => {

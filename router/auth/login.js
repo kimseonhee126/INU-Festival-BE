@@ -147,7 +147,7 @@ router.get("/logout", async (req, res) => {
     }
 
     // 사용자를 찾았다면, 토큰을 초기화합니다.
-    await User.update({ token: "" }, { where: { id: user.id } });
+    // await User.update({ token: "" }, { where: { id: user.id } });
 
     // 성공적으로 로그아웃 처리가 완료되었음을 클라이언트에 알립니다.
     return res

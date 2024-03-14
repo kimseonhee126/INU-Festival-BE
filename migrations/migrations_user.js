@@ -23,9 +23,6 @@ module.exports = {
       nick: {
         type: Sequelize.STRING(15),
       },
-      snsId: {
-        type: Sequelize.STRING(30),
-      },
       provider: {
         type: Sequelize.STRING(10),
       },

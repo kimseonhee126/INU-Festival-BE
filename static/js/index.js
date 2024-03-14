@@ -1,18 +1,13 @@
-var socket = io()
+//여기는 클라이언트 쪽 코드입니다.
 
-/* 접속 되었을 때 실행 */
-socket.on('connect', function() {
-  /* 이름을 입력받고 */
-  // var name = prompt('반갑습니다!', '')
+// /* 접속 되었을 때 실행 */
+// socket.on('connect', function() {
 
-  // /* 이름이 빈칸인 경우 */
-  // if(!name) {
-  //   name = '익명'
-  // }
+//   socket.name = studentId
 
-  // /* 서버에 새로운 유저가 왔다고 알림 */
-  // socket.emit('newUser', name)
-})
+//   /* 서버에 새로운 유저가 왔다고 알림 */
+//   socket.emit('newUser', name)
+// })
 
 /* 서버로부터 데이터 받은 경우 */
 socket.on('update', function(data) {
@@ -61,30 +56,3 @@ function send() {
   // 서버로 message 이벤트 전달 + 데이터와 함께
   socket.emit('message', {type: 'message', message: message})
 }
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-  e.preventDefault(); // 폼 전송 기본 동작 방지
-
-  const studentId = document.getElementById('studentId').value;
-  const password = document.getElementById('password').value;
-
-  fetch('http://localhost:4000/user/lms', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer 1eee12ab-2c56-6120-8093-bee53682f938'
-      },
-      body: JSON.stringify({
-          studentId: studentId,
-          password: password
-      })
-  })
-  .then(response => response.json())
-  .then(data => {
-      console.log('Success:', data);
-      // 로그인 성공 처리 로직 (예: 리다이렉션)
-  })
-  .catch((error) => {
-      console.error('Error:', error);
-  });
-});
