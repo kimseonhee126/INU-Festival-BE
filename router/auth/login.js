@@ -10,21 +10,8 @@ dotenv.config();
 // JSON 미들웨어 사용
 router.use(express.json());
 
-// 세션 미들웨어 사용
-router.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: `${process.env.COOKIE_SECRET}`,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-  })
-);
-
+// 자동 로그인기능(토큰으로 학번 가져오기)
 router.get("/me", async (req, res) => {
-  //
   try {
     // 토큰 받기
     const token = req.headers["authorization"];
@@ -81,26 +68,26 @@ router.post("/lms", async (req, res) => {
     
     const existUser1 = await User.findOne({ where: { token: tokenValue } });
     const existUser2 = await User.findOne({ where: { studentId } });
-    if (existUser1 && existUser2) {
-      return res.status(200).json({ accessToken: tokenValue });
+    if (existUser1 && existUser2) { // 토큰도 있고 기존에 등록된 사용자도 있으면
+      return res.status(200).json({ accessToken: tokenValue }); // 기존 토큰값을 그대로 반환
     }
-    // 기존에 등록된 사용자가 있으면 -> 토큰값만 없는 경우(로그아웃 했다가 다시 로그인)
+    // 기존에 등록된 사용자가 있으면 -> 토큰값만 없는 경우(로그아웃 상태에서 다시 로그인을 시도한 경우) -> 토큰 재발급
     if (existUser2) {
       const response = await axios.post(`${process.env.LMS_URL}`, {
         studentId,
         password,
       });
       const accessToken = response.data.rememberMeToken;
-      await User.update({ token: accessToken }, { where: { studentId } });
+      await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
       return res.status(200).json({ accessToken });
-    } else {
+    } else { // 최초 로그인 시도한 경우
       const response = await axios.post(`${process.env.LMS_URL}`, {
         studentId,
         password,
       });
       const accessToken = response.data.rememberMeToken;
       const barcode = response.data.barcode;
-      // 기존에 등록되지 않은 사용자라면 -> 로그인 한 적이 없는 경우
+      // 유저 생성
       await User.create({
         barcode: barcode,
         token: accessToken,
@@ -147,7 +134,7 @@ router.get("/logout", async (req, res) => {
     }
 
     // 사용자를 찾았다면, 토큰을 초기화합니다.
-    // await User.update({ token: "" }, { where: { id: user.id } });
+    await User.update({ token: "" }, { where: { id: user.id } });
 
     // 성공적으로 로그아웃 처리가 완료되었음을 클라이언트에 알립니다.
     return res
@@ -161,33 +148,5 @@ router.get("/logout", async (req, res) => {
     });
   }
 });
-
-// axios.post(apiUrl, requestData)
-//   .then(response => {
-//     // API 응답에서 rememberMeToken과 barcode를 추출
-//     const { rememberMeToken, barcode } = response.data;
-
-//     // 콘솔에 출력
-//     console.log('학번 : ', requestData.studentId);
-//     console.log('rememberMeToken:', rememberMeToken);
-//     console.log('barcode:', barcode);
-
-//     try {
-//         // User 테이블에 데이터 삽입
-//         const newUser = User.create({
-//           token: rememberMeToken,
-//           barcode: barcode,
-//           studentId: requestData.studentId,
-//         });
-
-//         console.log(`학번 : ${requestData.studentId} 데이터가 저장되었습니다.`);
-//       } catch (error) {
-//         console.error('Error : ', error);
-//       }
-//   })
-//   .catch(error => {
-//     console.error('Error:', error.message);
-//   }
-// );
 
 module.exports = router;
