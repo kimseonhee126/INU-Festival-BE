@@ -5,6 +5,12 @@ const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const User = require('./models').User;
+/* 설치한 socket.io 모듈 불러오기 */
+const socket = require('socket.io')
+const http = require('http')
+
+const server = http.createServer(app); // Express 앱을 http 서버에 래핑
+const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
 // .env 파일 사용하기 위해
 dotenv.config();
 
@@ -23,13 +29,6 @@ module.exports = {
 app.use('/img', express.static('public/img'));
 app.use('/css', express.static('./static/css'))
 app.use('/js', express.static('./static/js'))
-
-/* 설치한 socket.io 모듈 불러오기 */
-const socket = require('socket.io')
-const http = require('http')
-
-const server = http.createServer(app); // Express 앱을 http 서버에 래핑
-const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
 
 // Cors 미들웨어 사용
 app.use(cors());
