@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     nick: {
       type: DataTypes.STRING(15),
     },
-    snsId: {
-      type: DataTypes.STRING(30),
-    },
+    // snsId: {
+    //   type: DataTypes.STRING(30),
+    // },
     provider: {
       type: DataTypes.STRING(10),
       defaultValue: 'LMS',

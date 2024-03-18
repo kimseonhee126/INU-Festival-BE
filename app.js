@@ -1,9 +1,9 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
-const dotenv = require('dotenv');
 const User = require('./models').User;
 // .env 파일 사용하기 위해
 dotenv.config();
@@ -21,6 +21,16 @@ module.exports = {
 
 // 미들웨어 사용 -> Public 폴더를 정적 파일로 제공
 app.use('/img', express.static('public/img'));
+app.use('/css', express.static('./static/css'))
+app.use('/js', express.static('./static/js'))
+
+/* 설치한 socket.io 모듈 불러오기 */
+const socket = require('socket.io')
+const http = require('http')
+
+const server = http.createServer(app); // Express 앱을 http 서버에 래핑
+const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
+
 // Cors 미들웨어 사용
 app.use(cors());
 // // Morgan 미들웨어 사용
@@ -66,12 +76,24 @@ app.get('/', async (req, res) => {
   }
 });
 
+io.sockets.on('connection', function(socket) {
+  /* 전송한 메시지 받기 */
+  socket.on('message', function(data) {
+    /* 보낸 사람을 제외한 나머지 유저에게 메시지 전송 */
+    socket.broadcast.emit('update', data);
+  })
+
+  /* 접속 종료 */
+  socket.on('disconnect', function() {
+    // console.log('user disconnected');
+  })
+})
+
 // 요일과 날짜
 app.get('/days', (req, res) => {
     res.send({ days: realDays, dates: realDates });
 });
 
-// Running the Server: 포트번호는 4000
-app.listen(process.env.PORT, (req, res) => {
-    console.log(`Server is running on ${process.env.PORT}`);
+server.listen(process.env.PORT, () => {
+  console.log(`Server is running on ${process.env.PORT}`);
 });
