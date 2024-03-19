@@ -26,7 +26,7 @@ router.get('/all_messages', async (req, res) => {
       emoji: oneline.emoji
     };
   }));
-  res.send(Onelines);
+  res.send({shouts: Onelines});
 });
 
 // 채팅 메시지 추가(DB에 저장 하고 보내기)
