@@ -33,18 +33,8 @@ const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
 
 // Cors 미들웨어 사용
 app.use(cors());
-// // Morgan 미들웨어 사용
+// Morgan 미들웨어 사용
 // app.use(morgan('dev'));
-// 세션 관련 미들웨어 사용
-app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    secret: `${process.env.COOKIE_SECRET}`,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-    },
-}));
 
 /* ----------------------------- 라우터 분리 ------------------------------ */
 // const kakaoRouter = require('./router/auth/auth.js');
