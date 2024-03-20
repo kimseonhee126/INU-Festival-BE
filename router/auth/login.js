@@ -15,6 +15,8 @@ router.get("/me", async (req, res) => {
   try {
     // 토큰 받기
     const token = req.headers["authorization"];
+
+    console.log(`token : ${token}`);
     const tokenValue = token ? token.split(" ")[1] : null;
 
     console.log(`token 값으로 User 찾기 : ${tokenValue}`);
@@ -40,12 +42,7 @@ router.get("/me", async (req, res) => {
       name = findUser.studentId;
       return res.json({ id, name });
     } else {
-      // 세션 넘겨주기 -> kakao
-      req.session.user = {
-        id: findUser.snsId,
-        name: findUser.nick,
-      };
-
+        
       // 프론트로 response 넘겨주기 -> kakao
       id = findUser.snsId;
       name = findUser.nick;
