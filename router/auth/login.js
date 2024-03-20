@@ -15,38 +15,18 @@ router.get("/me", async (req, res) => {
   try {
     // 토큰 받기
     const token = req.headers["authorization"];
-
-    console.log(`token : ${token}`);
     const tokenValue = token ? token.split(" ")[1] : null;
 
-    console.log(`token 값으로 User 찾기 : ${tokenValue}`);
     // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token: tokenValue } });
 
-    let id;
-    let name;
-
     if (!findUser) {
       return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
-    }
 
-    if (findUser.provider === "LMS") {
-      // 세션 넘겨주기 -> LMS
-      req.session.user = {
-        id: findUser.barcode,
-        name: findUser.studentId,
-      };
-
-      // 프론트로 response 넘겨주기 -> LMS
-      id = findUser.barcode;
-      name = findUser.studentId;
-      return res.json({ id, name });
     } else {
-        
-      // 프론트로 response 넘겨주기 -> kakao
-      id = findUser.snsId;
-      name = findUser.nick;
-      return res.json({ id, name });
+      // 토큰을 가진 사용자가 있다면, 해당 사용자의 학번을 반환합니다.
+      return res.status(200).json({ id: findUser.studentId, name: findUser.studentId});
+      // return res.status(200).json({ studentId: findUser.studentId }); // 이렇게 나중에 바꾸면 좋을듯
     }
   } catch (err) {
     // 에러 출력
