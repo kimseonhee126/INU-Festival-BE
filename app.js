@@ -6,16 +6,16 @@ const sequelize = require('sequelize');
 const db = require('./models');
 const User = require('./models').User;
 /* 설치한 socket.io 모듈 불러오기 */
-const socket = require('socket.io')
-const http = require('http')
+const socket = require('socket.io');
+const http = require('http');
+
+// express 사용하기
+const app = express();
 
 const server = http.createServer(app); // Express 앱을 http 서버에 래핑
 const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
 // .env 파일 사용하기 위해
 dotenv.config();
-
-// express 사용하기
-const app = express();
 
 const realDays =['월', '화', '수'];
 const realDates = ['2024-05-01', '2024-05-02', '2024-05-03'];
