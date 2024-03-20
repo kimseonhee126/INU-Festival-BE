@@ -23,6 +23,9 @@ router.get("/me", async (req, res) => {
     // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token: tokenValue } });
 
+    console.log(`findUser : ${findUser}`);
+    console.log(`findUser.studentId : ${findUser.studentId}`);
+
     let id;
     let name;
 
@@ -42,7 +45,7 @@ router.get("/me", async (req, res) => {
       name = findUser.studentId;
       return res.json({ id, name });
     } else {
-        
+
       // 프론트로 response 넘겨주기 -> kakao
       id = findUser.snsId;
       name = findUser.nick;
