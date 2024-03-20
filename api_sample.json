@@ -1,145 +1,76 @@
 {
-  "booths": [
+  "shouts": [
     {
-      "id": 1,
-      "name": "총학부스",
-      "category": "비주점",
-      "department": "총학생회",
-      "description": "총학생회 부스입니다.",
-      "liked": 0,
-      "boothDays": [
-        { "id": 1, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 2, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "1",
+      "content": "오늘도 축제 화이팅!!",
+      "emoji": "happy",
+      "snsId": "12341234"
     },
     {
-      "id": 2,
-      "name": "다크2호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 555,
-      "boothDays": [{ "id": 3, "day": "수", "time": "14:00 ~ 17:00" }]
+      "id": "2",
+      "content": "최근에 본 좋은 영화 있나여?",
+      "emoji": "happy",
+      "snsId": "12341234"
     },
     {
-      "id": 3,
-      "name": "다크3호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 354,
-      "boothDays": [
-        { "id": 4, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 5, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "3",
+      "content": "이런 정보를 공유해주셔서 감사합니다!",
+      "emoji": "excited",
+      "snsId": "12341234"
     },
     {
-      "id": 4,
-      "name": "다크4호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 777,
-      "boothDays": [
-        { "id": 6, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 7, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "4",
+      "content": "종강내놔...ㅡ.ㅡ",
+      "emoji": "funny",
+      "snsId": "12341234"
     },
     {
-      "id": 5,
-      "name": "다크5호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 2500,
-      "boothDays": [
-        { "id": 8, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 9, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "5",
+      "content": "축제 즐길 거리가 별로 없네 ㅜㅜ",
+      "emoji": "excited",
+      "snsId": "12341234"
     },
     {
-      "id": 6,
-      "name": "다크ege호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 2000,
-      "boothDays": [
-        { "id": 10, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 11, "day": "수", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "6",
+      "content": "퇴근길에 보니 기분이 좋네요",
+      "emoji": "happy",
+      "snsId": "12341234"
     },
     {
-      "id": 7,
-      "name": "다크iuit호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 25345,
-      "boothDays": [
-        { "id": 12, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 13, "day": "수", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "7",
+      "content": "피곤 그 자체",
+      "emoji": "funny",
+      "snsId": "12341234"
     },
     {
-      "id": 8,
-      "name": "다크uuuu호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 3543,
-      "boothDays": [
-        { "id": 14, "day": "화", "time": "13:00 ~ 17:00" },
-        { "id": 15, "day": "수", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "8",
+      "content": "인천대 축제가 이렇게 재밌었나?!",
+      "emoji": "excited",
+      "snsId": "12341234"
     },
     {
-      "id": 9,
-      "name": "다크yyyy호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 2345,
-      "boothDays": [
-        { "id": 16, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 17, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "9",
+      "content": "번개할 사람 구해요!",
+      "emoji": "happy",
+      "snsId": "12341234"
     },
     {
-      "id": 10,
-      "name": "다크asdfsd호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 452,
-      "boothDays": [
-        { "id": 18, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 19, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "10",
+      "content": "푸드트럭 대박임~",
+      "emoji": "thrilling",
+      "snsId": "12341234"
     },
     {
-      "id": 11,
-      "name": "다크sagdfssa호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 1000,
-      "boothDays": [
-        { "id": 20, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 21, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "11",
+      "content": "축제 같이 보실 분~~",
+      "emoji": "excited",
+      "snsId": "12341234"
     },
     {
-      "id": 12,
-      "name": "다크afsd호스",
-      "category": "비주점",
-      "department": "탁구부",
-      "description": "탁구 부스입니다.",
-      "liked": 1000,
-      "boothDays": [
-        { "id": 22, "day": "월", "time": "13:00 ~ 17:00" },
-        { "id": 23, "day": "화", "time": "14:00 ~ 17:00" }
-      ]
+      "id": "12",
+      "content": "오 이 기능 뭐냐?",
+      "emoji": "thrilling",
+      "snsId": "12341234"
     }
   ]
 }
