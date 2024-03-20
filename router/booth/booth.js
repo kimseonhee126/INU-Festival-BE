@@ -210,7 +210,7 @@ router.get('/:id/comment', async (req, res) => {
 });
 
 // 부스 좋아요 업데이트하기
-router.put('/:id/liked', async (req, res) => {
+router.put('/liked/:id', async (req, res) => {
     try {
         const boothId = req.params.id;
         const likeCount = req.body.likeCount;
