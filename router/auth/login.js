@@ -23,23 +23,20 @@ router.get("/me", async (req, res) => {
         // 해당 토큰을 가지고 있는 user 찾기
         const findUser = await User.findOne({ where: { token: tokenValue } });
 
+        console.log(`findUser : ${findUser}`);
+        console.log(`findUser.studentId : ${findUser.studentId}`);
+
         let id;
         let name;
 
         if (!findUser) {
             return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
+        } else {
+            // 프론트로 response 넘겨주기 -> LMS
+            id = findUser.barcode;
+            name = findUser.studentId;
+            return res.json({ id, name });
         }
-
-        // 세션 넘겨주기 -> LMS
-        req.session.user = {
-            id: findUser.barcode,
-            name: findUser.studentId,
-        };
-
-        // 프론트로 response 넘겨주기 -> LMS
-        id = findUser.barcode;
-        name = findUser.studentId;
-        return res.json({ id, name });
     } catch (err) {
         // 에러 출력
         console.error("에러: ", err.message);
