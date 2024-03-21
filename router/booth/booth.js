@@ -230,7 +230,7 @@ router.put('/liked/:id', async (req, res) => {
 });
 
 // 부스 댓글 추가하기
-router.post('/:id/comment', async (req, res) => {
+router.post('/comment/:id', async (req, res) => {
     try {
         const token = req.headers['authorization'];
         const tokenValue = token ? token.split(' ')[1] : null;
