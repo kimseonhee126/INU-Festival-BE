@@ -12,21 +12,21 @@ router.use(express.json());
 
 // 자동 로그인기능(토큰으로 학번 가져오기)
 router.get("/me", async (req, res) => {
-  try {
-    // 토큰 받기
-    const token = req.headers["authorization"];
-    const tokenValue = token ? token.split(" ")[1] : null;
+    try{
+        // 토큰 받기
+        const token = req.headers["authorization"];
+        const tokenValue = token ? token.split(" ")[1] : null;
 
-    // 해당 토큰을 가지고 있는 user 찾기
-    const findUser = await User.findOne({ where: { token: tokenValue } });
+        // 해당 토큰을 가지고 있는 user 찾기
+        const findUser = await User.findOne({ where: { token: tokenValue } });
 
-    if (!findUser) {
-      return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
-
-    } else {
-      // 토큰을 가진 사용자가 있다면, 해당 사용자의 학번을 반환합니다.
-      return res.status(200).json({ id: findUser.studentId, name: findUser.studentId});
-      // return res.status(200).json({ studentId: findUser.studentId }); // 이렇게 나중에 바꾸면 좋을듯
+        if (!findUser) {
+            return res.status(403).json({ message: "토큰을 찾을 수 없습니다!" });
+        } else {
+            return res.status(200).json({ id: findUser.studentId, name: findUser.studentId});   
+        }
+    } catch(err) {
+        res.json({ success: false, message: "서버 내부 오류"  });
     }
 });
 
