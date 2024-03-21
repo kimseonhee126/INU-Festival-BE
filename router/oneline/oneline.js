@@ -33,7 +33,7 @@ router.get('/all_messages', async (req, res) => {
 router.post("/add", async (req, res) => {
   const token = req.headers['authorization'];
   console.log('token:토큰은', token);
-  const tokenValue = token ? token.split(' ')[1] : null;
+  const tokenValue = token ? token.split(" ")[1] : null;
   // 토큰으로 유저 찾기
   console.log('tokenValue:토큰값은', tokenValue);
   const existUser = await User.findOne({ where: { token: tokenValue } });
