@@ -74,6 +74,7 @@ io.sockets.on('connection', function(socket) {
   /* 전송한 메시지 받기 */
   socket.on('message', function(data) {
     /* 보낸 사람을 제외한 나머지 유저에게 메시지 전송 */
+    console.log('message: ' + data);
     socket.broadcast.emit('update', data);
   })
 
