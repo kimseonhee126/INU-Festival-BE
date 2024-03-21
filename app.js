@@ -13,7 +13,12 @@ const http = require('http');
 const app = express();
 
 const server = http.createServer(app); // Express 앱을 http 서버에 래핑
-const io = socket(server); // http 서버 인스턴스를 socket.io에 전달
+const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 // .env 파일 사용하기 위해
 dotenv.config();
 
