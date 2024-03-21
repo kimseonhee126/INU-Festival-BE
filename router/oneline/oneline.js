@@ -35,7 +35,9 @@ router.post("/add", async (req, res) => {
   console.log('token:토큰은', token);
   const tokenValue = token ? token.split(' ')[1] : null;
   // 토큰으로 유저 찾기
+  console.log('tokenValue:토큰값은', tokenValue);
   const existUser = await User.findOne({ where: { token: tokenValue } });
+  console.log('existUser:유저는', existUser);
   if (!existUser) { // 로그인을 하지 않은 경우
       return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
   } else {
