@@ -41,7 +41,6 @@ app.use(cors());
 // app.use(morgan('dev'));
 
 /* ----------------------------- 라우터 분리 ------------------------------ */
-// const kakaoRouter = require('./router/auth/auth.js');
 const loginRouter = require('./router/auth/login.js');
 const timetableRouter = require('./router/perform/perform.js');
 const boothRouter = require('./router/booth/booth.js');
