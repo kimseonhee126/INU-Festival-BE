@@ -9,47 +9,8 @@ const { Keywords } = db;     // db.Keyword
 메인 페이지 - 한 줄 외치기
     # 키워드
 */
-// router.get('/', async(req, res) => {
-//     try {
-//         const allKeywords = await Keywords.findAll({
-//             attributes: ['id', 'word'],
-//         });
 
-//         const someKeywords = allKeywords.slice(0, 10);
-
-//         // id 컬럼, studentID 컬럼을 문자열로 변환 후 response 보내기
-//         const keywords = someKeywords.map((keyword) => ({
-//             id: String(keyword.id),
-//             word: keyword.word,
-//         }));
-
-//         res.send({keywords:keywords});
-//     }
-//     catch (err) {
-//         console.log('Error: ', err);
-//         res.send('500 error');
-//     }
-// });
-
-//
-async function asyncMecab(text) {
-	return new Promise((res, rej) => {
-		mecab.pos(text, function (err, result) {
-			result?.forEach(value => {
-				if (value[1].indexOf('NN'/*명사*/) == 0
-					|| value[1] == "SL" || value[1] == "OL"     //외국어
-					|| value[1] == "SH" || value[1] == "OH"     //한자
-					|| value[1] == "SN" || value[1] == "ON")    //숫자
-				{
-					if (!mecabResult[value[0]]) mecabResult[value[0]] = 1;
-					else mecabResult[value[0]]++;
-				}
-			});
-			res();
-		});
-	});
-}
-
+// 임의의 데이터
 const sentences = [
     '나는 고양이를 좋아합니다.',
     '오늘은 날씨가 좋네요.',
@@ -60,24 +21,110 @@ const sentences = [
     '오늘은 무엇을 먹을까요?',
     '햇살이 따뜻하네요.',
     '책을 읽으면 많은 것을 배울 수 있어요.',
-    '나는 새로운 언어를 배우고 싶습니다.'
+    '나는 새로운 언어를 배우고 싶습니다.',
+    '여행을 가면 마음이 행복해집니다.',
+    '피곤할 때는 잠을 자는 것이 좋아요.',
+    '나는 친구들과 함께 시간을 보내는 것을 즐깁니다.',
+    '음악을 듣는 것은 마음의 힐링이 됩니다.',
+    '운동을 하면 몸이 건강해집니다.',
+    '요리를 하면 맛있는 음식을 먹을 수 있어요.',
+    '집에서 영화를 보는 것이 편안합니다.',
+    '문제를 해결하는 것은 머리를 깊게 생각하는 기회입니다.',
+    '꽃을 보면 마음이 환해집니다.',
+    '나는 새로운 경험을 하는 것을 좋아합니다.'
 ];
 
-router.get('/', async (req, res) => {
-    let result = [];
-    try {
-        for (let i = 0; i < sentences.length(); i++) {
-            console.log(`sentence : ${sentences[i][j]}`);
-            result.push(sentences[i][0]);
-        }
-        res.json(result);
-    } catch(err) {
-        res.json({ message: 'failed' });
-    }
+// keyword 추출하기
+function extractKeyword(sentences) {
+    return new Promise((resolve, reject) => {
+        let filteredObject = {};
+        let filteredResult = sentences.map(sentence => {
+            return new Promise((resolve, reject) => {
+                mecab.pos(sentence, function (err, result) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        let eachResult = result
+                            .filter(([word, pos]) => pos == 'NNG')
+                            .map(([word, pos]) => word);
+                        filteredObject[sentence] = eachResult;
+                        resolve();
+                    }
+                });
+            });
+        });
 
-    // mecab.pos("이건 형태소 분석을 위한 테스트용 텍스트입니다.", function (err, result) {
-    //     console.log(result);
-    // })
+        Promise.all(filteredResult)
+            .then(() => {
+                resolve(filteredObject);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+}
+
+// 30분 주기로 keyword 값 변경하기
+const interval = 20 * 1000;
+
+let cacheKeyword = null;
+
+async function updateKeywords() {
+    try {
+        //
+        const mecabKeyword = await extractKeyword(sentences);
+        cacheKeyword = mecabKeyword;
+    } catch (err) {
+        console.error("키워드가 업데이트 되지 않았습니다 :", err);
+    }
+}
+
+updateKeywords();
+
+// 일정 주기로 키워드 업데이트
+setInterval(updateKeywords, interval)
+
+// 
+router.get('/', async (req, res) => {
+    try {
+
+        if (cacheKeyword) {
+            let keywords = [];
+            Object.keys(cacheKeyword).forEach((sentence, index) => {
+                const id = index + 1;
+                const keywordList = cacheKeyword[sentence];
+                keywordList.forEach(keyword => {
+                    keywords.push({ id, keyword });
+                });
+            });
+
+            console.log(`keywords : ${JSON.stringify(keywords)}`);
+
+            res.json({ keywords });
+        } else {
+            res.status(500).json({ error: '키워드가 없습니다...' });
+        }
+
+        // const mecabKeyword = await extractKeyword(sentences);
+
+        // let keywords = [];
+
+        // Object.keys(mecabKeyword).forEach((sentence, index) => {
+        //     const id = index + 1;
+        //     const keywordList = mecabKeyword[sentence];
+        //     keywordList.forEach(keyword => {
+        //         keywords.push({ id, keyword });
+        //     });
+        // });
+
+        // console.log(`keywords : ${JSON.stringify(keywords)}`);
+
+        // res.json({ keywords });
+    } catch (err) {
+        console.error(`error : ${err}`);
+        res.status(500).json({ err });
+    }
 });
+
 
 module.exports = router;
