@@ -12,6 +12,8 @@ module.exports = {
         table: 'Booths',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     // User - OneLine FK 설정
     await queryInterface.addConstraint('OneLines', {
@@ -41,6 +43,7 @@ module.exports = {
         table: 'Booths',
         field: 'id',
       },
+      update: 'CASCADE',
       onDelete: 'CASCADE',
     });
     await queryInterface.addConstraint('Comments', {
@@ -51,7 +54,6 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
-      onDelete: 'CASCADE',
     });
   },
 
