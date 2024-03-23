@@ -41,6 +41,7 @@ module.exports = {
         table: 'Booths',
         field: 'id',
       },
+      onDelete: 'CASCADE',
     });
     await queryInterface.addConstraint('Comments', {
       fields: ['userId'],
@@ -50,6 +51,7 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
+      onDelete: 'CASCADE',
     });
   },
 
