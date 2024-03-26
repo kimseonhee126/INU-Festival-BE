@@ -120,6 +120,7 @@ async function getAllSentences() {
 
 // Keyword DB의 모든 데이터 삭제 후 getAllSentences 함수 실행
 async function clearDB() {
+    console.log('Clearing and fetching data...');
     try {
         // Keyword DB의 모든 데이터 삭제
         await Keywords.destroy({
@@ -135,7 +136,7 @@ async function clearDB() {
 }
 
 // 30분 주기로 getAllSentences 함수 실행
-setInterval(clearDB, 30 * 60 * 1000);
+setInterval(clearDB, 5 * 1000);
 
 // sentences 전역변수 만들기
 clearDB();
