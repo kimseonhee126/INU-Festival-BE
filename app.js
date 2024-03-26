@@ -22,8 +22,8 @@ const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
 // .env 파일 사용하기 위해
 dotenv.config();
 
-const realDays =['월', '화', '수'];
-const realDates = ['2024-05-01', '2024-05-02', '2024-05-03'];
+const realDays =['화', '수', '목'];
+const realDates = ['2024-05-07', '2024-05-07', '2024-05-09']
 
 module.exports = {
   realDays,
@@ -41,7 +41,6 @@ app.use(cors());
 // app.use(morgan('dev'));
 
 /* ----------------------------- 라우터 분리 ------------------------------ */
-// const kakaoRouter = require('./router/auth/auth.js');
 const loginRouter = require('./router/auth/login.js');
 const timetableRouter = require('./router/perform/perform.js');
 const boothRouter = require('./router/booth/booth.js');
@@ -55,7 +54,7 @@ app.use('/user', loginRouter);                   // lms 로그인, 로그아웃
 app.use('/timetable', timetableRouter);          // timetable 분리
 app.use('/booth', boothRouter);                 // booth 분리
 app.use('/notice', noticeRouter);               // notice 분리
-app.use('/keyword', keywordRouter);             // keyword 분리
+app.use('/keywords', keywordRouter);             // keyword 분리
 app.use('/shout', onelineRouter);                // oneline 분리
 app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
 
@@ -74,6 +73,7 @@ io.sockets.on('connection', function(socket) {
   /* 전송한 메시지 받기 */
   socket.on('message', function(data) {
     /* 보낸 사람을 제외한 나머지 유저에게 메시지 전송 */
+    console.log('message: ' + data);
     socket.broadcast.emit('update', data);
   })
 

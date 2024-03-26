@@ -13,64 +13,69 @@ module.exports = {
       'OneLines',
       [
         {
-          content: '오늘도 축제 화이팅!!',
+          content: '축제는 다양한 공연과 이벤트가.',
           emoji: "happy",
           userId: userRows[0].id,
         },
         {
-          content: '최근에 본 좋은 영화 있나여?',
+          content: '축제의 분위기는 너무 흥미로워요.',
           emoji: "happy",
           userId: userRows[1].id,
         },
         {
-          content: '이런 정보를 공유해주셔서 감사합니다!',
+          content: '축제에 참여하면 색다른 경험을.',
           emoji: "excited",
           userId: userRows[2].id,
         },
         {
-          content: '종강내놔...ㅡ.ㅡ',
+          content: '이번 축제는 예상보다 흥미로웠어요.',
           emoji: "funny",
           userId: userRows[3].id,
         },
         {
-          content: '축제 즐길 거리가 별로 없네 ㅜㅜ',
+          content: '축제에서 새로운 사람들을 만나요.',
           emoji: "excited",
           userId: userRows[4].id,
         },
         {
-          content: '퇴근길에 보니 기분이 좋네요',
+          content: '축제의 다채로운 프로그램이.',
           emoji: "happy",
           userId: userRows[5].id,
         },
         {
-          content: '피곤 그 자체',
+          content: '축제에는 많은 사람들이 모여요.',
           emoji: "funny",
           userId: userRows[6].id,
         },
         {
-          content: '인천대 축제가 이렇게 재밌었나?!',
+          content: '축제에서 즐길 거리가 많아요.',
           emoji: "excited",
           userId: userRows[7].id,
         },
         {
-          content: '번개할 사람 구해요!',
+          content: '축제에서 다양한 음식을 즐겨요.',
           emoji: "happy",
           userId: userRows[8].id,
         },
         {
-          content: '푸드트럭 대박임~',
+          content: '축제에서 새로운 취미를 발견해요.',
           emoji: "thrilling",
           userId: userRows[0].id,
         },
         {
-          content: '축제 같이 보실 분~~',
+          content: '축제의 다양한 푸드트럭이 좋아요.',
           emoji: "excited",
           userId: userRows[0].id,
         },
         {
-          content: '오 이 기능 뭐냐?',
+          content: '축제의 분위기가 너무 흥미로워요.',
           emoji: "thrilling",
           userId: userRows[0].id,
+        },
+        {
+          content: '축제의 다채로운 문화행사가.',
+          emoji: "thrilling",
+          userId: userRows[3].id,
         },
       ]
     )

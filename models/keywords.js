@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    word: DataTypes.STRING
+    keyword: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Keywords',
