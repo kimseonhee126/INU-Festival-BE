@@ -13,6 +13,3 @@
 
 # 진행사항
 현재 코드 리펙토링 및 코드 구현 아키텍처 설계 중 ~
-
-# branch
-kimseonhee126 삭제 후 kimseonhee 생성
