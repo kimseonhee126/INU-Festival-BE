@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require('../../models');
 
 const { Keywords } = db;     // db.Keyword
+const { OneLine } = db;     // db.OneLine
 
 /* 
 메인 페이지 - 한 줄 외치기
@@ -12,39 +13,26 @@ const { Keywords } = db;     // db.Keyword
 
 // 임의의 데이터
 // const sentences = [
-//     '오늘은 무엇을 먹을까요?',
-//     '햇살이 따뜻하네요.',
-//     '책을 읽으면 많은 것을 배울 수 있어요.',
-//     '나는 새로운 언어를 배우고 싶습니다.',
-//     '여행을 가면 마음이 행복해집니다.',
-//     '피곤할 때는 잠을 자는 것이 좋아요.',
-//     '나는 친구들과 함께 시간을 보내는 것을 즐깁니다.',
-//     '음악을 듣는 것은 마음의 힐링이 됩니다.',
-//     '운동을 하면 몸이 건강해집니다.',
-//     '요리를 하면 맛있는 음식을 먹을 수 있어요.',
-//     '집에서 영화를 보는 것이 편안합니다.',
-//     '문제를 해결하는 것은 머리를 깊게 생각하는 기회입니다.',
-//     '꽃을 보면 마음이 환해집니다.',
-//     '나는 새로운 경험을 하는 것을 좋아합니다.'
+//     '축제는 다양한 공연과 이벤트가.',
+//     '축제의 분위기는 너무 흥미로워요.',
+//     '축제에 참여하면 색다른 경험을.',
+//     '이번 축제는 예상보다 흥미로웠어요.',
+//     '축제에서 새로운 사람들을 만나요.',
+//     '축제의 다채로운 프로그램이.',
+//     '축제에는 많은 사람들이 모여요.',
+//     '축제에서 즐길 거리가 많아요.',
+//     '축제의 다채로운 문화행사가.',
+//     '축제에서 다양한 음식을 즐겨요.',
+//     '축제에 예상치 못한 이벤트가.',
+//     '축제에서 새로운 취미를 발견해요.',
+//     '축제의 다양한 푸드트럭이 좋아요.',
+//     '축제에서 다양한 문화를 경험해요.',
+//     '축제의 분위기가 너무 흥미로워요.'
 // ];
 
-// 문장리스트
-let sentences = [];
+let sentences;
 
-// 클라이언트에서 POST 요청을 보낼 때마다 키워드 업데이트
-router.post('/', async (req, res) => {
-    try {
-        const { sentence } = req.body;
-        sentences.push(sentence);
-        await updateKeywords();
-        res.status(200).json({ sentence });
-    } catch (err) {
-        console.error(`error : ${err}`);
-        res.status(500).json({ err });
-    }
-});
-
-// keyword 추출하기
+// mecab으로 keyword 추출하기
 function extractKeyword(sentences) {
     return new Promise((resolve, reject) => {
         let filteredObject = {};
@@ -74,53 +62,96 @@ function extractKeyword(sentences) {
     });
 }
 
-// 30분 주기로 keyword 값 변경하기
-const interval = 20 * 1000;
+// 가장 많이 나온 keyword 상위 10개 키워드 추출하기
+function rankingKeyword(filteredObject) {
+    let keywordCounts = {};
 
-let cacheKeyword = null;
+    for (const sentence in filteredObject) {
+        const keywords = filteredObject[sentence];
+        for (const keyword of keywords) {
+            keywordCounts[keyword] = (keywordCounts[keyword] || 0) + 1;
+        }
+    }
 
-async function updateKeywords() {
+    // 키워드 빈도를 기준으로 내림차순 정렬
+    const sortedKeywords = Object.keys(keywordCounts).sort((a, b) => keywordCounts[b] - keywordCounts[a]);
+
+    // 상위 10개 키워드 추출
+    const topKeywords = sortedKeywords.slice(0, 10);
+
+    return topKeywords;
+}
+
+// keyword DB에 저장하기
+async function saveDB(topKeywords) {
     try {
-        //
-        const mecabKeyword = await extractKeyword(sentences);
-        cacheKeyword = mecabKeyword;
-    } catch (err) {
-        console.error("키워드가 업데이트 되지 않았습니다 :", err);
+        // 저장할 객체 만들기
+        const saveKeyword = topKeywords.map(async keyword => {
+            const newKeyword = await Keywords.build({ keyword });
+            return newKeyword.save();
+        });
+        console.log('keyword가 db에 잘 저장되었습니다.');
+    } catch(err) {
+        // 에러 확인
+        console.error('Error saving keywords to the database:', err);
     }
 }
 
-updateKeywords();
+// OneLine DB 에서 데이터 가져오기
+async function getAllSentences() {
+    try {
+        // content 부분만 가져와서 리스트 sentencesList 만들기
+        const sentencesList = await OneLine.findAll({ attributes: ['content'] });
+        sentences = sentencesList.map(sentence => sentence.content);
 
-// 일정 주기로 키워드 업데이트
-setInterval(updateKeywords, interval)
+        // keyword 추출하기
+        const filteredObject = await extractKeyword(sentences);
 
-// 
+        // 가장 많이 나온 keyword 상위 10개 키워드 추출하기
+        const topKeywords = rankingKeyword(filteredObject);
+
+        // keyword DB에 저장하기
+        await saveDB(topKeywords);
+    } catch (error) {
+        console.error('Error fetching sentences:', error);
+        return []; // 에러 발생 시 빈 배열 반환
+    }
+}
+
+// Keyword DB의 모든 데이터 삭제 후 getAllSentences 함수 실행
+async function clearDB() {
+    try {
+        // Keyword DB의 모든 데이터 삭제
+        await Keywords.destroy({
+            where: {}, // 모든 데이터 삭제
+            truncate: true // AUTO_INCREMENT를 재설정
+        });
+
+        // getAllSentences 함수 실행
+        await getAllSentences();
+    } catch (error) {
+        console.error('Error clearing and fetching data:', error);
+    }
+}
+
+// 30분 주기로 getAllSentences 함수 실행
+setInterval(clearDB, 30 * 60 * 1000);
+
+// sentences 전역변수 만들기
+clearDB();
+
+// GET /keywords
 router.get('/', async (req, res) => {
     try {
-        const sentence = req.body;
-        sentences.push(sentence);
+        // DB에서 저장된 키워드 가져오기
+        const keywords = await Keywords.findAll({ attributes: ['id', 'keyword'] });
 
-        if (cacheKeyword) {
-            let keywords = [];
-            Object.keys(cacheKeyword).forEach((sentence, index) => {
-                const id = index + 1;
-                const keywordList = cacheKeyword[sentence];
-                keywordList.forEach(keyword => {
-                    keywords.push({ id, keyword });
-                });
-            });
-
-            console.log(`keywords : ${JSON.stringify(keywords)}`);
-
-            res.json({ keywords });
-        } else {
-            res.status(500).json({ error: '키워드가 없습니다...' });
-        }
+        // 응답으로 키워드 보내기
+        res.json({ keywords });
     } catch (err) {
         console.error(`error : ${err}`);
         res.status(500).json({ err });
     }
 });
-
 
 module.exports = router;

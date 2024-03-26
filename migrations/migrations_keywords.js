@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      word: {
+      keyword: {
         type: Sequelize.STRING(20)
       },
       createdAt: {
