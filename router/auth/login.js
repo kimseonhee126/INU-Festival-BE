@@ -30,7 +30,7 @@ router.get("/me", async (req, res) => {
     }
 });
 
-// request 올라가라..!!
+// POST /user/lms
 router.post("/lms", async (req, res) => {
     try {
         const { studentId, password } = req.body;
@@ -59,6 +59,7 @@ router.post("/lms", async (req, res) => {
             });
             const accessToken = response.data.rememberMeToken;
             const barcode = response.data.barcode;
+            
             // 유저 생성
             await User.create({
                 barcode: barcode,

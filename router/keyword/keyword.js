@@ -134,7 +134,7 @@ async function clearDB() {
     }
 }
 
-// 30분 주기로 getAllSentences 함수 실행
+// 30분 주기로 clearDB 함수 실행
 setInterval(clearDB, 30 * 60 * 1000);
 
 // sentences 전역변수 만들기

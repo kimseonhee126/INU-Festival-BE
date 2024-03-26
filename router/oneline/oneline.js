@@ -32,17 +32,17 @@ router.get('/all_messages', async (req, res) => {
 // 채팅 메시지 추가(DB에 저장 하고 보내기)
 router.post("/add", async (req, res) => {
   const token = req.headers['authorization'];
-  console.log('token:토큰은', token);
-  // const tokenValue = token ? token.split(" ")[1] : null;
+
+  // 토큰값 null인지 아닌지 확인하기
   const tokenValue = token ? token.split(" ")[1].replace(/^"|"$/g, '') : null;
-  // 토큰으로 유저 찾기
-  console.log('tokenValue:토큰값은', tokenValue);
+
+  // 토큰값으로 유저 찾기
   const existUser = await User.findOne({ where: { token: tokenValue } });
-  console.log('existUser:유저는', existUser);
-  if (!existUser) { // 로그인을 하지 않은 경우
+
+  // 로그인을 하지 않은 경우
+  if (!existUser) {
       return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
   } else {
-    console.log(req.body)
     const { content, emoji } = req.body;
     const newOneLine = await OneLine.create({
       content: content,
