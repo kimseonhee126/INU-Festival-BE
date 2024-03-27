@@ -24,6 +24,8 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     // Notice - NoticeImg FK 설정
     await queryInterface.addConstraint('NoticeImgs', {
@@ -34,6 +36,8 @@ module.exports = {
         table: 'Notices',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     await queryInterface.addConstraint('Comments', {
       fields: ['boothId'],
@@ -54,6 +58,8 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
   },
 
