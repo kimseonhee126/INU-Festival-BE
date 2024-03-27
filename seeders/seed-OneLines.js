@@ -40,22 +40,22 @@ module.exports = {
         {
           content: '축제의 다채로운 프로그램이.',
           emoji: "happy",
-          userId: userRows[5].id,
+          userId: userRows[4].id,
         },
         {
           content: '축제에는 많은 사람들이 모여요.',
           emoji: "funny",
-          userId: userRows[6].id,
+          userId: userRows[3].id,
         },
         {
           content: '축제에서 즐길 거리가 많아요.',
           emoji: "excited",
-          userId: userRows[7].id,
+          userId: userRows[2].id,
         },
         {
           content: '축제에서 다양한 음식을 즐겨요.',
           emoji: "happy",
-          userId: userRows[8].id,
+          userId: userRows[1].id,
         },
         {
           content: '축제에서 새로운 취미를 발견해요.',
