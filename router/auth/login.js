@@ -105,6 +105,8 @@ router.get("/logout", async (req, res) => {
         // 먼저 해당 토큰을 가진 사용자를 찾습니다.
         const user = await User.findOne({ where: { token: tokenValue } });
 
+        studentId = user.studentId;
+
         if (!user) {
             return res
                 .status(404)
