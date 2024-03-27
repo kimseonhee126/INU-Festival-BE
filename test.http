@@ -86,11 +86,10 @@ authorization : Bearer 1eee596d-db8b-6970-32bd-47641e9f6474
 # POST 요청: 로그인
 ###
 POST http://localhost:4000/user/lms
-authorization: Bearer 1eee596d-db8b-6970-32bd-47641e9f6474
 Content-Type: application/json
 
 {
-    "studentId": "201901284",
+    "studentId": "201100000",
     "password": "rootroot1!"    
 }
 

@@ -13,9 +13,6 @@ module.exports = {
             insertData.push({
                 url: 'BOL.jpeg',
                 boothId: boothId,
-                // createdAt, updatedAt 필드도 추가해야 할 수 있습니다. 아래는 예시입니다.
-                createdAt: new Date(),
-                updatedAt: new Date()
             });
         }
     }
