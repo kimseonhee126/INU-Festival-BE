@@ -47,7 +47,8 @@ router.post("/lms", async (req, res) => {
         if (existUser2) {
             if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
                 const accessToken = existUser2.token;
-                return res.status(200).json({ accessToken});
+                console.log("토큰값:", accessToken);
+                return res.status(200).json({ accessToken });
             }
             const response = await axios.post(`${process.env.LMS_URL}`, {
                 studentId,
