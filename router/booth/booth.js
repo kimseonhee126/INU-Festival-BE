@@ -186,7 +186,7 @@ router.get('/:id/comment', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
+                attributes: ['studentId'],
             }],
         });
 
