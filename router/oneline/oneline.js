@@ -9,10 +9,10 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: false }));
 
 const { OneLine } = db;     // db.OneLine
-const { User } = db;     // db.User
+const { User } = db;        // db.User
 
 // 채팅 메시지 불러오기
-router.get('/all_messages', async (req, res) => {
+router.get('/', async (req, res) => {
   const ALLOnelines = await OneLine.findAll({
     attributes: ['id', 'content', 'emoji', 'userId'],
   });
@@ -30,7 +30,7 @@ router.get('/all_messages', async (req, res) => {
 });
 
 // 채팅 메시지 추가(DB에 저장 하고 보내기)
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
   const token = req.headers['authorization'];
 
   // 토큰값 null인지 아닌지 확인하기
