@@ -34,18 +34,7 @@ router.get('/ranking', async (req, res) => {
     const month = today.getMonth();
     const date = today.getDate();  
 
-    if (month >= 4) { // 5월이상이면 (월은 0부터 시작하므로 4가 5월을 의미)
-        if (date <= 7) { // 7일까지 
-            day = 1;
-        } else if (date === 8) { // 8일이면
-            day = 2
-        } else { // 9일 이상
-            day = 3; // 5월 9일부터는 3일차만 나옴
-        }
-    } else {
-        // 5월 전인 경우에 대한 처리
-        day = 1; // 5월 7일 전은 1일차만 나옴
-    }
+    day = month >= 4 ? (date <= 7 ? 1 : (date === 8 ? 2 : 3)) : 1;
 
     try {
         const allBooths = await Booth.findAll({
