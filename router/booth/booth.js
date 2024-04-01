@@ -30,41 +30,52 @@ router.get('/category', async (req, res) => {
 
 // 메인페이지 - 부스 랭킹 Top 5
 router.get('/ranking', async (req, res) => {
+    const today = new Date();
+    const month = today.getMonth();
+    const date = today.getDate();  
+
+    if (month >= 4) { // 5월이상이면 (월은 0부터 시작하므로 4가 5월을 의미)
+        if (date <= 7) { // 7일까지 
+            day = 1;
+        } else if (date === 8) { // 8일이면
+            day = 2
+        } else { // 9일 이상
+            day = 3; // 5월 9일부터는 3일차만 나옴
+        }
+    } else {
+        // 5월 전인 경우에 대한 처리
+        day = 1; // 5월 7일 전은 1일차만 나옴
+    }
+
     try {
         const allBooths = await Booth.findAll({
             attributes: ['id', 'name', 'category', 'department', 'description','liked'],
+            include: [{
+                model: BoothDay,
+                where: { day: day }, 
+                attributes: ['day'],
+            }],
             order: [['liked', 'DESC']],
             limit: 5,
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
             const boothId = booth.id;
-
-            const myBoothDays = await BoothDay.findAll({
-                where: { boothId: boothId },
-                attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
-            });
-
+        
             const myBoothImgs = await BoothImg.findAll({
                 where: { boothId: boothId },
                 attributes: ['id', 'url'],
             });
-
-            const boothDaysWithRealDay = myBoothDays.map(boothDay => {
-                const dayIndex = boothDay.day - 1; // 배열 인덱스를 위해 1 감소
-                return {
-                    ...boothDay.get({ plain: true }),
-                    day: realDays[dayIndex], // 숫자를 실제 요일로 변환
-                };
-            });
-
+        
+            const boothPlain = booth.get({ plain: true });
+            delete boothPlain.BoothDays; // BoothDays 삭제
+        
             return {
-                ...booth.get({ plain: true }),
-                boothDays: boothDaysWithRealDay,
+                ...boothPlain,
                 boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
             };
         }));
-
+        
         res.send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
@@ -72,7 +83,7 @@ router.get('/ranking', async (req, res) => {
     }
 });
 
-// GET /booth/all : 메인페이지 - 부스 전체목록 조회하기
+// 메인페이지 - 부스 전체목록 조회하기
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
@@ -186,7 +197,7 @@ router.get('/:id/comment', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId'],
+                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
             }],
         });
 
