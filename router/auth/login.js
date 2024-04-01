@@ -30,13 +30,14 @@ router.get("/me", async (req, res) => {
     }
 });
 
-// request 올라가라..!!
+// POST /user/lms
 router.post("/lms", async (req, res) => {
     try {
         const { studentId, password } = req.body;
         // 토큰이 없을 수 있으므로..!! null 값일 수 있으므로..!!
         const token = req.headers["authorization"];
         const tokenValue = token ? token.split(" ")[1] : null;
+        console.log('studentId:', studentId);
 
         const existUser1 = await User.findOne({ where: { token: tokenValue } });
         const existUser2 = await User.findOne({ where: { studentId } });
@@ -47,7 +48,8 @@ router.post("/lms", async (req, res) => {
         if (existUser2) {
             if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
                 const accessToken = existUser2.token;
-                return res.status(200).json({ accessToken});
+                console.log("토큰값:", accessToken);
+                return res.status(200).json({ accessToken });
             }
             const response = await axios.post(`${process.env.LMS_URL}`, {
                 studentId,
@@ -63,6 +65,7 @@ router.post("/lms", async (req, res) => {
             });
             const accessToken = response.data.rememberMeToken;
             const barcode = response.data.barcode;
+            
             // 유저 생성
             await User.create({
                 barcode: barcode,
@@ -103,12 +106,16 @@ router.get("/logout", async (req, res) => {
         // 먼저 해당 토큰을 가진 사용자를 찾습니다.
         const user = await User.findOne({ where: { token: tokenValue } });
 
+        studentId = user.studentId;
+
         if (!user) {
             return res
                 .status(404)
                 .json({ success: false, message: "사용자를 찾을 수 없습니다." });
         }
-
+        if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
+            return res.status(200).json({ success: true, message: "성공적으로 로그아웃 되었습니다." });
+        }
         // 사용자를 찾았다면, 토큰을 초기화합니다.
         await User.update({ token: "" }, { where: { id: user.id } });
 

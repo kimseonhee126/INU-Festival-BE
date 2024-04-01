@@ -72,7 +72,7 @@ router.get('/ranking', async (req, res) => {
     }
 });
 
-// 메인페이지 - 부스 전체목록 조회하기
+// GET /booth/all : 메인페이지 - 부스 전체목록 조회하기
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
@@ -186,7 +186,7 @@ router.get('/:id/comment', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
+                attributes: ['studentId'],
             }],
         });
 
