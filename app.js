@@ -23,7 +23,7 @@ const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
 dotenv.config();
 
 const realDays =['화', '수', '목'];
-const realDates = ['2024-05-07', '2024-05-07', '2024-05-09']
+const realDates = ['2024-05-07', '2024-05-08', '2024-05-09']
 
 module.exports = {
   realDays,
