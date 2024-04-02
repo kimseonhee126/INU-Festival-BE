@@ -186,13 +186,13 @@ router.get('/:id/comment', async (req, res) => {
             where: { boothId: boothId },
             include: [{
                 model: User,
-                attributes: ['studentId', 'snsId'], // 사용자의 studentId와 snsId를 포함
+                attributes: ['studentId'], 
             }],
         });
 
         const boothComments = myBoothComments.map(comment => {
-            // 사용자의 studentId가 있으면 그 값을 userId로 사용, 없으면 snsId를 userId로 사용
-            const userId = comment.User.studentId ? String(comment.User.studentId) : String(comment.User.snsId);
+            // 사용자의 studentId가 있으면 그 값을 userId로 사용
+            const userId = String(comment.User.studentId);
 
             return {
                 userId, // 새로운 userId 정의
