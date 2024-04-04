@@ -12,6 +12,8 @@ module.exports = {
         table: 'Booths',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     // User - OneLine FK 설정
     await queryInterface.addConstraint('OneLines', {
@@ -22,6 +24,8 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     // Notice - NoticeImg FK 설정
     await queryInterface.addConstraint('NoticeImgs', {
@@ -32,6 +36,8 @@ module.exports = {
         table: 'Notices',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     await queryInterface.addConstraint('Comments', {
       fields: ['boothId'],
@@ -41,6 +47,8 @@ module.exports = {
         table: 'Booths',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
     await queryInterface.addConstraint('Comments', {
       fields: ['userId'],
@@ -50,6 +58,8 @@ module.exports = {
         table: 'Users',
         field: 'id',
       },
+      update: 'CASCADE',
+      onDelete: 'CASCADE',
     });
   },
 

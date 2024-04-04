@@ -4,60 +4,21 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     // id를 1부터 다시 시작하는 로직 추가
-    await queryInterface.sequelize.query('ALTER TABLE BoothDays AUTO_INCREMENT = 1;');
+    await queryInterface.sequelize.query('ALTER TABLE Comments AUTO_INCREMENT = 1;');
 
-    const users = await queryInterface.sequelize.query(`SELECT id from Users;`);
-    const booths = await queryInterface.sequelize.query(`SELECT id from Booths;`);
-    const userRows = users[0];
-    const boothRows = booths[0];
-
-    await queryInterface.bulkInsert(
-      'Comments',
-      [
-        {
-          content: '좋아요!',
-          emoji: 'happy',
-          boothId: boothRows[0].id,
-          userId: userRows[0].id,
-        },
-        {
-          content: '이 부스는 최고입니다.',
-          emoji: 'thrilling',
-          boothId: boothRows[0].id,
-          userId: userRows[1].id,
-        },
-        {
-          content: '좋아요!',
-          emoji: 'funny',
-          boothId: boothRows[1].id,
-          userId: userRows[1].id,
-        },
-        {
-          content: '이 부스는 최고입니다.',
-          emoji: 'excited',
-          boothId: boothRows[1].id,
-          userId: userRows[1].id,
-        },
-        {
-          content: '좋아요!',
-          emoji: 'happy',
-          boothId: boothRows[2].id,
-          userId: userRows[2].id,
-        },
-        {
-          content: '좋아요!',
-          emoji: 'thrilling',
-          boothId: boothRows[3].id,
-          userId: userRows[3].id,
-        },
-        {
-          content: '좋아요!',
-          emoji: 'funny',
-          boothId: boothRows[4].id,
-          userId: userRows[4].id,
-        },
-      ],
-    )
+    const insertData = [];
+    for(let boothId = 4; boothId <= 77; boothId++) {
+        // 각 boothId에 대해 같은 댓글을 3개씩 추가합니다.
+        for(let commentCount = 0; commentCount < 3; commentCount++) {
+            insertData.push({
+                content: '댓글입니다.',
+                emoji: 'happy',
+                boothId: boothId,
+                userId: commentCount + 1,
+            });
+        }
+    }
+    await queryInterface.bulkInsert('Comments', insertData);
   },
 
   async down (queryInterface, Sequelize) {
@@ -67,5 +28,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    await queryInterface.bulkDelete('Comments', null, {});
   }
 };
