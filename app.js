@@ -11,6 +11,7 @@ const http = require('http');
 
 // express 사용하기
 const app = express();
+app.set('view engine', 'ejs');
 
 const server = http.createServer(app); // Express 앱을 http 서버에 래핑
 const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
@@ -48,6 +49,7 @@ const noticeRouter = require('./router/notice/notice.js');
 const keywordRouter = require('./router/keyword/keyword.js');
 const onelineRouter = require('./router/oneline/oneline.js');
 const adminBoothRouter = require('./router/admin/booth.js');
+const ManageRouter = require('./router/manage/manage.js');
 
 // app.use('/auth', kakaoRouter);                   // 카카오 로그인
 app.use('/user', loginRouter);                   // lms 로그인, 로그아웃
@@ -57,6 +59,7 @@ app.use('/notice', noticeRouter);               // notice 분리
 app.use('/keywords', keywordRouter);             // keyword 분리
 app.use('/sentence', onelineRouter);                // oneline 분리
 app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
+app.use('/manage', ManageRouter);             // Booth 관리자 페이지
 
 // 테스트용
 app.get('/', async (req, res) => {
