@@ -11,6 +11,7 @@ const http = require('http');
 
 // express 사용하기
 const app = express();
+app.set('view engine', 'ejs');
 
 const server = http.createServer(app); // Express 앱을 http 서버에 래핑
 const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
