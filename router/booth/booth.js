@@ -197,6 +197,7 @@ router.get('/:id/comment', async (req, res) => {
             return {
                 userId, // 새로운 userId 정의
                 content: comment.content,
+                emoji: comment.emoji,
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                 updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             };
