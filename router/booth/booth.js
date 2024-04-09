@@ -197,6 +197,7 @@ router.get('/:id/comment', async (req, res) => {
             return {
                 userId, // 새로운 userId 정의
                 content: comment.content,
+                emoji: comment.emoji,
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                 updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             };
@@ -233,7 +234,7 @@ router.put('/liked/:id', async (req, res) => {
 router.post('/comment/:id', async (req, res) => {
     try {
         const token = req.headers['authorization'];
-        const tokenValue = token ? token.split(' ')[1] : null;
+        const tokenValue = token ? token.split(" ")[1].replace(/^"|"$/g, '') : null;
         const existUser = await User.findOne({ where: { token: tokenValue } });
         if (!existUser) { // 로그인을 하지 않은 경우
             return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
