@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../models');
 const moment = require("moment");
+moment.tz.setDefault('Asia/Seoul'); // 로컬 시간대 설정
 
 const { realDays } = require('../../app');
 
