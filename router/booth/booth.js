@@ -350,6 +350,4 @@ router.delete('/:bid/comment/:cid', async (req, res) => {
     }
 });
 
-
-
 module.exports = router;
