@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>채팅</title>
-    <!-- <link rel="stylesheet" href="/css/index.css" /> -->
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <link rel="stylesheet" href="/css/index.css" />
     <!-- <script src="/js/index.js"></script> -->
     <style>
       .hidden {
@@ -13,6 +12,19 @@
     </style>
   </head>
   <body>
-    <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" />
+    <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
+    <div class="login-container">
+      <form id="loginForm">
+        <input type="text" id="studentId" placeholder="Student ID" required />
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
   </body>
 </html>
