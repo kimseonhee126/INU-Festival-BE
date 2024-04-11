@@ -20,7 +20,7 @@ router.get('/category', async (req, res) => {
     try {
         const categories = {
             days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
-            filters: ["주점", "비주점", "푸드트럭"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+            filters: ["주점", "비주점", "푸드트럭", "플리마켓", "존"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
         }
         res.json({ categories });
     } catch (error) {
@@ -120,7 +120,7 @@ router.get('/:id', async (req, res) => {
         const boothId = req.params.id; 
         const booth = await Booth.findOne({
             where: { id: boothId }, 
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
         });
 
         if (!booth) {
