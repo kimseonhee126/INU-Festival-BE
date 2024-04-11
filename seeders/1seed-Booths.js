@@ -26,7 +26,7 @@ module.exports = {
         department: row[2] || '',
         description: row[3] || '',
         liked: row[4] || 0,
-        markerImg: row[5] || ''
+        markerImage: row[5] || '',
       };
       data.push(obj);
     }
