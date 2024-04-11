@@ -30,7 +30,7 @@ module.exports = {
       };
       data.push(obj);
     }
-
+    console.log('data : ', JSON.stringify(data, null, 2));
     return queryInterface.bulkInsert('BoothDays', data, {});
   },
 
