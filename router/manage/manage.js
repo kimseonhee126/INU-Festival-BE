@@ -21,7 +21,7 @@ const upload = multer({ storage: _storage })
 
 // router.use(express.urlencoded({ extended: false }));
 
-// 이미지 불러오기
+// 로그인 페이지
 router.get("/", async (req, res) => {
   fs.readFile("./static/login.html", function (err, data) {
     if (err) {
@@ -34,8 +34,21 @@ router.get("/", async (req, res) => {
   });
 });
 
+// 리스트 페이지
+router.get('/list', function(req, res){
+  fs.readFile("./static/list.html", function (err, data) {
+    if (err) {
+      res.send("에러");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.write(data);
+      res.end();
+    }
+  });
+});
+
 router.get('/detail', function(req, res){
-  fs.readFile("./static/upload.html", function (err, data) {
+  fs.readFile("./static/detail.html", function (err, data) {
     if (err) {
       res.send("에러");
     } else {
