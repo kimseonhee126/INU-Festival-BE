@@ -120,7 +120,7 @@ router.get('/:id', async (req, res) => {
         const boothId = req.params.id; 
         const booth = await Booth.findOne({
             where: { id: boothId }, 
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
         });
 
         if (!booth) {
