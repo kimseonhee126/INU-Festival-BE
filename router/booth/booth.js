@@ -39,7 +39,7 @@ router.get('/ranking', async (req, res) => {
 
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description','liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description','liked', 'markerImage'],
             include: [{
                 model: BoothDay,
                 where: { day: day }, 
@@ -77,7 +77,7 @@ router.get('/ranking', async (req, res) => {
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
