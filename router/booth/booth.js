@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../models');
 const moment = require("moment");
+moment.tz.setDefault('Asia/Seoul'); // 로컬 시간대 설정
 
 const { realDays } = require('../../app');
 
@@ -197,6 +198,7 @@ router.get('/:id/comment', async (req, res) => {
             return {
                 userId, // 새로운 userId 정의
                 content: comment.content,
+                emoji: comment.emoji,
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                 updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             };
@@ -245,7 +247,11 @@ router.post('/comment/:id', async (req, res) => {
             return res.status(404).send({ message: '해당 id를 가진 부스가 없습니다.' });
         }
 
-        const comment = Comment.build(req.body);
+        const comment = Comment.build({
+            ...req.body,
+            boothId: boothId
+        });
+        
         // 필드별로 값을 할당
         comment.userId = existUser.id;
         await comment.save(); 
@@ -294,10 +300,11 @@ router.put('/:bid/comment/:cid', async (req, res) => {
             return res.status(403).send({ message: '댓글 작성자만 수정할 수 있습니다.' });
         }
 
-        console.log(comment);
-
-        await comment.update(req.body);
-        console.log(comment);
+        await comment.update({
+            ...req.body,
+            updatedAt: new Date(),
+        });
+        
         const formattedResponse = {
             id: String(comment.id),
             content: comment.content,
