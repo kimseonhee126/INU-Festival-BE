@@ -10,7 +10,8 @@ const _storage = multer.diskStorage({
     cb(null, 'public/img/')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    const safeName = file.originalname.replace(/[^a-z0-9.]/gi, '').toLowerCase();
+    cb(null, safeName);
   }
 })
 const upload = multer({ storage: _storage })
@@ -22,7 +23,7 @@ const upload = multer({ storage: _storage })
 
 // 이미지 불러오기
 router.get("/", async (req, res) => {
-  fs.readFile("./static/index.html", function (err, data) {
+  fs.readFile("./static/login.html", function (err, data) {
     if (err) {
       res.send("에러");
     } else {
@@ -33,7 +34,7 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get('/upload', function(req, res){
+router.get('/detail', function(req, res){
   fs.readFile("./static/upload.html", function (err, data) {
     if (err) {
       res.send("에러");
@@ -44,7 +45,7 @@ router.get('/upload', function(req, res){
     }
   });
 });
-router.post('/upload', upload.single('public/img'), function(req, res){
+router.post('/detail', upload.single('public/img'), function(req, res){
   console.log(req.file);
   res.send('Uploaded : '+req.file.filename);
 });
