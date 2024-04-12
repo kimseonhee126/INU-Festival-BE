@@ -14,7 +14,7 @@
   <body>
     <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
     <div class="login-container">
-      <form id="loginForm">
+      <form id="loginForm" class="loginForm">
         <input type="text" id="studentId" placeholder="인천대 포털 학번" required />
         <input
           type="password"
@@ -25,7 +25,8 @@
         <button type="submit">로그인</button>
       </form>
     </div>
-    <button onclick="logout()" class="logout hidden">Logout</button>
+    <button onclick="logout()" class="logout hidden">로그아웃</button>
+    <div class="booth_list"></div>
   </body>
 </html>
 <script>
@@ -68,8 +69,9 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
           console.log('Success:', data);
           // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
           // 예: 특정 DOM 요소를 업데이트
-          document.getElementsByClassName('login-container').classList.add = 'none';
-          document.getElementsByClassName("logout").classList.remove("hidden");
+          document.getElementsByClassName("logout")[0].classList.remove("hidden");
+          document.getElementsByClassName('login-container')[0].classList.add("hidden");
+          document.getElementsByClassName("booth_list")[0].innerText = JSON.stringify(data, null, 2);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -82,9 +84,8 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     .catch((error) => console.error("Error:", error));
 });
 
-const authToken = localStorage.getItem('authToken');
-
 function logout() {
+  const authToken = localStorage.getItem('authToken');
   fetch("http://localhost:4000/user/logout", {
     method: "GET",
     headers: {
