@@ -30,18 +30,15 @@ a {
   flex-direction: column;
   align-items: center;
   height: 100%;
-  /* display: flex; */
-  /* font-weight: 700; */
-  /* font-size: 3.5rem; */
-  /* line-height: 2rem; */
-  /* color: #1278b3; */
-  /* flex-direction: column; */
-  /* align-items: center; */
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  gap: 1rem;
 }
 
 .login-container {
   display: flex;
-  width: 100%;
+  width: 80%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -71,7 +68,7 @@ button {
   cursor: pointer;
 }
 
-.info_box {
+.box {
   display: flex;
   gap: 1rem;
   width: 100%;
@@ -81,9 +78,21 @@ button {
   width: 10rem;
 }
 
-.student {
+.edit {
+  width: 3rem;
+}
+
+.booth_box {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+.text_box {
+  display: flex;
   width: 100%;
   text-align: left;
+  align-items: center;
 }
 
 button:hover {

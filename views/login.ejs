@@ -30,11 +30,16 @@
           <button type="submit">로그인</button>
         </form>
       </div>
-      <div class="info_box">
-        <div class="student"></div>
+      <div class="info_box box">
+        <div class="student text_box"></div>
         <button onclick="logout()" class="logout hidden">로그아웃</button>
       </div>
-      <div class="booth_list"></div>
+      <div class="assigned_booth text_box hidden">등록된 부스</div>
+      <div class="booth_box box hidden">
+        <div class="booth_list text_box"></div>
+        <button type="edit" class="edit">수정</button>
+      </div>
+
     </div>
 
     
@@ -44,7 +49,6 @@
 
 // 즉시 실행 함수
 (function() {
-  console.log('hello');
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
     fetch("http://localhost:4000/user/me", {
@@ -78,8 +82,11 @@
         // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
         // 예: 특정 DOM 요소를 업데이트
         document.getElementsByClassName("logout")[0].classList.remove("hidden");
+        document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
+        document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
         document.getElementsByClassName('login-container')[0].classList.add("hidden");
-        document.getElementsByClassName("booth_list")[0].innerText = JSON.stringify(data, null, 2);
+        document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
+        // JSON.stringify(data, null, 2);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -131,8 +138,10 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
         // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
         // 예: 특정 DOM 요소를 업데이트
         document.getElementsByClassName("logout")[0].classList.remove("hidden");
+        document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
+        document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
         document.getElementsByClassName('login-container')[0].classList.add("hidden");
-        document.getElementsByClassName("booth_list")[0].innerText = JSON.stringify(data, null, 2);
+        document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
       })
       .catch(error => {
         console.error('Error:', error);
