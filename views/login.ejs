@@ -15,22 +15,20 @@
     <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
     <div class="login-container">
       <form id="loginForm">
-        <input type="text" id="studentId" placeholder="Student ID" required />
+        <input type="text" id="studentId" placeholder="인천대 포털 학번" required />
         <input
           type="password"
           id="password"
-          placeholder="Password"
+          placeholder="비밀번호"
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">로그인</button>
       </form>
     </div>
-
+    <button onclick="logout()" class="logout hidden">Logout</button>
   </body>
 </html>
 <script>
-const authToken = localStorage.getItem('authToken');
-
 document.getElementById("loginForm").addEventListener("submit", function (e) {
   e.preventDefault();
   var studentId = document.getElementById("studentId").value;
@@ -40,7 +38,6 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({
       studentId: studentId,
@@ -52,7 +49,31 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
       if (data.accessToken) {
         // 인증 토큰을 localStorage에 저장
         localStorage.setItem('authToken', data.accessToken);
-        window.location.href = 'http://localhost:4000/manage/list';
+
+        //새로운 토큰을 사용하여 추가 요청을 보냄
+        fetch("http://localhost:4000/manage/list", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data.accessToken}`, // 여기서 data.accessToken은 앞서 정의된 토큰 변수입니다
+          },
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }
+          return response.json(); // 서버로부터 받은 JSON 응답을 파싱
+        })
+        .then(data => {
+          console.log('Success:', data);
+          // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
+          // 예: 특정 DOM 요소를 업데이트
+          document.getElementsByClassName('login-container').classList.add = 'none';
+          document.getElementsByClassName("logout").classList.remove("hidden");
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       } else {
         // 로그인 실패 시 에러 메시지 표시
         alert(data.message || "로그인 실패");
@@ -60,6 +81,9 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     })
     .catch((error) => console.error("Error:", error));
 });
+
+const authToken = localStorage.getItem('authToken');
+
 function logout() {
   fetch("http://localhost:4000/user/logout", {
     method: "GET",
@@ -71,9 +95,10 @@ function logout() {
   .then((response) => response.json())
   .then((data) => {
     if (data.success) {
-      // 로그인 성공 후 특정 페이지로 리다이렉트
+      // 로그아웃 성공 후 특정 페이지로 리다이렉트
+      window.location.href = 'http://localhost:4000/manage/';
     } else {
-      // 로그인 실패 시 에러 메시지 표시
+      // 로그아웃 실패 시 에러 메시지 표시
       alert(data.message || "로그아웃 실패");
     }
   })
