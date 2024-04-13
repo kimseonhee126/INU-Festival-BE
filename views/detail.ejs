@@ -1,21 +1,72 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>채팅</title>
-    <!-- <link rel="stylesheet" href="/css/index.css" /> -->
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
-    <!-- <script src="/js/index.js"></script> -->
-    <style>
-      .hidden {
-        display: none;
-      }
-    </style>
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="/css/reset.css" >
+      <link rel="stylesheet" href="/css/index.css" />
+      <title>유니온 관리자 페이지</title>
+      <style>
+        .hidden {
+          display: none;
+        }
+      </style>
+    </head>
   </head>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
-    <form action="detail" method="post" enctype="multipart/form-data">
-      <input type="file" name="public/img" />
-      <input type="submit" />
-    </form>
+    <div class="big_container">
+      <div class="info_box box">
+        <form action="/manage" method="GET">
+          <button class="cancle">수정 취소</button>
+        </form>
+        <button onclick="save()" class="save">저장</button>
+      </div>
+      <!-- <form action="detail" method="post" enctype="multipart/form-data">
+        <input type="file" name="public/img" />
+        <input type="submit" />
+      </form> -->
+    </div>
+
   </body>
 </html>
+<script>
+
+function fetchWithAuth(url, options = {}) {
+  const authToken = localStorage.getItem('authToken');
+  const defaultOptions = {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    }
+  };
+
+  const finalOptions = Object.assign({}, defaultOptions, options);
+  finalOptions.headers = Object.assign({}, defaultOptions.headers, options.headers);
+
+  return fetch(url, finalOptions)
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+      return response.json(); // 서버로부터 받은 JSON 응답을 파싱
+    });
+}
+
+(function() {
+  const authToken = localStorage.getItem('authToken');
+  if (authToken) {
+    fetchWithAuth("http://localhost:4000/manage/detail")
+      .then(data => {
+        console.log('Success:', data);
+        // document.getElementsByClassName("student")[0].innerText = `${data.booth.name} 님`;
+        // updateDOMAfterLogin(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+})();
+</script>

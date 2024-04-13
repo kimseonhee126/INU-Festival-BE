@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="/css/reset.css" >
     <link rel="stylesheet" href="/css/index.css" />
     <title>유니온 관리자 페이지</title>
-    <!-- <script src="/js/index.js"></script> -->
     <style>
       .hidden {
         display: none;
       }
     </style>
   </head>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
     <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
     <div class="big_container">
@@ -37,7 +37,9 @@
       <div class="assigned_booth text_box hidden">등록된 부스</div>
       <div class="booth_box box hidden">
         <div class="booth_list text_box"></div>
-        <button type="edit" class="edit">수정</button>
+        <form action="/manage/edit" method="GET">
+            <button class="edit">수정</button>
+        </form>
       </div>
 
     </div>
@@ -47,56 +49,49 @@
 </html>
 <script>
 
-// 즉시 실행 함수
+// Auth 헤더를 포함한 fetch 함수
+function fetchWithAuth(url, options = {}) {
+  const authToken = localStorage.getItem('authToken');
+  const defaultOptions = {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    }
+  };
+
+  const finalOptions = Object.assign({}, defaultOptions, options);
+  finalOptions.headers = Object.assign({}, defaultOptions.headers, options.headers);
+
+  return fetch(url, finalOptions)
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+      return response.json(); // 서버로부터 받은 JSON 응답을 파싱
+    });
+}
+
+// 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
-    fetch("http://localhost:4000/user/me", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Success:', data); // 학번
-      document.getElementsByClassName("student")[0].innerText = `${data.name} 님`;
-      // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
-      //새로운 토큰을 사용하여 추가 요청을 보냄
-      fetch("http://localhost:4000/manage/list", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`, // 여기서 accessToken은 앞서 정의된 토큰 변수입니다
-        },
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json(); // 서버로부터 받은 JSON 응답을 파싱
+    fetchWithAuth("http://localhost:4000/user/me")
+      .then((data) => {
+        console.log('Success:', data);
+        document.getElementsByClassName("student")[0].innerText = `${data.name} 님`;
+        return fetchWithAuth("http://localhost:4000/manage/list");
       })
       .then(data => {
         console.log('Success:', data);
-        // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
-        // 예: 특정 DOM 요소를 업데이트
-        document.getElementsByClassName("logout")[0].classList.remove("hidden");
-        document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
-        document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
-        document.getElementsByClassName('login-container')[0].classList.add("hidden");
-        document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
-        // JSON.stringify(data, null, 2);
+        updateDOMAfterLogin(data);
       })
       .catch(error => {
         console.error('Error:', error);
       });
-    })
-    .catch((error) => console.error("Error:", error));
   }
 })();
 
-
+// 로그인 폼 제출 이벤트
 document.getElementById("loginForm").addEventListener("submit", function (e) {
   e.preventDefault();
   var studentId = document.getElementById("studentId").value;
@@ -115,65 +110,41 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   .then((response) => response.json())
   .then((data) => {
     if (data.accessToken) {
-      // 인증 토큰을 localStorage에 저장
       localStorage.setItem('authToken', data.accessToken);
       document.getElementsByClassName("student")[0].innerText = `${data.studentId} 님`;
-
-      //새로운 토큰을 사용하여 추가 요청을 보냄
-      fetch("http://localhost:4000/manage/list", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data.accessToken}`, // 여기서 data.accessToken은 앞서 정의된 토큰 변수입니다
-        },
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json(); // 서버로부터 받은 JSON 응답을 파싱
-      })
-      .then(data => {
-        console.log('Success:', data);
-        // 여기에서 서버로부터 받은 데이터(data)를 가지고 필요한 작업을 수행합니다.
-        // 예: 특정 DOM 요소를 업데이트
-        document.getElementsByClassName("logout")[0].classList.remove("hidden");
-        document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
-        document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
-        document.getElementsByClassName('login-container')[0].classList.add("hidden");
-        document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      return fetchWithAuth("http://localhost:4000/manage/list");
     } else {
-      // 로그인 실패 시 에러 메시지 표시
       alert(data.message || "로그인 실패");
+    }
+  })
+  .then(data => {
+    if (data) {
+      console.log('Success:', data);
+      updateDOMAfterLogin(data);
     }
   })
   .catch((error) => console.error("Error:", error));
 });
 
+function updateDOMAfterLogin(data) {
+  document.getElementsByClassName("logout")[0].classList.remove("hidden");
+  document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
+  document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
+  document.getElementsByClassName('login-container')[0].classList.add("hidden");
+  document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
+}
+
+// 로그아웃 함수
 function logout() {
-  const authToken = localStorage.getItem('authToken');
-  fetch("http://localhost:4000/user/logout", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    if (data.success) {
-      // 로그아웃 성공 후 특정 페이지로 리다이렉트
-      localStorage.removeItem('authToken');
-      window.location.href = 'http://localhost:4000/manage/';
-    } else {
-      // 로그아웃 실패 시 에러 메시지 표시
-      alert(data.message || "로그아웃 실패");
-    }
-  })
-  .catch((error) => console.error("Error:", error));
+  fetchWithAuth("http://localhost:4000/user/logout")
+    .then((data) => {
+      if (data.success) {
+        localStorage.removeItem('authToken');
+        window.location.href = 'http://localhost:4000/manage/';
+      } else {
+        alert(data.message || "로그아웃 실패");
+      }
+    })
+    .catch((error) => console.error("Error:", error));
 }
 </script>

@@ -46,16 +46,11 @@ router.get("/", async (req, res) => {
 // 리스트 페이지
 router.get('/list', async (req, res) => { 
   try{
-    // console.log(req.headers)
     // 토큰 받기
     const token = req.headers["authorization"];
-    // console.log(`토큰: ${token}`);
     const tokenValue = token ? token.split(" ")[1] : null;
-    // console.log(`토큰값: ${tokenValue}`);
-
     // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token: tokenValue } });
-    // console.log(`유저: ${findUser.studentId}`);
     const booth = await Booth.findOne({ where: { id: findUser.rank }});
     console.log(`부스: ${booth.name}`);
 
@@ -66,9 +61,27 @@ router.get('/list', async (req, res) => {
   }
 });
 
-router.get('/detail', function(req, res){
+router.get('/edit', (req, res) => {
   res.render('detail');
 });
+
+router.get('/detail', async (req, res) => { 
+  try{
+    // 토큰 받기
+    const token = req.headers["authorization"];
+    const tokenValue = token ? token.split(" ")[1] : null;
+    // 해당 토큰을 가지고 있는 user 찾기
+    const findUser = await User.findOne({ where: { token: tokenValue } });
+    const booth = await Booth.findOne({ where: { id: findUser.rank }});
+    console.log(`부스: ${booth.name}`);
+
+    res.json({ success: true, booth: booth });
+
+  } catch(err) {
+    res.json({ success: false, message: "서버 내부 오류"  });
+  }
+});
+
 router.post('/detail', upload.single('public/img'), function(req, res){
   console.log(req.file);
   res.send('Uploaded : '+req.file.filename);
