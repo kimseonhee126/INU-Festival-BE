@@ -101,3 +101,21 @@ button:hover {
 }
 
 /* --------------- detail ------------------- */
+
+.real_img {
+  width: 20rem;
+  object-fit: cover;
+}
+
+.img_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.name_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}

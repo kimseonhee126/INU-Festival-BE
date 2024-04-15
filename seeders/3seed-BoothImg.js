@@ -11,7 +11,7 @@ module.exports = {
         // 각 boothId에 대해 같은 이미지를 3개씩 추가합니다.
         for(let imgCount = 0; imgCount < 3; imgCount++) {
             insertData.push({
-                url: 'BOL.jpeg',
+                url: 'http://127.0.0.1:4000/img/sample_img.png',
                 boothId: boothId,
             });
         }

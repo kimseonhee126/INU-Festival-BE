@@ -18,23 +18,38 @@
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
     <div class="big_container">
-      <div class="info_box box">
-        <form action="/manage" method="GET">
-          <button class="cancle">수정 취소</button>
-        </form>
-        <button onclick="save()" class="save">저장</button>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="info_box box">
+            <button type="button" class="cancel" onclick="location.href='/manage'">수정 취소</button>
+            <button type="button" class="save" onclick="submitForm()">저장</button>
+        </div>
+        <div class="img_box"></div>
+
+        <button type="button" class="add_img" onclick="addImageInput()">사진 추가</button>
+
+        <!-- <input type="file" id="image_input" name="imgs" multiple class="hidden" onchange="previewImages()"> -->
+
+        <div class="name_box">
+            <div class="booth_name_ask">부스 이름 :</div>
+            <input id="booth_name_input" type="text" name="name"></input>
+        </div>
+        <div class="name_box">
+            <div class="booth_dep_ask">부스 소속 :</div>
+            <input id="booth_dep_input" type="text" name="department"></input>
+        </div>
+        <div class="name_box">
+          <div class="booth_dis_ask">부스 소개 :</div>
+          <input id="booth_dis_input" type="text" name="description"></input>
       </div>
-      <!-- <form action="detail" method="post" enctype="multipart/form-data">
-        <input type="file" name="public/img" />
-        <input type="submit" />
-      </form> -->
+      </form>
     </div>
 
   </body>
 </html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
-function fetchWithAuth(url, options = {}) {
+function axiosWithAuth(url, options = {}) {
   const authToken = localStorage.getItem('authToken');
   const defaultOptions = {
     headers: {
@@ -46,27 +61,126 @@ function fetchWithAuth(url, options = {}) {
   const finalOptions = Object.assign({}, defaultOptions, options);
   finalOptions.headers = Object.assign({}, defaultOptions.headers, options.headers);
 
-  return fetch(url, finalOptions)
+  return axios.get(url, finalOptions)
     .then(response => {
-      if (!response.ok) {
+      if (response.status !== 200) {
         return Promise.reject(response);
       }
-      return response.json(); // 서버로부터 받은 JSON 응답을 파싱
+      return response.data; // 서버로부터 받은 JSON 응답을 파싱
     });
 }
 
 (function() {
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
-    fetchWithAuth("http://localhost:4000/manage/detail")
+    axiosWithAuth("http://localhost:4000/manage/detail")
       .then(data => {
         console.log('Success:', data);
-        // document.getElementsByClassName("student")[0].innerText = `${data.booth.name} 님`;
-        // updateDOMAfterLogin(data);
+        document.getElementById("booth_name_input").value = data.booth.name;
+        document.getElementById("booth_dep_input").value = data.booth.department;    
+        document.getElementById("booth_dis_input").value = data.booth.description;
+        
+        const img_box = document.getElementsByClassName("img_box")[0];
+        data.booth.boothImgs.forEach((img, index) => {
+          const imageElement = document.createElement("img");
+          imageElement.className = "real_img";
+          imageElement.src = img.url;
+          img_box.appendChild(imageElement);
+
+          // const input = document.createElement("input");
+          // input.type = "file";
+          // input.name = "imgs";
+          // input.multiple = true;
+          // img_box.appendChild(input);
+        });
       })
       .catch(error => {
         console.error('Error:', error);
       });
   }
 })();
+
+function axiosWithAuthForUpload(url, formData, options = {}) {
+  const authToken = localStorage.getItem('authToken');
+  const defaultOptions = {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'multipart/form-data'
+    }
+  };
+
+  const finalOptions = Object.assign({}, defaultOptions, options);
+  finalOptions.headers = Object.assign({}, defaultOptions.headers, options.headers);
+
+  return axios.post(url, formData, finalOptions)
+    .then(response => {
+      if (response.status !== 200) {
+        return Promise.reject(response);
+      }
+      return response.data; // 서버로부터 받은 JSON 응답을 파싱
+    })
+    .catch(error => {
+      console.error('Upload Error:', error);
+      throw error; // 오류를 던져서 외부에서 처리할 수 있도록 함
+    });
+}
+
+function submitForm() {
+  const form = document.getElementById('uploadForm');
+  const formData = new FormData(form);
+
+  // // 삭제할 이미지 ID 추가
+  // const deleteImageIds = [/* 삭제할 이미지 ID 배열 */];
+  // deleteImageIds.forEach(id => formData.append('deleteImageIds', id));
+
+  // 함수 호출
+  axiosWithAuthForUpload('detail', formData)
+    .then(data => {
+    })
+    .catch(error => {
+    });
+}
+
+// function add_img() {
+//   const img_box = document.getElementsByClassName("img_box")[0];
+//   const input = document.createElement("input");
+//   input.type = "file";
+//   input.name = "public/img";
+//   img_box.appendChild(input);
+// }
+
+function addImageInput() {
+  const imgBox = document.querySelector(".img_box");
+  const input = document.createElement("input");
+  input.type = "file";
+  input.name = "imgs";
+  input.multiple = true;
+  input.onchange = previewImages; // 파일 선택 시 미리보기 생성
+  imgBox.appendChild(input);
+
+  document.getElementsByClassName('add_img')[0].classList.add('hidden');
+}
+
+function previewImages() {
+  const files = this.files;
+  const imgBox = document.querySelector(".img_box");
+
+  // 기존의 미리보기 이미지들을 제거
+  const existingPreviews = document.querySelectorAll(".preview");
+  existingPreviews.forEach(preview => preview.remove());
+
+  // 선택된 각 파일에 대해 미리보기 이미지 생성
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.className = "preview";
+      img.style.width = "100px"; // 미리보기 이미지 크기 설정
+      imgBox.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 </script>
