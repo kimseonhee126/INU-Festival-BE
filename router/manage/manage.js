@@ -161,32 +161,22 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
     // 중복된 이미지 id 삭제
     deleteImgs = [...new Set(req.body.deleteImgs)];
 
-    boothImgs.forEach(img => {
-      const imgId = img.id;
-      const isDelete = deleteImgs.includes(String(imgId));
-      if (isDelete) {
-        fs.unlinkSync(`public/${img.url}`);
-        img.destroy();
-      }
+    deleteImgs.map(async (imgId) => {
+      const deleteImg = await BoothImg.findOne({
+        where: { id: imgId },
+      })
+      deletePath = deleteImg.url.split('/').pop();
+      fs.unlinkSync(`public/img/${deletePath}`);
+      await deleteImg.destroy();
     });
 
+    const myUrls = 'http://127.0.0.1:4000';
     req.files.map(file => {
       BoothImg.create({
-        url: `${file.filename}`,
+        url: myUrls+'/img/'+file.filename,
         boothId: booth.id,
       });
     });
-
-    const comment = Comment.build({
-      ...req.body,
-      boothId: boothId
-    });
-
-
-    // console.log(`부스: ${booth.name}`);
-    console.log(req.files);
-    // console.log(`경로 : ${req.file.path}`);
-    console.log(req.body);
 
     res.json({ success: true, booth: booth });
 
@@ -194,36 +184,5 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
     res.json({ success: false, message: "서버 내부 오류"  });
   }
 });
-
-// // 이미지 파일을 받아 처리하는 라우트
-// router.post('/detail', upload.array('imgs', 10), async (req, res) => {
-//   try{
-//     // 토큰 받기
-//     const token = req.headers["authorization"];
-//     const tokenValue = token ? token.split(" ")[1] : null;
-//     // 해당 토큰을 가지고 있는 user 찾기
-//     const findUser = await User.findOne({ where: { token: tokenValue } });
-//     const booth = await Booth.findOne({ where: { id: findUser.rank }});
-
-//     const boothImgs = await BoothImg.findAll({
-//       where: { boothId: booth.id },
-//     });
-
-//     await booth.update({
-//       ...req.body,
-//       updatedAt: new Date(),
-//     });
-
-//     await BoothImg.update({
-//       img: req.file.filename,
-//     });
-
-//     res.json({ success: true, booth: booth });
-
-//   } catch(err) {
-//     res.json({ success: false, message: "서버 내부 오류"  });
-//   }
-//   res.json({ success: true, message: "이미지가 업로드되었습니다." });
-// });
 
 module.exports = router;
