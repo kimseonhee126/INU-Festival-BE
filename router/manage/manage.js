@@ -20,6 +20,7 @@ const { Comment } = db;   //db.Comment
 const fs = require('fs')
 
 const multer = require('multer');
+const { create } = require("domain");
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -139,8 +140,63 @@ router.get('/detail', async (req, res) => {
 });
 
 
+router.post('/detail', upload.array('imgs', 10), async (req, res) => {
+  try{
+    // 토큰 받기
+    const token = req.headers["authorization"];
+    const tokenValue = token ? token.split(" ")[1] : null;
+    // 해당 토큰을 가지고 있는 user 찾기
+    const findUser = await User.findOne({ where: { token: tokenValue } });
+    const booth = await Booth.findOne({ where: { id: findUser.rank }});
+
+    const boothImgs = await BoothImg.findAll({
+      where: { boothId: booth.id },
+    });
+
+    await booth.update({
+      ...req.body,
+      updatedAt: new Date(),
+    });
+
+    // 중복된 이미지 id 삭제
+    deleteImgs = [...new Set(req.body.deleteImgs)];
+
+    boothImgs.forEach(img => {
+      const imgId = img.id;
+      const isDelete = deleteImgs.includes(String(imgId));
+      if (isDelete) {
+        fs.unlinkSync(`public/${img.url}`);
+        img.destroy();
+      }
+    });
+
+    req.files.map(file => {
+      BoothImg.create({
+        url: `${file.filename}`,
+        boothId: booth.id,
+      });
+    });
+
+    const comment = Comment.build({
+      ...req.body,
+      boothId: boothId
+    });
+
+
+    // console.log(`부스: ${booth.name}`);
+    console.log(req.files);
+    // console.log(`경로 : ${req.file.path}`);
+    console.log(req.body);
+
+    res.json({ success: true, booth: booth });
+
+  } catch(err) {
+    res.json({ success: false, message: "서버 내부 오류"  });
+  }
+});
+
+// // 이미지 파일을 받아 처리하는 라우트
 // router.post('/detail', upload.array('imgs', 10), async (req, res) => {
-//   console.log(req.body);
 //   try{
 //     // 토큰 받기
 //     const token = req.headers["authorization"];
@@ -149,36 +205,25 @@ router.get('/detail', async (req, res) => {
 //     const findUser = await User.findOne({ where: { token: tokenValue } });
 //     const booth = await Booth.findOne({ where: { id: findUser.rank }});
 
-//     // const boothImgs = await BoothImg.findAll({
-//     //   where: { boothId: booth.id },
-//     // });
+//     const boothImgs = await BoothImg.findAll({
+//       where: { boothId: booth.id },
+//     });
 
-//     // await booth.update({
-//     //   ...req.body,
-//     //   updatedAt: new Date(),
-//     // });
+//     await booth.update({
+//       ...req.body,
+//       updatedAt: new Date(),
+//     });
 
-//     // await BoothImg.update({
-//     //   img: req.file.filename,
-//     // });
-
-//     // console.log(`부스: ${booth.name}`);
-//     console.log(req.files);
-//     // console.log(`경로 : ${req.file.path}`);
-//     console.log(req.body);
+//     await BoothImg.update({
+//       img: req.file.filename,
+//     });
 
 //     res.json({ success: true, booth: booth });
 
 //   } catch(err) {
 //     res.json({ success: false, message: "서버 내부 오류"  });
 //   }
+//   res.json({ success: true, message: "이미지가 업로드되었습니다." });
 // });
-
-// 이미지 파일을 받아 처리하는 라우트
-router.post('/detail', upload.array('imgs', 10), async (req, res) => {
-  console.log(req.files); // 업로드된 파일 정보 로깅
-  // 이후 로직에 따라 데이터베이스 업데이트 및 기타 처리
-  res.json({ success: true, message: "이미지가 업로드되었습니다." });
-});
 
 module.exports = router;
