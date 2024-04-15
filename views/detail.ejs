@@ -27,8 +27,6 @@
 
         <button type="button" class="add_img" onclick="addImageInput()">사진 추가</button>
 
-        <!-- <input type="file" id="image_input" name="imgs" multiple class="hidden" onchange="previewImages()"> -->
-
         <div class="name_box">
             <div class="booth_name_ask">부스 이름 :</div>
             <input id="booth_name_input" type="text" name="name"></input>
@@ -49,6 +47,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
+// 토큰과 함께 요청을 보내는 함수
 function axiosWithAuth(url, options = {}) {
   const authToken = localStorage.getItem('authToken');
   const defaultOptions = {
@@ -70,6 +69,7 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
+// 새로고침시 실행되는 함수
 (function() {
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
@@ -87,11 +87,6 @@ function axiosWithAuth(url, options = {}) {
           imageElement.src = img.url;
           img_box.appendChild(imageElement);
 
-          // const input = document.createElement("input");
-          // input.type = "file";
-          // input.name = "imgs";
-          // input.multiple = true;
-          // img_box.appendChild(input);
         });
       })
       .catch(error => {
@@ -100,6 +95,7 @@ function axiosWithAuth(url, options = {}) {
   }
 })();
 
+// 사진 업로드 요청을 보내는 함수
 function axiosWithAuthForUpload(url, formData, options = {}) {
   const authToken = localStorage.getItem('authToken');
   const defaultOptions = {
@@ -125,13 +121,10 @@ function axiosWithAuthForUpload(url, formData, options = {}) {
     });
 }
 
+// 수정 폼 제출 시 실행되는 함수
 function submitForm() {
   const form = document.getElementById('uploadForm');
   const formData = new FormData(form);
-
-  // // 삭제할 이미지 ID 추가
-  // const deleteImageIds = [/* 삭제할 이미지 ID 배열 */];
-  // deleteImageIds.forEach(id => formData.append('deleteImageIds', id));
 
   // 함수 호출
   axiosWithAuthForUpload('detail', formData)
@@ -141,14 +134,7 @@ function submitForm() {
     });
 }
 
-// function add_img() {
-//   const img_box = document.getElementsByClassName("img_box")[0];
-//   const input = document.createElement("input");
-//   input.type = "file";
-//   input.name = "public/img";
-//   img_box.appendChild(input);
-// }
-
+// 사진 버튼 누르면 이미지 업로드 창 생성
 function addImageInput() {
   const imgBox = document.querySelector(".img_box");
   const input = document.createElement("input");
@@ -161,6 +147,8 @@ function addImageInput() {
   document.getElementsByClassName('add_img')[0].classList.add('hidden');
 }
 
+
+// 이미지 미리보기 해주는 함수
 function previewImages() {
   const files = this.files;
   const imgBox = document.querySelector(".img_box");
@@ -176,7 +164,7 @@ function previewImages() {
       const img = document.createElement("img");
       img.src = e.target.result;
       img.className = "preview";
-      img.style.width = "100px"; // 미리보기 이미지 크기 설정
+      img.style.width = "20rem"; // 미리보기 이미지 크기 설정
       imgBox.appendChild(img);
     };
     reader.readAsDataURL(file);
