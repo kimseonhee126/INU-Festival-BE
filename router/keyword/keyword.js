@@ -146,7 +146,7 @@ router.get('/', async (req, res) => {
         const keywords = await Keywords.findAll({ attributes: ['id', 'keyword'] });
 
         // 응답으로 키워드 보내기
-        res.json({ keywords });
+        res.status(200).json({ keywords });
     } catch (err) {
         console.error(`error : ${err}`);
         res.status(500).json({ err });

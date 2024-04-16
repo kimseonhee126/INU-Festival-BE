@@ -57,7 +57,7 @@ app.use('/timetable', timetableRouter);          // timetable 분리
 app.use('/booth', boothRouter);                 // booth 분리
 app.use('/notice', noticeRouter);               // notice 분리
 app.use('/keywords', keywordRouter);             // keyword 분리
-app.use('/sentence', onelineRouter);                // oneline 분리
+app.use('/sentence', onelineRouter);                // sentence 분리
 app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
 app.use('/manage', ManageRouter);             // Booth 관리자 페이지
 

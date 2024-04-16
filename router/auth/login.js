@@ -1,5 +1,4 @@
 const express = require("express");
-const session = require("express-session");
 const router = express.Router();
 const axios = require("axios");
 const dotenv = require("dotenv");
@@ -55,7 +54,7 @@ router.post("/lms", async (req, res) => {
             });
             const accessToken = response.data.rememberMeToken;
             await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
-            return res.status(200).json({ accessToken });
+            return res.status(200).json({ accessToken, studentId});
         } else { // 최초 로그인 시도한 경우
             const response = await axios.post(`${process.env.LMS_URL}`, {
                 studentId,
@@ -71,7 +70,7 @@ router.post("/lms", async (req, res) => {
                 studentId: studentId,
                 provider: "LMS",
             });
-            return res.status(200).json({ accessToken });
+            return res.status(200).json({ accessToken, studentId });
         }
     } catch (err) {
         console.error("에러:", err.message);
