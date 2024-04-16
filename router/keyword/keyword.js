@@ -90,7 +90,6 @@ async function saveDB(topKeywords) {
             const newKeyword = await Keywords.build({ keyword });
             return newKeyword.save();
         });
-        console.log('keyword가 db에 잘 저장되었습니다.');
     } catch(err) {
         // 에러 확인
         console.error('Error saving keywords to the database:', err);

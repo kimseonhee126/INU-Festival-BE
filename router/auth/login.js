@@ -36,7 +36,6 @@ router.post("/lms", async (req, res) => {
         // 토큰이 없을 수 있으므로..!! null 값일 수 있으므로..!!
         const token = req.headers["authorization"];
         const tokenValue = token ? token.split(" ")[1] : null;
-        console.log('studentId:', studentId);
 
         const existUser1 = await User.findOne({ where: { token: tokenValue } });
         const existUser2 = await User.findOne({ where: { studentId } });
@@ -47,7 +46,6 @@ router.post("/lms", async (req, res) => {
         if (existUser2) {
             if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
                 const accessToken = existUser2.token;
-                console.log("토큰값:", accessToken);
                 return res.status(200).json({ accessToken });
             }
             const response = await axios.post(`${process.env.LMS_URL}`, {

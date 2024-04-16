@@ -30,7 +30,6 @@ module.exports = {
       };
       data.push(obj);
     }
-
     return queryInterface.bulkInsert('BoothDays', data, {});
   },
 
