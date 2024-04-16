@@ -18,15 +18,17 @@ router.get('/', async (req, res) => {
   });
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
-    const user = await User.findOne({ where: { id: oneline.userId } });
+    const user = await User.findOne({ where: { id: oneline.userId } });   // user 찾기
+    const hideStudentId = user.studentId.toString().slice(0, 6) + '***';  // studentId 가리기
+
     return {
       ...oneline.get({ plain: true }),
-      studentId: user.studentId,
+      studentId: hideStudentId,
       content: oneline.content,
       emoji: oneline.emoji
     };
   }));
-  res.send({shouts: Onelines});
+  res.status(200).send({shouts: Onelines});
 });
 
 // 채팅 메시지 추가(DB에 저장 하고 보내기)
@@ -44,14 +46,16 @@ router.post("/", async (req, res) => {
       return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
   } else {
     const { content, emoji } = req.body;
+    const hideStudentId = existUser.studentId.toString().slice(0, 6) + '***';   // studentId 가리기
+
     const newOneLine = await OneLine.create({
       content: content,
       emoji: emoji,
-      userId: existUser.id
+      userId: existUser.id,
     });
 
     const data = {
-      studentId: existUser.studentId,
+      studentId: hideStudentId,
       content: newOneLine.content,
       emoji: newOneLine.emoji
     }

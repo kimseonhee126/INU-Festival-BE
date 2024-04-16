@@ -66,7 +66,7 @@ router.get('/ranking', async (req, res) => {
             };
         }));
         
-        res.send({ booths: Booths });
+        res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send('Server error');
@@ -108,7 +108,7 @@ router.get('/all', async (req, res) => {
             };
         }));
 
-        res.send({ booths: Booths });
+        res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send('Server error');
@@ -164,7 +164,7 @@ router.get('/:id', async (req, res) => {
             boothComments: myBoothComments2,
         };
 
-        res.send({ booth: boothResponse });
+        res.status(200).send({ booth: boothResponse });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
@@ -204,7 +204,7 @@ router.get('/:id/comment', async (req, res) => {
             };
         });
 
-        res.send({ boothComments });
+        res.status(200).send({ boothComments });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' });
@@ -265,7 +265,7 @@ router.post('/comment/:id', async (req, res) => {
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         };
-        res.send(formattedResponse);
+        res.status(200).send(formattedResponse);
 
     } catch (err) {
         console.error('ERROR: ', err);
@@ -314,7 +314,7 @@ router.put('/:bid/comment/:cid', async (req, res) => {
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         };
-        res.send(formattedResponse);
+        res.status(200).send(formattedResponse);
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: '댓글 수정에 실패했습니다.' });
@@ -355,7 +355,5 @@ router.delete('/:bid/comment/:cid', async (req, res) => {
         res.status(500).send({ message: '댓글 삭제에 실패했습니다.' });
     }
 });
-
-
 
 module.exports = router;
