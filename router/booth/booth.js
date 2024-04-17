@@ -256,15 +256,22 @@ router.post('/comment/:id', async (req, res) => {
         });
         
         // 필드별로 값을 할당
-        comment.userId = existUser.id;
-        await comment.save(); 
+        console.log(`exitUser.studentId : ${existUser.studentId}`);
+
+        await existUser.save();
+
+        const hideLength = existUser.studentId.toString();                               // 학번을 문자열로 변환
+        console.log(`hideLength : ${hideLength}`);
+
+        const hiddenStudentId = hideLength.slice(0, hideLength.length - 3) + '***'; // 뒤에서 3자리를 가린 학번
+        console.log(`hiddenStudentId : ${hiddenStudentId}`);
 
         // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
         const formattedResponse = {
             ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
-            id: String(comment.id),
+            id: String(existUser.id),
             boothId: String(booth.id),
-            userId: existUser.studentId,
+            userId: hiddenStudentId,
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         };
