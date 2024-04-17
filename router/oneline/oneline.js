@@ -19,11 +19,10 @@ router.get('/', async (req, res) => {
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });   // user 찾기
-    const hideStudentId = user.studentId.toString().slice(0, 6) + '***';  // studentId 가리기
 
     return {
       ...oneline.get({ plain: true }),
-      studentId: hideStudentId,
+      studentId: user.studentId,
       content: oneline.content,
       emoji: oneline.emoji
     };
@@ -46,7 +45,6 @@ router.post("/", async (req, res) => {
       return res.status(400).send({ success: false, message: '로그인 먼저 하세요!' });
   } else {
     const { content, emoji } = req.body;
-    const hideStudentId = existUser.studentId.toString().slice(0, 6) + '***';   // studentId 가리기
 
     const newOneLine = await OneLine.create({
       content: content,
@@ -55,7 +53,7 @@ router.post("/", async (req, res) => {
     });
 
     const data = {
-      studentId: hideStudentId,
+      studentId: existUser.studentId,
       content: newOneLine.content,
       emoji: newOneLine.emoji
     }
