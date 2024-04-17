@@ -40,11 +40,16 @@ const myUrl = "http://localhost:4000"; // -> 개발용
         data.booth.boothImgs.forEach((img, index) => {
           const container = document.createElement("div");
           container.className = "img_container";
-          // container.innerText = `삭제하려면 체크후 저장하세요`;
-
           const imageElement = document.createElement("img");
           imageElement.className = "real_img";
           imageElement.src = img.url;
+
+          const deleteContainer = document.createElement("div");
+          deleteContainer.className = "delete_container";
+
+          const toDelete = document.createElement("div");
+          toDelete.className = "to_delete";
+          toDelete.innerHTML = "삭제";
 
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -53,7 +58,9 @@ const myUrl = "http://localhost:4000"; // -> 개발용
           checkbox.value = img.id; // 이미지 ID를 값으로 설정
 
           container.appendChild(imageElement);
-          container.appendChild(checkbox);
+          deleteContainer.appendChild(toDelete);
+          deleteContainer.appendChild(checkbox);
+          container.appendChild(deleteContainer);
           img_box.appendChild(container);
         });
       })
