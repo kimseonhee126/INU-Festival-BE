@@ -50,10 +50,14 @@ router.post("/lms", async (req, res) => {
                 console.log("토큰값:", accessToken);
                 return res.status(200).json({ accessToken });
             }
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+            const response = await axios.post('http://localhost:3000/api', {
                 studentId,
                 password,
             });
+            // const response = await axios.post(`${process.env.LMS_URL}`, {
+            //     studentId,
+            //     password,
+            // });
             const accessToken = response.data.rememberMeToken;
             await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
             return res.status(200).json({ accessToken, studentId});
@@ -81,7 +85,7 @@ router.post("/lms", async (req, res) => {
             // API로부터의 응답 에러 처리
             res.status(err.response.status).json({
                 success: false,
-                message: err.response.data.message || "외부 API 요청 에러",
+                message: '🥹 학번과 비밀번호를 다시 확인해주세요..!!',
             });
         } else {
             // 요청을 보내는 중 문제가 발생한 경우
