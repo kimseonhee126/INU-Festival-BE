@@ -15,8 +15,6 @@
   </head>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
-    <!-- <img src="http://https://3.36.49.113.nip.io/img/sample_img.png" alt="description" /> -->
-    <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
     <div class="big_container">
       <div class="title">유니랜드 부스 관리자 페이지</div>
       <div class="login-container">
@@ -72,18 +70,19 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "3.36.49.113.nip.io"; // -> 배포용
+
 // 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
-    fetchWithAuth("http://localhost:4000/user/me")
+    fetchWithAuth(`${myUrl}/user/me`)
       .then((data) => {
-        console.log('Success:', data);
         document.getElementsByClassName("student")[0].innerText = `${data.name} 님`;
-        return fetchWithAuth("http://localhost:4000/manage/list");
+        return fetchWithAuth(`${myUrl}/manage/list`);
       })
       .then(data => {
-        console.log('Success:', data);
         updateDOMAfterLogin(data);
       })
       .catch(error => {
@@ -98,7 +97,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   var studentId = document.getElementById("studentId").value;
   var password = document.getElementById("password").value;
 
-  fetch("http://localhost:4000/user/lms", {
+  fetch(`${myUrl}/user/lms`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -113,7 +112,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     if (data.accessToken) {
       localStorage.setItem('authToken', data.accessToken);
       document.getElementsByClassName("student")[0].innerText = `${data.studentId} 님`;
-      return fetchWithAuth("http://localhost:4000/manage/list");
+      return fetchWithAuth(`${myUrl}/manage/list`);
     } else {
       alert(data.message || "로그인 실패");
     }
@@ -137,11 +136,11 @@ function updateDOMAfterLogin(data) {
 
 // 로그아웃 함수
 function logout() {
-  fetchWithAuth("http://localhost:4000/user/logout")
+  fetchWithAuth(`${myUrl}/user/logout`)
     .then((data) => {
       if (data.success) {
         localStorage.removeItem('authToken');
-        window.location.href = 'http://localhost:4000/manage/';
+        window.location.href = `${myUrl}/manage`;
       } else {
         alert(data.message || "로그아웃 실패");
       }

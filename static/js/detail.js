@@ -20,13 +20,14 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "3.36.49.113.nip.io"; // -> 배포용
+
 // 새로고침시 실행되는 함수
 (function() {
-  // const myUrls = `https://3.36.49.113.nip.io/`;
-  const myUrls = `http://localhost:4000/`;
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
-    axiosWithAuth(`${myUrls}manage/detail`)
+    axiosWithAuth(`${myUrl}/manage/detail`)
       .then(data => {
         // 이름, 소속, 소개 입력창에 기존 정보를 미리 채워넣음
         document.getElementById("booth_name_input").value = data.booth.name;
@@ -39,7 +40,7 @@ function axiosWithAuth(url, options = {}) {
         data.booth.boothImgs.forEach((img, index) => {
           const container = document.createElement("div");
           container.className = "img_container";
-          container.innerText = `삭제하려면 체크후 저장하세요`;
+          // container.innerText = `삭제하려면 체크후 저장하세요`;
 
           const imageElement = document.createElement("img");
           imageElement.className = "real_img";
