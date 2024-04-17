@@ -7,7 +7,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="/css/reset.css" >
       <link rel="stylesheet" href="/css/index.css" />
-      <link rel="stylesheet" href="/css/slice.css" />
       <title>유니온 관리자 페이지</title>
       <style>
         .hidden {
@@ -29,17 +28,18 @@
 
         <div class="edit_box">
           <div class="title_box">
-            <div class="booth_name_ask" class="ask">부스 이름 :</div>
-            <input id="booth_name_input" type="text" name="name"></input>
+            <div class="booth_name_ask ask" >부스 이름 :</div>
+            <input id="booth_name_input" class="ask_input" type="text" name="name"></input>
           </div>
           <div class="title_box">
-              <div class="booth_dep_ask" class="ask">부스 소속 :</div>
-              <input id="booth_dep_input" type="text" name="department"></input>
+              <div class="booth_dep_ask ask" >부스 소속 :</div>
+              <input id="booth_dep_input" class="ask_input" type="text" name="department"></input>
           </div>
-          <div class="title_box">
-            <div class="booth_dis_ask" class="ask">부스 소개 :</div>
-            <input id="booth_dis_input" type="text" name="description"></input>
+          <div class="dsc_box">
+            <div class="booth_dis_ask ask" >부스 소개 :</div>
+            <textarea name="description" id="booth_dis_input" type="text" cols="30" rows="10"></textarea>
           </div>
+          
         </div>
       </form>
     </div>

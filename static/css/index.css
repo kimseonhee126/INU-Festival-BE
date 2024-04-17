@@ -27,11 +27,11 @@ a {
   background-color: #F5F5F5;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  padding: 2.5rem 1rem 0 1rem;
+  min-height: 100%;
   font-weight: 700;
   font-size: 1.5rem;
   gap: 1rem;
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
 }
 
 .login-container {
@@ -94,6 +94,7 @@ button {
   width: 100%;
   text-align: left;
   align-items: center;
+  font-size: large;
 }
 
 button:hover {
@@ -134,7 +135,8 @@ button:hover {
 .ask {
   display: flex;
   align-items: center;
-  margin: 0 1rem 0 0;
+  font-size: 1.2rem;
+  width: 9rem;
 }
 
 .edit_box {
@@ -147,4 +149,16 @@ button:hover {
 
 .add_img {
   margin: 1rem 0 1rem 0;
+}
+
+.ask_input {
+  width: 100%;
+}
+
+.dsc_box {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 0.5rem;
 }
