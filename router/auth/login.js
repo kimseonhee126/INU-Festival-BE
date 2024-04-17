@@ -29,6 +29,14 @@ router.get("/me", async (req, res) => {
     }
 });
 
+// *--- LMS 로그인 API ---*
+
+// apiUrl = process.env.LMS_URL; // 기존
+// apiUrl = process.env.API_URL; // -> 배포시
+apiUrl = "http://localhost:4000/api"; // -> 개발시
+
+
+
 // POST /user/lms
 router.post("/lms", async (req, res) => {
     try {
@@ -49,20 +57,15 @@ router.post("/lms", async (req, res) => {
                 return res.status(200).json({ accessToken });
             }
 
-            const response = await axios.post('http://localhost:4000/api', {
+            const response = await axios.post(`${apiUrl}`, { //
                 studentId,
                 password,
             });
-            return res.status(200).json({ accessToken: response.data});
-            // const response = await axios.post(`${process.env.LMS_URL}`, {
-            //     studentId,
-            //     password,
-            // });
-            // const accessToken = response.data.rememberMeToken;
-            // await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
-            // return res.status(200).json({ accessToken, studentId});
+            const accessToken = response.data.rememberMeToken;
+            await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
+            return res.status(200).json({ accessToken, studentId});
         } else { // 최초 로그인 시도한 경우
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+            const response = await axios.post(`${apiUrl}`, {
                 studentId,
                 password,
             });
@@ -136,4 +139,3 @@ router.get("/logout", async (req, res) => {
 });
 
 module.exports = router;
-
