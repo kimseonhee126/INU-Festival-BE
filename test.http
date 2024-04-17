@@ -120,18 +120,3 @@ Content-Type: application/json
 # PUT 요청 : 관리자 부스 수정
 ###
 PUT http://localhost:4000/admin/booth
-
-###
-@host = https://api.inuappcenter.kr/account/status
-@id = '201901284'
-@password = 'rootroot1!'
-
-### Basic 인증을 사용한 POST 요청
-POST {{host}}
-Authorization: Basic {{base64(201901284 + ':' +rootroot1!)}}
-Content-Type: application/json
-
-{
-    "studentId": "201901284",
-    "password": "rootroot1!"
-}
