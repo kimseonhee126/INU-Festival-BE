@@ -21,7 +21,7 @@
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
     <div class="big_container">
-      <div class="title">유니랜드 부스 관리자</div>
+      <div class="title">UNI 💓 LAND 부스 관리자</div>
       <div class="login-container">
         <form id="loginForm" class="loginForm">
           <input type="text" id="studentId" placeholder="인천대 포털 학번" required />
@@ -48,10 +48,13 @@
         </div>
       </div>
       <div class="after_login hidden">
-        <div class="warning">주의!<br>부스를 선택하면 학번이 저장됩니다!<br>학번당 한 부스만 수정가능합니다!</div>      
-        <label for="choices">담당 부스를 선택하세요</label>
+        <div for="choices">담당 부스를 선택하세요</div>
+        <div class="warning"><span style="color: red;">⚠️ 주의!! ⚠️</span>
+          <br>부스 대표 <span style="color: red;">한 명만</span> 부스를 등록해 주세요!
+          <br>한번 등록한 이후 <span style="color: red;">본인 학번으로 등록된 부스 하나만</span> 수정 가능합니다!
+        </div>      
         <div class="select_title_box">
-          <div class="choice_category">카테고리 선택</div>
+          <!-- <div class="choice_category">카테고리 선택</div> -->
           <select id="choices" onchange="filterBooths()">
             <option class="option" value="비주점" selected>비주점</option>
             <option class="option" value="주점">주점</option>
@@ -62,7 +65,7 @@
             <div class="booth_list text_box"><%= booth.name %> | <%= booth.department %></div>
             <form class="boothForm">
               <input type="hidden" name="boothId" value="<%= booth.id %>">
-              <button type="button" class="edit edit-button">선택</button>
+              <button type="button" class="edit edit-button">등록</button>
             </form>
           </div>
         <% }); %>
@@ -72,3 +75,4 @@
 </html>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/login.js"></script>
+

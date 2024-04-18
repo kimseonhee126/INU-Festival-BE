@@ -113,7 +113,7 @@ function submitForm() {
   axiosWithAuthForUpload('detail', formData)
     .then(data => {
       // 성공 후 처리, 예를 들어 페이지 리다이렉트
-      // window.location.href = '/manage';
+      window.location.href = '/manage';
     })
     .catch(error => {
       console.error('Upload Error:', error);

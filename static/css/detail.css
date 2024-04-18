@@ -8,7 +8,7 @@
 .img_box {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .title_box {
@@ -21,7 +21,7 @@
 .delete_container {
   font-size: small;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   padding: 0.5rem 0 2rem 0;
 }
 
@@ -42,7 +42,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 0 0 0;
+  padding: 4rem 0 0 0;
 }
 
 .add_img {

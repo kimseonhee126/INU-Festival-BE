@@ -125,6 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', function(event) {
       event.preventDefault(); // 기본 이벤트 방지
 
+      const isConfirmed = confirm('지금 등록 이후 재등록이 불가합니다. 이 부스가 확실합니까?');
+      if (!isConfirmed) {
+        return; // 사용자가 취소를 누르면 작업을 중단
+      }
+
       const boothId = form.querySelector('[name="boothId"]').value;
 
       // fetchWithAuth 함수를 사용하여 데이터 전송
