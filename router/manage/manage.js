@@ -26,7 +26,7 @@ const myUrls = 'https://13.125.142.74.nip.io/';
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `${myUrls}public/img/nonalchol`)
+    cb(null, `public/img`)
   },
   filename: function (req, file, cb) {
     const date = new Date();
