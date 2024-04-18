@@ -77,11 +77,11 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
 });
 
 function updateDOMAfterLogin(data) {
-  console.log(data);
   document.getElementsByClassName("logout")[0].classList.remove("hidden");
   document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
   document.getElementsByClassName('login-container')[0].classList.add("hidden");
-  if(!data.rank|| data.barcode) { // 부스 배정이 안된 경우
+  console.log("랭크 가져오기",data); 
+  if(!data.rank) {
     document.getElementsByClassName("after_login")[0].classList.remove("hidden");
   } else { // 부스 배정이 된 경우
     document.getElementsByClassName("my_booth_box")[0].classList.remove("hidden");
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const boothId = form.querySelector('[name="boothId"]').value;
 
       // fetchWithAuth 함수를 사용하여 데이터 전송
-      fetchWithAuth('/manage/booth_linking', {
+      fetchWithAuth(`${myUrl}/manage/booth_linking`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .then(data => {
         console.log(data);
-        window.location.href = '/manage'; // 서버 응답 성공 후 페이지 리다이렉트
+        window.location.href = `${myUrl}/manage`; // 서버 응답 성공 후 페이지 리다이렉트
       })
       .catch(error => {
         console.error('Submission failed:', error);
