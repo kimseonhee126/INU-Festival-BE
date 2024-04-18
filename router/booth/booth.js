@@ -193,9 +193,8 @@ router.get('/:id/comment', async (req, res) => {
 
         const boothComments = myBoothComments.map(comment => {
             // 사용자의 studentId가 있으면 그 값을 userId로 사용
-            const userId = String(comment.User.studentId);
+            const hideLength = String(comment.User.studentId); // 학번을 문자열로 변환
 
-            const hideLength = userId.toString(); // 학번을 문자열로 변환
             const hiddenStudentId = hideLength.slice(0, hideLength.length - 3) + '***'; // 뒤에서 3자리를 가린 학번
 
             return {
