@@ -20,8 +20,8 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
-const myUrl = "http://localhost:4000"; // -> 개발용
-// const myUrl = "3.36.49.113.nip.io"; // -> 배포용
+// const myUrl = "http://localhost:4000"; // -> 개발용
+const myUrl = "3.36.49.113.nip.io"; // -> 배포용
 
 // 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {

@@ -32,8 +32,8 @@ router.get("/me", async (req, res) => {
 // *--- LMS 로그인 API ---*
 
 // apiUrl = process.env.LMS_URL; // 기존
-// apiUrl = process.env.API_URL; // -> 배포시
-apiUrl = "http://localhost:4000/api"; // -> 개발시
+apiUrl = process.env.API_URL; // -> 배포시
+// apiUrl = "http://localhost:4000/api"; // -> 개발시
 
 
 
