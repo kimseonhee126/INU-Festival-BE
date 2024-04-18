@@ -110,7 +110,7 @@ function submitForm() {
   });
 
   // 함수 호출
-  axiosWithAuthForUpload('detail', formData)
+  axiosWithAuthForUpload(`${myUrl}/manage/detail`, formData)
     .then(data => {
       // 성공 후 처리, 예를 들어 페이지 리다이렉트
       window.location.href = '/manage';
