@@ -167,7 +167,7 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
       ...req.body,
       updatedAt: new Date(),
     });
-
+    console.log(req.body);
     // 중복된 이미지 id 삭제
     deleteImgs = [...new Set(req.body.deleteImgs)];
 
