@@ -20,8 +20,8 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
-const myUrl = "http://localhost:4000"; // -> 개발용
-// const myUrl = "3.36.49.113.nip.io"; // -> 배포용
+// const myUrl = "http://localhost:4000"; // -> 개발용
+const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 // 새로고침시 실행되는 함수
 (function() {
