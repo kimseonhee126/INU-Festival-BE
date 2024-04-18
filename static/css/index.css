@@ -82,6 +82,7 @@ button {
 
 .info_box {
   padding: 1rem 0 2rem;
+  width: 100%;
 }
 .booth_box {
   border: 1px solid #ccc;
@@ -101,64 +102,29 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* --------------- detail ------------------- */
-
-.real_img {
-  width: 20rem;
-  object-fit: cover;
-}
-
-.img_box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.title_box {
+.select_title_box {
   display: flex;
   flex-direction: row;
-  justify-content: left;
-  width: 100%;
-}
-
-.delete_container {
-  font-size: small;
-  display: flex;
   justify-content: center;
+  gap: 1rem;
+  font-size: large;
 }
 
-.to_delete {
-  display: flex;
-  align-items: center;
-}
-
-.ask {
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
-  width: 9rem;
-}
-
-.edit_box {
+.after_login{
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 0 0 0;
 }
-
-.add_img {
-  margin: 1rem 0 1rem 0;
-}
-
-.ask_input {
-  width: 100%;
-}
-
-.dsc_box {
-  display: flex;
+.my_booth_box {
   flex-direction: column;
-  justify-content: left;
+  display: flex;
   width: 100%;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+.warning {
+  color: red;
+  font-size: 1.2rem;
+  line-height: 2rem;
 }

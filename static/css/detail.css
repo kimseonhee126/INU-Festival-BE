@@ -1,0 +1,69 @@
+/* --------------- detail ------------------- */
+
+.real_img {
+  width: 20rem;
+  object-fit: cover;
+}
+
+.img_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+.delete_container {
+  font-size: small;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 2rem 0;
+}
+
+.to_delete {
+  display: flex;
+  align-items: center;
+}
+
+.ask {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  width: 9rem;
+}
+
+.edit_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0 0 0;
+}
+
+.add_img {
+  margin: 1rem 0 1rem 0;
+}
+
+.ask_input {
+  width: 100%;
+}
+
+.dsc_box {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  gap: 1rem;
+}
+
+.select_title_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}

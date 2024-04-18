@@ -63,11 +63,9 @@ router.post("/lms", async (req, res) => {
                 password,
             });
             const accessToken = response.data.rememberMeToken;
-            const barcode = response.data.barcode;
             
             // 유저 생성
             await User.create({
-                barcode: barcode,
                 token: accessToken,
                 studentId: studentId,
                 provider: "LMS",

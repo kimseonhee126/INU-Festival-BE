@@ -3,8 +3,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-        // id를 1부터 다시 시작하는 로직 추가
-        await queryInterface.sequelize.query('ALTER TABLE Users AUTO_INCREMENT = 1;');
+    // id를 1부터 다시 시작하는 로직 추가
+    await queryInterface.sequelize.query('ALTER TABLE Users AUTO_INCREMENT = 1;');
     await queryInterface.bulkInsert(
       'Users',
       [
