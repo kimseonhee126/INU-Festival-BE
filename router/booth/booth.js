@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../models');
 const moment = require("moment");
+moment.tz.setDefault('Asia/Seoul'); // 로컬 시간대 설정
 
 const { realDays } = require('../../app');
 
@@ -19,7 +20,7 @@ router.get('/category', async (req, res) => {
     try {
         const categories = {
             days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
-            filters: ["주점", "비주점", "푸드트럭"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+            filters: ["주점", "비주점", "푸드트럭", "플리마켓", "존"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
         }
         res.json({ categories });
     } catch (error) {
@@ -38,7 +39,7 @@ router.get('/ranking', async (req, res) => {
 
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description','liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description','liked', 'markerImage'],
             include: [{
                 model: BoothDay,
                 where: { day: day }, 
@@ -65,7 +66,7 @@ router.get('/ranking', async (req, res) => {
             };
         }));
         
-        res.send({ booths: Booths });
+        res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send('Server error');
@@ -76,7 +77,7 @@ router.get('/ranking', async (req, res) => {
 router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
@@ -107,7 +108,7 @@ router.get('/all', async (req, res) => {
             };
         }));
 
-        res.send({ booths: Booths });
+        res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send('Server error');
@@ -119,7 +120,7 @@ router.get('/:id', async (req, res) => {
         const boothId = req.params.id; 
         const booth = await Booth.findOne({
             where: { id: boothId }, 
-            attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
         });
 
         if (!booth) {
@@ -163,7 +164,7 @@ router.get('/:id', async (req, res) => {
             boothComments: myBoothComments2,
         };
 
-        res.send({ booth: boothResponse });
+        res.status(200).send({ booth: boothResponse });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
@@ -192,10 +193,12 @@ router.get('/:id/comment', async (req, res) => {
 
         const boothComments = myBoothComments.map(comment => {
             // 사용자의 studentId가 있으면 그 값을 userId로 사용
-            const userId = String(comment.User.studentId);
+            const hideLength = String(comment.User.studentId); // 학번을 문자열로 변환
+
+            const hiddenStudentId = hideLength.slice(0, hideLength.length - 3) + '***'; // 뒤에서 3자리를 가린 학번
 
             return {
-                userId, // 새로운 userId 정의
+                userId: hiddenStudentId,
                 content: comment.content,
                 emoji: comment.emoji,
                 createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
@@ -203,7 +206,7 @@ router.get('/:id/comment', async (req, res) => {
             };
         });
 
-        res.send({ boothComments });
+        res.status(200).send({ boothComments });
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: 'Server error' });
@@ -250,21 +253,25 @@ router.post('/comment/:id', async (req, res) => {
             ...req.body,
             boothId: boothId
         });
-        
+
         // 필드별로 값을 할당
         comment.userId = existUser.id;
         await comment.save(); 
+
+        const hideLength = existUser.studentId.toString();                               // 학번을 문자열로 변환
+
+        const hiddenStudentId = hideLength.slice(0, hideLength.length - 3) + '***'; // 뒤에서 3자리를 가린 학번
 
         // createdAt과 updatedAt을 포맷하여 응답 객체에 추가
         const formattedResponse = {
             ...comment.toJSON(), // comment 객체의 나머지 필드를 포함
             id: String(comment.id),
             boothId: String(booth.id),
-            userId: existUser.studentId,
+            userId: hiddenStudentId,
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         };
-        res.send(formattedResponse);
+        res.status(200).send(formattedResponse);
 
     } catch (err) {
         console.error('ERROR: ', err);
@@ -313,7 +320,7 @@ router.put('/:bid/comment/:cid', async (req, res) => {
             createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         };
-        res.send(formattedResponse);
+        res.status(200).send(formattedResponse);
     } catch (err) {
         console.error('ERROR: ', err);
         res.status(500).send({ message: '댓글 수정에 실패했습니다.' });
@@ -354,7 +361,5 @@ router.delete('/:bid/comment/:cid', async (req, res) => {
         res.status(500).send({ message: '댓글 삭제에 실패했습니다.' });
     }
 });
-
-
 
 module.exports = router;

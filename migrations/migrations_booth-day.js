@@ -24,6 +24,9 @@ module.exports = {
       y: {
         type: Sequelize.STRING
       },
+      boothId: {
+        type: Sequelize.INTEGER,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -34,9 +37,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('Now'),
       },
-      boothId: {
-        type: Sequelize.INTEGER,
-      }
     });
   },
   async down(queryInterface, Sequelize) {

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/reset.css" >
+    <link rel="stylesheet" href="/css/index.css" />
+    <title>관리자</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+      .accessible {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+      } 
+    </style>
+  </head>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <body>
+    <div class="big_container">
+      <div class="title">UNI 💓 LAND 부스 관리자</div>
+      <div class="login-container">
+        <form id="loginForm" class="loginForm">
+          <input type="text" id="studentId" placeholder="인천대 포털 학번" required />
+          <input
+            type="password"
+            id="password"
+            placeholder="포털 비밀번호"
+            required
+          />
+          <button type="submit">로그인</button>
+        </form>
+      </div>
+      <div class="info_box box">
+        <div class="student text_box"></div>
+        <button onclick="logout()" class="logout hidden">로그아웃</button>
+      </div>
+      <div class="my_booth_box hidden">
+        <div class="assigned_booth text_box">등록된 부스</div>
+        <div class="booth_box box">
+          <div class="my_booth_name text_box"></div>
+          <form action="/manage/edit" method="GET">
+            <button class="edit">수정</button>
+          </form>
+        </div>
+      </div>
+      <div class="after_login hidden">
+        <div for="choices">담당 부스를 선택하세요</div>
+        <div class="warning"><span style="color: red;">⚠️ 주의!! ⚠️</span>
+          <br>부스 대표 <span style="color: red;">한 명만</span> 부스를 등록해 주세요!
+          <br>한번 등록한 이후 <span style="color: red;">본인 학번으로 등록된 부스 하나만</span> 수정 가능합니다!
+        </div>      
+        <div class="select_title_box">
+          <!-- <div class="choice_category">카테고리 선택</div> -->
+          <select id="choices" onchange="filterBooths()">
+            <option class="option" value="비주점" selected>비주점</option>
+            <option class="option" value="주점">주점</option>
+          </select>
+        </div>
+        <% allBooths.forEach(function(booth) { %>
+          <div class="booth_box box booth" data-category="<%= booth.category %>" data-department="<%= booth.department %>">
+            <div class="booth_list text_box"><%= booth.name %> | <%= booth.department %></div>
+            <form class="boothForm">
+              <input type="hidden" name="boothId" value="<%= booth.id %>">
+              <button type="button" class="edit edit-button">등록</button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/login.js"></script>
+

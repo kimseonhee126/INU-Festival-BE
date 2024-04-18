@@ -18,7 +18,6 @@ module.exports = {
       },
       rank: {
         type: Sequelize.INTEGER,
-        defaultValue: 1,
       },
       nick: {
         type: Sequelize.STRING(15),
@@ -30,7 +29,7 @@ module.exports = {
         type: Sequelize.STRING(20),
       },
       barcode: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

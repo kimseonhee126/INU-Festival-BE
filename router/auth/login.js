@@ -1,5 +1,4 @@
 const express = require("express");
-const session = require("express-session");
 const router = express.Router();
 const axios = require("axios");
 const dotenv = require("dotenv");
@@ -30,6 +29,14 @@ router.get("/me", async (req, res) => {
     }
 });
 
+// *--- LMS 로그인 API ---*
+
+// apiUrl = process.env.LMS_URL; // 기존
+// apiUrl = process.env.API_URL; // -> 배포시
+apiUrl = "http://localhost:4000/api"; // -> 개발시
+
+
+
 // POST /user/lms
 router.post("/lms", async (req, res) => {
     try {
@@ -37,7 +44,6 @@ router.post("/lms", async (req, res) => {
         // 토큰이 없을 수 있으므로..!! null 값일 수 있으므로..!!
         const token = req.headers["authorization"];
         const tokenValue = token ? token.split(" ")[1] : null;
-        console.log('studentId:', studentId);
 
         const existUser1 = await User.findOne({ where: { token: tokenValue } });
         const existUser2 = await User.findOne({ where: { studentId } });
@@ -48,32 +54,30 @@ router.post("/lms", async (req, res) => {
         if (existUser2) {
             if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
                 const accessToken = existUser2.token;
-                console.log("토큰값:", accessToken);
                 return res.status(200).json({ accessToken });
             }
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+
+            const response = await axios.post(`${apiUrl}`, { //
                 studentId,
                 password,
             });
             const accessToken = response.data.rememberMeToken;
             await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
-            return res.status(200).json({ accessToken });
+            return res.status(200).json({ accessToken, studentId});
         } else { // 최초 로그인 시도한 경우
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+            const response = await axios.post(`${apiUrl}`, {
                 studentId,
                 password,
             });
             const accessToken = response.data.rememberMeToken;
-            const barcode = response.data.barcode;
             
             // 유저 생성
             await User.create({
-                barcode: barcode,
                 token: accessToken,
                 studentId: studentId,
                 provider: "LMS",
             });
-            return res.status(200).json({ accessToken });
+            return res.status(200).json({ accessToken, studentId });
         }
     } catch (err) {
         console.error("에러:", err.message);
@@ -82,7 +86,7 @@ router.post("/lms", async (req, res) => {
             // API로부터의 응답 에러 처리
             res.status(err.response.status).json({
                 success: false,
-                message: err.response.data.message || "외부 API 요청 에러",
+                message: '🥹 학번과 비밀번호를 다시 확인해주세요..!!',
             });
         } else {
             // 요청을 보내는 중 문제가 발생한 경우

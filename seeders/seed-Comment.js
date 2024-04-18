@@ -7,7 +7,7 @@ module.exports = {
     await queryInterface.sequelize.query('ALTER TABLE Comments AUTO_INCREMENT = 1;');
 
     const insertData = [];
-    for(let boothId = 4; boothId <= 77; boothId++) {
+    for(let boothId = 70; boothId <= 77; boothId++) {
         // 각 boothId에 대해 같은 댓글을 3개씩 추가합니다.
         for(let commentCount = 0; commentCount < 3; commentCount++) {
             insertData.push({
