@@ -199,6 +199,7 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
 router.post('/booth_linking', async (req, res) => {
   try{
     const boothId = req.body.boothId;
+    console.log(boothId);
     const token = req.headers["authorization"];
     const tokenValue = token ? token.split(" ")[1] : null;
     // 해당 토큰을 가지고 있는 user 찾기
