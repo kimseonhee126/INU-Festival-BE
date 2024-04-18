@@ -20,7 +20,6 @@ const { Comment } = db;   //db.Comment
 const fs = require('fs')
 
 const multer = require('multer');
-const { create } = require("domain");
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -49,10 +48,15 @@ router.use(express.urlencoded({ extended: false }));
 
 // 로그인 페이지
 router.get("/", async (req, res) => {
-  res.render('login');
+
+  const allBooths = await Booth.findAll({
+    attributes: ['id', 'name', 'category', 'department'],
+  });
+
+  res.render('login', { allBooths: allBooths });
 });
 
-// 리스트 페이지
+// 리스트 페이지로 이동하는 효과
 router.get('/list', async (req, res) => { 
   try{
     // 토큰 받기
@@ -60,20 +64,23 @@ router.get('/list', async (req, res) => {
     const tokenValue = token ? token.split(" ")[1] : null;
     // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token: tokenValue } });
-    const booth = await Booth.findOne({ where: { id: findUser.rank }});
-    console.log(`부스: ${booth.name}`);
-
-    res.json({ success: true, booth: booth });
-
+    try {
+      const booth = await Booth.findOne({ where: { id: findUser.rank }});
+      res.json({ success: true, booth: booth, rank:findUser.rank, barcode: findUser.barcode });
+    } catch {
+      res.json({ success: true, booth: 0, rank:0, barcode: findUser.barcode });
+    }
   } catch(err) {
     res.json({ success: false, message: "서버 내부 오류"  });
   }
 });
 
+// 수정 페이지로 이동하는 효과
 router.get('/edit', (req, res) => {
   res.render('detail');
 });
 
+// 진짜 수정페이지
 router.get('/detail', async (req, res) => {
   try {
     const token = req.headers["authorization"];
@@ -85,7 +92,7 @@ router.get('/detail', async (req, res) => {
     }
 
     // Assume findUser.rank corresponds to boothId
-    const boothId = findUser.rank;
+    const boothId = findUser.rank !== undefined ? findUser.rank : null;
     const booth = await Booth.findOne({
       where: { id: boothId },
       attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
@@ -166,7 +173,10 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
         where: { id: imgId },
       })
       deletePath = deleteImg.url.split('/').pop();
-      fs.unlinkSync(`public/img/${deletePath}`);
+      try {
+        fs.unlinkSync(`public/img/${deletePath}`);
+      } catch {
+      }
       await deleteImg.destroy();
     });
 
@@ -182,6 +192,24 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
 
   } catch(err) {
     res.json({ success: false, message: "서버 내부 오류"  });
+  }
+});
+
+// 필터 선택시 적용해서 새로고침
+router.post('/booth_linking', async (req, res) => {
+  try{
+    const boothId = req.body.boothId;
+    const token = req.headers["authorization"];
+    const tokenValue = token ? token.split(" ")[1] : null;
+    // 해당 토큰을 가지고 있는 user 찾기
+    const findUser = await User.findOne({ where: { token: tokenValue } });
+    await findUser.update({
+      rank : boothId,
+    });
+    res.json({ success: true, message: "부스 링킹 성공" });
+
+  } catch(err) {
+    res.json({ success: false, message: "서버 booth_linking 오류"  });
   }
 });
 

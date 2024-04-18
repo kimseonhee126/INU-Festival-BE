@@ -20,11 +20,14 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "3.36.49.113.nip.io"; // -> 배포용
+
 // 새로고침시 실행되는 함수
 (function() {
   const authToken = localStorage.getItem('authToken');
   if (authToken) {
-    axiosWithAuth("http://localhost:4000/manage/detail")
+    axiosWithAuth(`${myUrl}/manage/detail`)
       .then(data => {
         // 이름, 소속, 소개 입력창에 기존 정보를 미리 채워넣음
         document.getElementById("booth_name_input").value = data.booth.name;
@@ -37,11 +40,16 @@ function axiosWithAuth(url, options = {}) {
         data.booth.boothImgs.forEach((img, index) => {
           const container = document.createElement("div");
           container.className = "img_container";
-          container.innerText = `삭제하려면 체크하세요`;
-
           const imageElement = document.createElement("img");
           imageElement.className = "real_img";
           imageElement.src = img.url;
+
+          const deleteContainer = document.createElement("div");
+          deleteContainer.className = "delete_container";
+
+          const toDelete = document.createElement("div");
+          toDelete.className = "to_delete";
+          toDelete.innerHTML = "삭제";
 
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -50,7 +58,9 @@ function axiosWithAuth(url, options = {}) {
           checkbox.value = img.id; // 이미지 ID를 값으로 설정
 
           container.appendChild(imageElement);
-          container.appendChild(checkbox);
+          deleteContainer.appendChild(toDelete);
+          deleteContainer.appendChild(checkbox);
+          container.appendChild(deleteContainer);
           img_box.appendChild(container);
         });
       })
@@ -103,7 +113,7 @@ function submitForm() {
   axiosWithAuthForUpload('detail', formData)
     .then(data => {
       // 성공 후 처리, 예를 들어 페이지 리다이렉트
-      // window.location.href = '/manage';
+      window.location.href = '/manage';
     })
     .catch(error => {
       console.error('Upload Error:', error);

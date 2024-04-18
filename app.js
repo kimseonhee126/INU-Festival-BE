@@ -50,6 +50,7 @@ const keywordRouter = require('./router/keyword/keyword.js');
 const onelineRouter = require('./router/oneline/oneline.js');
 const adminBoothRouter = require('./router/admin/booth.js');
 const ManageRouter = require('./router/manage/manage.js');
+const apiRouter = require('./router/auth/api.js');
 
 // app.use('/auth', kakaoRouter);                   // 카카오 로그인
 app.use('/user', loginRouter);                   // lms 로그인, 로그아웃
@@ -60,6 +61,7 @@ app.use('/keywords', keywordRouter);             // keyword 분리
 app.use('/sentence', onelineRouter);                // sentence 분리
 app.use('/admin', adminBoothRouter);             // Booth 관리자 페이지
 app.use('/manage', ManageRouter);             // Booth 관리자 페이지
+app.use('/api', apiRouter);                       // api 분리
 
 // 테스트용
 app.get('/', async (req, res) => {

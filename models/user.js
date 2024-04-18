@@ -24,8 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(15),
     },
     rank: {
-      type: DataTypes.INTEGER,
-      defaultValue: 1,
+      type: DataTypes.INTEGER,  
     },
     nick: {
       type: DataTypes.STRING(15),
@@ -41,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
     },
     barcode: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.INTEGER,  
     },
   }, {
     sequelize,

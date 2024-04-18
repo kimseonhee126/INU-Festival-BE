@@ -7,6 +7,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="/css/reset.css" >
       <link rel="stylesheet" href="/css/index.css" />
+      <link rel="stylesheet" href="/css/detail.css" />
       <title>유니온 관리자 페이지</title>
       <style>
         .hidden {
@@ -19,27 +20,30 @@
   <body>
     <div class="big_container">
       <form id="uploadForm" enctype="multipart/form-data">
-        <div class="info_box box">
-            <button type="button" class="cancel" onclick="location.href='/manage'">수정 취소</button>
-            <button type="button" class="save" onclick="submitForm()">저장</button>
-        </div>
-        <div class="img_box"></div>
-        <img src="" alt="">
+
+        <div class="img_box"></div> 
         <button type="button" class="add_img" onclick="addImageInput()">사진 추가</button>
 
-        <div class="name_box">
-            <div class="booth_name_ask">부스 이름 :</div>
-            <input id="booth_name_input" type="text" name="name"></input>
+        <div class="edit_box">
+          <div class="title_box">
+            <div class="booth_name_ask ask" >부스 이름 :</div>
+            <input id="booth_name_input" class="ask_input" type="text" name="name"></input>
+          </div>
+          <div class="title_box">
+              <div class="booth_dep_ask ask" >부스 소속 :</div>
+              <input id="booth_dep_input" class="ask_input" type="text" name="department"></input>
+          </div>
+          <div class="dsc_box">
+            <div class="booth_dis_ask ask" >부스 소개 :</div>
+            <textarea name="description" id="booth_dis_input" type="text" cols="30" rows="10"></textarea>
+          </div>
+          
         </div>
-        <div class="name_box">
-            <div class="booth_dep_ask">부스 소속 :</div>
-            <input id="booth_dep_input" type="text" name="department"></input>
-        </div>
-        <div class="name_box">
-          <div class="booth_dis_ask">부스 소개 :</div>
-          <input id="booth_dis_input" type="text" name="description"></input>
-      </div>
       </form>
+      <div class="info_box box">
+        <button type="button" class="cancel" onclick="location.href='/manage'">수정 취소</button>
+        <button type="button" class="save" onclick="submitForm()">저장</button>
+      </div>
     </div>
 
   </body>

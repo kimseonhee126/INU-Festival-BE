@@ -27,11 +27,11 @@ a {
   background-color: #F5F5F5;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  padding: 2.5rem 1rem 0 1rem;
+  min-height: 100%;
   font-weight: 700;
   font-size: 1.5rem;
   gap: 1rem;
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
 }
 
 .login-container {
@@ -46,12 +46,12 @@ a {
 #loginForm {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 input[type="text"],
 input[type="password"] {
   padding: 10px;
-  margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
@@ -82,6 +82,7 @@ button {
 
 .info_box {
   padding: 1rem 0 2rem;
+  width: 100%;
 }
 .booth_box {
   border: 1px solid #ccc;
@@ -94,28 +95,42 @@ button {
   width: 100%;
   text-align: left;
   align-items: center;
+  font-size: large;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-/* --------------- detail ------------------- */
-
-.real_img {
-  width: 20rem;
-  object-fit: cover;
+.select_title_box {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 1rem;
+  font-size: large;
 }
 
-.img_box {
+.after_login{
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
+}
+.my_booth_box {
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
 }
 
-.name_box {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  width: 100%;
+.warning {
+  background-color: white;
+  font-size: 1.2rem;
+  line-height: 2rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+#choices {
+  padding: 0.2rem;
+  font-size: 1rem;
 }

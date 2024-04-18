@@ -29,6 +29,14 @@ router.get("/me", async (req, res) => {
     }
 });
 
+// *--- LMS 로그인 API ---*
+
+// apiUrl = process.env.LMS_URL; // 기존
+// apiUrl = process.env.API_URL; // -> 배포시
+apiUrl = "http://localhost:4000/api"; // -> 개발시
+
+
+
 // POST /user/lms
 router.post("/lms", async (req, res) => {
     try {
@@ -48,7 +56,8 @@ router.post("/lms", async (req, res) => {
                 const accessToken = existUser2.token;
                 return res.status(200).json({ accessToken });
             }
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+
+            const response = await axios.post(`${apiUrl}`, { //
                 studentId,
                 password,
             });
@@ -56,16 +65,14 @@ router.post("/lms", async (req, res) => {
             await User.update({ token: accessToken }, { where: { studentId } }); // 재발급한 토큰저장하기
             return res.status(200).json({ accessToken, studentId});
         } else { // 최초 로그인 시도한 경우
-            const response = await axios.post(`${process.env.LMS_URL}`, {
+            const response = await axios.post(`${apiUrl}`, {
                 studentId,
                 password,
             });
             const accessToken = response.data.rememberMeToken;
-            const barcode = response.data.barcode;
             
             // 유저 생성
             await User.create({
-                barcode: barcode,
                 token: accessToken,
                 studentId: studentId,
                 provider: "LMS",
@@ -79,7 +86,7 @@ router.post("/lms", async (req, res) => {
             // API로부터의 응답 에러 처리
             res.status(err.response.status).json({
                 success: false,
-                message: err.response.data.message || "외부 API 요청 에러",
+                message: '🥹 학번과 비밀번호를 다시 확인해주세요..!!',
             });
         } else {
             // 요청을 보내는 중 문제가 발생한 경우

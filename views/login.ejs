@@ -6,18 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/reset.css" >
     <link rel="stylesheet" href="/css/index.css" />
-    <title>유니온 관리자 페이지</title>
+    <title>관리자</title>
     <style>
       .hidden {
         display: none;
       }
+      .accessible {
+        visibility: hidden;
+        position: absolute;
+        left: -9999px;
+      } 
     </style>
   </head>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <body>
-    <!-- <img src="http://127.0.0.1:4000/img/sample_img.png" alt="description" /> -->
     <div class="big_container">
-      <div class="title">유니온 관리자 페이지</div>
+      <div class="title">UNI 💓 LAND 부스 관리자</div>
       <div class="login-container">
         <form id="loginForm" class="loginForm">
           <input type="text" id="studentId" placeholder="인천대 포털 학번" required />
@@ -34,117 +38,41 @@
         <div class="student text_box"></div>
         <button onclick="logout()" class="logout hidden">로그아웃</button>
       </div>
-      <div class="assigned_booth text_box hidden">등록된 부스</div>
-      <div class="booth_box box hidden">
-        <div class="booth_list text_box"></div>
-        <form action="/manage/edit" method="GET">
+      <div class="my_booth_box hidden">
+        <div class="assigned_booth text_box">등록된 부스</div>
+        <div class="booth_box box">
+          <div class="my_booth_name text_box"></div>
+          <form action="/manage/edit" method="GET">
             <button class="edit">수정</button>
-        </form>
+          </form>
+        </div>
       </div>
-
+      <div class="after_login hidden">
+        <div for="choices">담당 부스를 선택하세요</div>
+        <div class="warning"><span style="color: red;">⚠️ 주의!! ⚠️</span>
+          <br>부스 대표 <span style="color: red;">한 명만</span> 부스를 등록해 주세요!
+          <br>한번 등록한 이후 <span style="color: red;">본인 학번으로 등록된 부스 하나만</span> 수정 가능합니다!
+        </div>      
+        <div class="select_title_box">
+          <!-- <div class="choice_category">카테고리 선택</div> -->
+          <select id="choices" onchange="filterBooths()">
+            <option class="option" value="비주점" selected>비주점</option>
+            <option class="option" value="주점">주점</option>
+          </select>
+        </div>
+        <% allBooths.forEach(function(booth) { %>
+          <div class="booth_box box booth" data-category="<%= booth.category %>" data-department="<%= booth.department %>">
+            <div class="booth_list text_box"><%= booth.name %> | <%= booth.department %></div>
+            <form class="boothForm">
+              <input type="hidden" name="boothId" value="<%= booth.id %>">
+              <button type="button" class="edit edit-button">등록</button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
     </div>
-
-    
   </body>
 </html>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/login.js"></script>
 
-// Auth 헤더를 포함한 fetch 함수
-function fetchWithAuth(url, options = {}) {
-  const authToken = localStorage.getItem('authToken');
-  const defaultOptions = {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      "Content-Type": "application/json",
-    }
-  };
-
-  const finalOptions = Object.assign({}, defaultOptions, options);
-  finalOptions.headers = Object.assign({}, defaultOptions.headers, options.headers);
-
-  return fetch(url, finalOptions)
-    .then(response => {
-      if (!response.ok) {
-        return Promise.reject(response);
-      }
-      return response.json(); // 서버로부터 받은 JSON 응답을 파싱
-    });
-}
-
-// 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
-(function() {
-  const authToken = localStorage.getItem('authToken');
-  if (authToken) {
-    fetchWithAuth("http://localhost:4000/user/me")
-      .then((data) => {
-        console.log('Success:', data);
-        document.getElementsByClassName("student")[0].innerText = `${data.name} 님`;
-        return fetchWithAuth("http://localhost:4000/manage/list");
-      })
-      .then(data => {
-        console.log('Success:', data);
-        updateDOMAfterLogin(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-})();
-
-// 로그인 폼 제출 이벤트
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  var studentId = document.getElementById("studentId").value;
-  var password = document.getElementById("password").value;
-
-  fetch("http://localhost:4000/user/lms", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      studentId: studentId,
-      password: password,
-    }),
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    if (data.accessToken) {
-      localStorage.setItem('authToken', data.accessToken);
-      document.getElementsByClassName("student")[0].innerText = `${data.studentId} 님`;
-      return fetchWithAuth("http://localhost:4000/manage/list");
-    } else {
-      alert(data.message || "로그인 실패");
-    }
-  })
-  .then(data => {
-    if (data) {
-      console.log('Success:', data);
-      updateDOMAfterLogin(data);
-    }
-  })
-  .catch((error) => console.error("Error:", error));
-});
-
-function updateDOMAfterLogin(data) {
-  document.getElementsByClassName("logout")[0].classList.remove("hidden");
-  document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
-  document.getElementsByClassName("booth_box")[0].classList.remove("hidden");
-  document.getElementsByClassName('login-container')[0].classList.add("hidden");
-  document.getElementsByClassName("booth_list")[0].innerText = `${data.booth.name} | ${data.booth.department}`;
-}
-
-// 로그아웃 함수
-function logout() {
-  fetchWithAuth("http://localhost:4000/user/logout")
-    .then((data) => {
-      if (data.success) {
-        localStorage.removeItem('authToken');
-        window.location.href = 'http://localhost:4000/manage/';
-      } else {
-        alert(data.message || "로그아웃 실패");
-      }
-    })
-    .catch((error) => console.error("Error:", error));
-}
-</script>
