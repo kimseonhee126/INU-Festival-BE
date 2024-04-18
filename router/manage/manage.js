@@ -21,9 +21,12 @@ const fs = require('fs')
 
 const multer = require('multer');
 
+// const myUrls = 'http://127.0.0.1:4000';
+const myUrls = 'https://13.125.142.74.nip.io/';
+
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/img/')
+    cb(null, `${myUrls}public/img/nonalchol`)
   },
   filename: function (req, file, cb) {
     const date = new Date();
@@ -179,9 +182,6 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
       }
       await deleteImg.destroy();
     });
-
-    // const myUrls = 'http://127.0.0.1:4000';
-    const myUrls = 'https://13.125.142.74.nip.io/';
 
     req.files.map(file => {
       BoothImg.create({
