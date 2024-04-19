@@ -98,7 +98,7 @@ router.get('/detail', async (req, res) => {
     const boothId = findUser.rank !== undefined ? findUser.rank : null;
     const booth = await Booth.findOne({
       where: { id: boothId },
-      attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+      attributes: ['id', 'name', 'category', 'department', 'description', 'time', 'location', 'x', 'y', 'liked'],
     });
 
     if (!booth) {
@@ -107,7 +107,7 @@ router.get('/detail', async (req, res) => {
 
     const myBoothDays = await BoothDay.findAll({
       where: { boothId: boothId },
-      attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
+      attributes: ['id', 'day'],
     });
 
     const myBoothImgs = await BoothImg.findAll({

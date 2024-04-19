@@ -21,6 +21,18 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
+      time: {
+        type: Sequelize.STRING
+      },
+      location: {
+        type: Sequelize.STRING
+      },
+      x: {
+        type: Sequelize.STRING
+      },
+      y: {
+        type: Sequelize.STRING
+      },
       liked: {
         type: Sequelize.INTEGER
       },
