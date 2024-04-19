@@ -141,7 +141,6 @@ router.get('/detail', async (req, res) => {
       boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
       boothComments: myBoothComments2,
   };
-  console.log(boothResponse);
   res.send({ booth: boothResponse });
 } catch (err) {
   console.error('ERROR: ', err);
@@ -167,7 +166,6 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
       ...req.body,
       updatedAt: new Date(),
     });
-    console.log(req.body);
     // 중복된 이미지 id 삭제
     deleteImgs = [...new Set(req.body.deleteImgs)];
 
@@ -201,7 +199,6 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
 router.post('/booth_linking', async (req, res) => {
   try{
     const boothId = req.body.boothId;
-    console.log(boothId);
     const token = req.headers["authorization"];
     const tokenValue = token ? token.split(" ")[1] : null;
     // 해당 토큰을 가지고 있는 user 찾기
