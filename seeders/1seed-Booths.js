@@ -7,9 +7,10 @@ module.exports = {
     // 시퀀스를 다시 시작하는 로직 추가
     await queryInterface.sequelize.query('ALTER TABLE Booths AUTO_INCREMENT = 1;');
 
-    let workbook = XLSX.readFile(__dirname + '/../public/stylesheets/booth-excel-seed.xlsx');
+    let workbook = XLSX.readFile(__dirname + '/../public/stylesheets/booth_data_list.xlsx');
     let worksheet = workbook.Sheets[workbook.SheetNames[0]]; // 첫번째 시트를 선택
     let range = XLSX.utils.decode_range(worksheet['!ref']); // 시트의 데이터 범위를 가져옵니다.
+    console.log(range);
 
     let data = [];
     // 데이터 범위 내의 모든 행을 순회합니다.
@@ -25,12 +26,14 @@ module.exports = {
         category: row[1] || '',
         department: row[2] || '',
         description: row[3] || '',
-        liked: row[4] || 0,
-        markerImage: row[5] || '',
+        time: row[4] || '',
+        location: row[5] || '',
+        x: row[6] || '',
+        y: row[7] || '',
+        markerImage: row[8] || '',
       };
       data.push(obj);
     }
-
     return queryInterface.bulkInsert('Booths', data, {});
   },
 

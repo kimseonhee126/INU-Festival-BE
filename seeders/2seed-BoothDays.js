@@ -7,8 +7,8 @@ module.exports = {
     // id를 1부터 다시 시작하는 로직 추가
     await queryInterface.sequelize.query('ALTER TABLE BoothDays AUTO_INCREMENT = 1;');
 
-    let workbook = XLSX.readFile(__dirname + '/../public/stylesheets/boothday-excel-seed.xlsx');
-    let worksheet = workbook.Sheets[workbook.SheetNames[0]]; // 첫번째 시트를 선택
+    let workbook = XLSX.readFile(__dirname + '/../public/stylesheets/booth_data_list.xlsx');
+    let worksheet = workbook.Sheets[workbook.SheetNames[1]]; // 두번째 시트를 선택
     let range = XLSX.utils.decode_range(worksheet['!ref']); // 시트의 데이터 범위를 가져옵니다.
 
     let data = [];
@@ -22,11 +22,7 @@ module.exports = {
       }
       let obj = {
         day: row[0] || '',
-        time: row[1] || '',
-        location: row[2] || '',
-        x: row[3] || '',
-        y: row[4] || '',
-        boothId: parseInt(row[5], 10) || 1, // 문자열 'boothId'를 정수로 변환
+        boothId: parseInt(row[1], 10) || 1, // 문자열 'boothId'를 정수로 변환
       };
       data.push(obj);
     }

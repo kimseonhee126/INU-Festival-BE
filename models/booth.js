@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     category: DataTypes.STRING,
     department: DataTypes.STRING,
     description: DataTypes.STRING,
+    time: DataTypes.STRING,
+    location: DataTypes.STRING,
+    x: DataTypes.STRING,
+    y: DataTypes.STRING,
     liked: DataTypes.INTEGER,
     markerImage: DataTypes.STRING,
   }, {

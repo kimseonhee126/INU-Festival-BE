@@ -21,8 +21,8 @@ const fs = require('fs')
 
 const multer = require('multer');
 
-// const myUrls = 'http://127.0.0.1:4000';
-const myUrls = 'https://13.125.142.74.nip.io';
+const myUrls = 'http://127.0.0.1:4000';
+// const myUrls = 'https://13.125.142.74.nip.io';
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -98,7 +98,7 @@ router.get('/detail', async (req, res) => {
     const boothId = findUser.rank !== undefined ? findUser.rank : null;
     const booth = await Booth.findOne({
       where: { id: boothId },
-      attributes: ['id', 'name', 'category', 'department', 'description', 'liked'],
+      attributes: ['id', 'name', 'category', 'department', 'description', 'time', 'location', 'x', 'y', 'liked'],
     });
 
     if (!booth) {
@@ -107,7 +107,7 @@ router.get('/detail', async (req, res) => {
 
     const myBoothDays = await BoothDay.findAll({
       where: { boothId: boothId },
-      attributes: ['id', 'day', 'time', 'location', 'x', 'y'],
+      attributes: ['id', 'day'],
     });
 
     const myBoothImgs = await BoothImg.findAll({
@@ -157,10 +157,6 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
     // 해당 토큰을 가지고 있는 user 찾기
     const findUser = await User.findOne({ where: { token: tokenValue } });
     const booth = await Booth.findOne({ where: { id: findUser.rank }});
-
-    const boothImgs = await BoothImg.findAll({
-      where: { boothId: booth.id },
-    });
 
     await booth.update({
       ...req.body,

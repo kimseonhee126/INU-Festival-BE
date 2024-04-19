@@ -23,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     day: DataTypes.STRING,
-    time: DataTypes.STRING,
-    location: DataTypes.STRING,
-    x: DataTypes.STRING,
-    y: DataTypes.STRING,
     boothId: {
       type: DataTypes.INTEGER,
       allowNull: false,
