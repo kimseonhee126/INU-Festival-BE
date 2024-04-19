@@ -158,10 +158,6 @@ router.post('/detail', upload.array('imgs', 10), async (req, res) => {
     const findUser = await User.findOne({ where: { token: tokenValue } });
     const booth = await Booth.findOne({ where: { id: findUser.rank }});
 
-    const boothImgs = await BoothImg.findAll({
-      where: { boothId: booth.id },
-    });
-
     await booth.update({
       ...req.body,
       updatedAt: new Date(),

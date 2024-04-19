@@ -33,6 +33,7 @@ const myUrl = "http://localhost:4000"; // -> 개발용
         document.getElementById("booth_name_input").value = data.booth.name;
         document.getElementById("booth_dep_input").value = data.booth.department;
         document.getElementById("booth_dis_input").value = data.booth.description;
+        document.getElementById("booth_loc_input").value = data.booth.location;
 
         const img_box = document.getElementsByClassName("img_box")[0];
 
