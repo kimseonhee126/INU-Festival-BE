@@ -33,7 +33,7 @@ module.exports = {
         liked: 0,
         markerImage: row[9] || '',
       };
-      // console.log(`markerImage : ${obj.markerImage}`);
+      console.log(`markerImage : ${obj.markerImage}`);
       data.push(obj);
     }
     return queryInterface.bulkInsert('Booths', data, {});
