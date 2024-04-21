@@ -30,8 +30,10 @@ module.exports = {
         location: row[5] || '',
         x: row[6] || '',
         y: row[7] || '',
-        markerImage: row[8] || '',
+        liked: 0,
+        markerImage: row[9] || '',
       };
+      // console.log(`markerImage : ${obj.markerImage}`);
       data.push(obj);
     }
     return queryInterface.bulkInsert('Booths', data, {});
