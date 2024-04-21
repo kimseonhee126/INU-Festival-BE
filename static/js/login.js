@@ -95,7 +95,7 @@ function updateDOMAfterLogin(data) {
 
       const elements3 = document.getElementsByClassName("chong_edit_btn");
       for (let i = 0; i < elements3.length; i++) {
-        elements3[i].classList.add("hidden");
+        elements3[i].classList.remove("hidden");
       }
 
       const elements2 = document.getElementsByClassName("chong_option");

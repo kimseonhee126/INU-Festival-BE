@@ -73,8 +73,9 @@
               <input type="hidden" name="boothId" value="<%= booth.id %>">
               <button type="button" class="edit edit-button">등록</button>
             </form>
-            <form action="/manage/edit" method="GET">
-              <button class="edit" value="<%= booth.id %>">수정</button>
+            <form class="chong_edit_btn hidden" action="/manage/edit" method="GET">
+              <input type="hidden" name="boothId" value="<%= booth.id %>">
+              <button class="edit">수정</button>
             </form>
           </div>
         <% }); %>
