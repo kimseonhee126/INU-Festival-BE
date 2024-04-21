@@ -85,7 +85,7 @@ router.get('/all', async (req, res) => {
 
             const myBoothDays = await BoothDay.findAll({
                 where: { boothId: boothId },
-                attributes: ['id', 'day'],
+                attributes: ['id', 'day', 'boothId'],
             });
 
             const myBoothImgs = await BoothImg.findAll({
