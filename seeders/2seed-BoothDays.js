@@ -25,6 +25,7 @@ module.exports = {
         boothId: parseInt(row[1], 10) || 1, // 문자열 'boothId'를 정수로 변환
       };
       data.push(obj);
+    //   console.log(`data : ${data}`);
     }
     return queryInterface.bulkInsert('BoothDays', data, {});
   },
