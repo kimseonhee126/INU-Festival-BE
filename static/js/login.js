@@ -20,8 +20,8 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
-// const myUrl = "http://localhost:4000"; // -> 개발용
-const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 // 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {
@@ -39,7 +39,7 @@ const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
         console.error('Error:', error);
       });
   }
-  filterBooths();  // 초기 로딩에서도 필터링 적용
+  filterBooths(authToken);  // 초기 로딩에서도 필터링 적용
 })();
 
 // 로그인 폼 제출 이벤트
@@ -63,24 +63,24 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     if (data.accessToken) {
       localStorage.setItem('authToken', data.accessToken);
       document.getElementsByClassName("student")[0].innerText = `${data.studentId} 님`;
-      return fetchWithAuth(`${myUrl}/manage/list`);
+      return fetchWithAuth(`${myUrl}/manage/list`); // 개인정보에 대한 부스정보 가져오기
     } else {
       alert(data.message || "로그인 실패");
     }
   })
   .then(data => {
     if (data) {
-      updateDOMAfterLogin(data);
+      updateDOMAfterLogin(data); // 로그인성공 후 -> 부스등록유무에 따른 DOM 변경
     }
   })
   .catch((error) => console.error("Error:", error));
 });
 
+// 로그인성공 후 -> 부스등록유무에 따른 DOM 변경
 function updateDOMAfterLogin(data) {
   document.getElementsByClassName("logout")[0].classList.remove("hidden");
   document.getElementsByClassName("assigned_booth")[0].classList.remove("hidden");
   document.getElementsByClassName('login-container')[0].classList.add("hidden");
-  console.log("랭크 가져오기",data); 
   if(!data.rank) {
     document.getElementsByClassName("after_login")[0].classList.remove("hidden");
   } else { // 부스 배정이 된 경우
@@ -103,10 +103,10 @@ function logout() {
     .catch((error) => console.error("Error:", error));
 }
 
-function filterBooths() {
+function filterBooths(authToken) {
   var selectedValue = document.getElementById('choices').value;
-  var booths = document.querySelectorAll('.booth');
 
+  var booths = document.querySelectorAll('.booth');
   booths.forEach(function(booth) {
       // 데이터 속성에서 booth의 카테고리를 확인하고, department가 '총학생회'가 아닌지도 체크합니다.
       if (booth.getAttribute('data-category') === selectedValue && booth.getAttribute('data-department') !== '총학생회') {
