@@ -11,7 +11,7 @@ module.exports = {
         // ----------------------- 재학생 공연 -----------------------
         {
           name: '포크라인',
-          date: '10월 06일',
+          date: '5월 07일',
           day: 'day1',
           time: '18:30 ~ 19:00',
           category: '동아리',
@@ -20,7 +20,7 @@ module.exports = {
         },
         {
           name: '울림',
-          date: '10월 06일',
+          date: '5월 07일',
           day: 'day1',
           time: '19:00 ~ 19:30',
           category: '동아리',
@@ -29,7 +29,7 @@ module.exports = {
         },
         {
           name: '커플리온스',
-          date: '10월 06일',
+          date: '5월 07일',
           day: 'day1',
           time: '19:30 ~ 20:00',
           category: '동아리',
@@ -38,7 +38,7 @@ module.exports = {
         },
         {
           name: '인스디스',
-          date: '12월 12일',
+          date: '5월 07일',
           day: 'day1',
           time: '20:00 ~ 20:30',
           category: '동아리',
@@ -47,7 +47,7 @@ module.exports = {
         },
         {
           name: '피아노동아리',
-          date: '12월 13일',
+          date: '5월 08일',
           day: 'day2',
           time: '19:30 ~ 20:00',
           category: '동아리',
@@ -56,7 +56,7 @@ module.exports = {
         },
         {
           name: '플라워',
-          date: '12월 13일',
+          date: '5월 08일',
           day: 'day2',
           time: '20:00 ~ 20:30',
           category: '동아리',
@@ -65,7 +65,7 @@ module.exports = {
         },
         {
           name: '커플리온스',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '19:30 ~ 20:00',
           category: '동아리',
@@ -74,7 +74,7 @@ module.exports = {
         },
         {
           name: '게임동아리',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '20:00 ~ 20:30',
           category: '동아리',
@@ -83,7 +83,7 @@ module.exports = {
         },
         {
           name: '댄스동아리',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '20:30 ~ 21:00',
           category: '동아리',
@@ -94,7 +94,7 @@ module.exports = {
         // ----------------------- 연예인 공연 -----------------------
         {
           name: '데이먼스 이어',
-          date: '12월 12일',
+          date: '5월 07일',
           day: 'day1',
           time: '21:00 ~ 21:30',
           category: '연예인',
@@ -103,7 +103,7 @@ module.exports = {
         },
         {
           name: '볼빨간 사춘기',
-          date: '12월 12일',
+          date: '5월 07일',
           day: 'day1',
           time: '21:30 ~ 22:00',
           category: '연예인',
@@ -112,7 +112,7 @@ module.exports = {
         },
         {
           name: '뉴진스',
-          date: '12월 12일',
+          date: '5월 07일',
           day: 'day1',
           time: '22:00 ~ 22:30',
           category: '연예인',
@@ -121,7 +121,7 @@ module.exports = {
         },
         {
           name: '블랙핑크',
-          date: '12월 13일',
+          date: '5월 08일',
           day: 'day2',
           time: '23:00 ~ 23:30',
           category: '연예인',
@@ -130,7 +130,7 @@ module.exports = {
         },
         {
           name: '아이즈원',
-          date: '12월 13일',
+          date: '5월 08일',
           day: 'day2',
           time: '23:30 ~ 24:00',
           category: '연예인',
@@ -139,7 +139,7 @@ module.exports = {
         },
         {
           name: '에이핑크',
-          date: '12월 13일',
+          date: '5월 08일',
           day: 'day2',
           time: '24:00 ~ 24:30',
           category: '연예인',
@@ -148,7 +148,7 @@ module.exports = {
         },
         {
           name: '트와이스',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '21:30 ~ 22:00',
           category: '연예인',
@@ -157,7 +157,7 @@ module.exports = {
         },
         {
           name: '아이유',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '22:00 ~ 22:30',
           category: '연예인',
@@ -166,7 +166,7 @@ module.exports = {
         },
         {
           name: '방탄소년단',
-          date: '12월 14일',
+          date: '5월 09일',
           day: 'day3',
           time: '22:30 ~ 23:00',
           category: '연예인',
