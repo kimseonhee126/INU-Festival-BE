@@ -21,8 +21,8 @@ const fs = require('fs')
 
 const multer = require('multer');
 
-const myUrls = 'http://127.0.0.1:4000';
-// const myUrls = 'https://13.125.142.74.nip.io';
+// const myUrls = 'http://127.0.0.1:4000';
+const myUrls = 'https://13.125.142.74.nip.io';
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -203,7 +203,6 @@ router.post('/detail2', async (req, res) => {
         boothComments: myBoothComments2,
     };
 
-    console.log(boothResponse);
     res.send({ booth: boothResponse });
   } catch (err) {
     console.error('ERROR: ', err);
