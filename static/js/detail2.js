@@ -22,54 +22,51 @@ function axiosWithAuth(url, options = {}) {
 
 const myUrl = "http://localhost:4000"; // -> 개발용
 // const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
-
+const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
 // 새로고침시 실행되는 함수
-(function() {
-  const authToken = localStorage.getItem('authToken');
-  if (authToken) {
-    axiosWithAuth(`${myUrl}/manage/detail`)
-      .then(data => {
-        // 이름, 소속, 소개 입력창에 기존 정보를 미리 채워넣음
-        document.getElementById("booth_name_input").value = data.booth.name;
-        document.getElementById("booth_dep_input").value = data.booth.department;
-        document.getElementById("booth_dis_input").value = data.booth.description;
-        document.getElementById("booth_loc_input").value = data.booth.location;
+axios.post('detail2', {boothId: boothId})
+  .then(response => {
+    const boothData = response.data.booth; // 이렇게 수정
+    console.log(boothData);
+    document.getElementById("booth_name_input").value = boothData.name;
+    document.getElementById("booth_dep_input").value = boothData.department;
+    document.getElementById("booth_dis_input").value = boothData.description;
+    document.getElementById("booth_loc_input").value = boothData.location;
 
-        const img_box = document.getElementsByClassName("img_box")[0];
+    const img_box = document.getElementsByClassName("img_box")[0];
 
-        // 기존 이미지들과 체크박스를 미리보기로 생성
-        data.booth.boothImgs.forEach((img, index) => {
-          const container = document.createElement("div");
-          container.className = "img_container";
-          const imageElement = document.createElement("img");
-          imageElement.className = "real_img";
-          imageElement.src = img.url;
+    // 기존 이미지들과 체크박스를 미리보기로 생성
+    boothData.boothImgs.forEach((img, index) => {
+      const container = document.createElement("div");
+      container.className = "img_container";
+      const imageElement = document.createElement("img");
+      imageElement.className = "real_img";
+      imageElement.src = img.url;
 
-          const deleteContainer = document.createElement("div");
-          deleteContainer.className = "delete_container";
+      const deleteContainer = document.createElement("div");
+      deleteContainer.className = "delete_container";
 
-          const toDelete = document.createElement("div");
-          toDelete.className = "to_delete";
-          toDelete.innerHTML = "삭제";
+      const toDelete = document.createElement("div");
+      toDelete.className = "to_delete";
+      toDelete.innerHTML = "삭제";
 
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.className = "delete_img";
-          checkbox.name = "deleteImgs";
-          checkbox.value = img.id; // 이미지 ID를 값으로 설정
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "delete_img";
+      checkbox.name = "deleteImgs";
+      checkbox.value = img.id; // 이미지 ID를 값으로 설정
 
-          container.appendChild(imageElement);
-          deleteContainer.appendChild(toDelete);
-          deleteContainer.appendChild(checkbox);
-          container.appendChild(deleteContainer);
-          img_box.appendChild(container);
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-})();
+      container.appendChild(imageElement);
+      deleteContainer.appendChild(toDelete);
+      deleteContainer.appendChild(checkbox);
+      container.appendChild(deleteContainer);
+      img_box.appendChild(container);
+    });
+  })
+  .catch(error => {
+    console.error('Upload Error:', error);
+  });
+
 
 // 사진 업로드 요청을 보내는 함수
 function axiosWithAuthForUpload(url, formData, options = {}) {
@@ -104,15 +101,17 @@ function submitForm() {
 
   // 체크된 이미지 ID들을 폼 데이터에 추가
   const deleteImgs = document.querySelectorAll(".delete_img:checked");
-  let count = 0; 
   deleteImgs.forEach(img => {
     formData.append('deleteImgs', img.value);
-    count++;
   });
 
-  // 함수 호출
-  axiosWithAuthForUpload('detail', formData)
-    .then(data => {
+  // 폼 데이터에 boothId 추가
+  const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
+  formData.append('boothId', boothId);  // formData에 boothId를 추가합니다.
+
+  // axios 호출
+  axios.post('detail3', formData)
+    .then(response => {
       // 성공 후 처리, 예를 들어 페이지 리다이렉트
       window.location.href = '/manage';
     })
@@ -120,6 +119,7 @@ function submitForm() {
       console.error('Upload Error:', error);
     });
 }
+
 
 // 사진 버튼 누르면 이미지 업로드 창 생성
 function addImageInput() {

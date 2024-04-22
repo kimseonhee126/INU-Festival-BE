@@ -21,8 +21,8 @@ const fs = require('fs')
 
 const multer = require('multer');
 
-// const myUrls = 'http://127.0.0.1:4000';
-const myUrls = 'https://13.125.142.74.nip.io';
+const myUrls = 'http://127.0.0.1:4000';
+// const myUrls = 'https://13.125.142.74.nip.io';
 
 const _storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -146,6 +146,106 @@ router.get('/detail', async (req, res) => {
   console.error('ERROR: ', err);
   res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
 }
+});
+
+// 수정 페이지로 이동하는 효과2 -> chonghak
+router.post('/edit2', (req, res) => {
+  const boothId = req.body.boothId;
+  res.render('detail2', { boothId: boothId });
+});
+
+router.post('/detail2', async (req, res) => {
+  try {
+    const boothId = req.body.boothId;
+    const booth = await Booth.findOne({
+      where: { id: boothId },
+      attributes: ['id', 'name', 'category', 'department', 'description', 'time', 'location', 'x', 'y', 'liked'],
+    });
+
+    if (!booth) {
+      return res.status(404).json({ success: false, message: "Booth not found" });
+    }
+
+    const myBoothDays = await BoothDay.findAll({
+      where: { boothId: boothId },
+      attributes: ['id', 'day'],
+    });
+
+    const myBoothImgs = await BoothImg.findAll({
+      where: { boothId: boothId },
+      attributes: ['id', 'url'],
+    });
+
+    const myBoothComments = await Comment.findAll({
+        where: { boothId: boothId },
+    });
+
+    const myBoothComments2 = myBoothComments.map(comment => ({
+        id: String(comment.id),
+        content: comment.content,
+        createdAt: moment(comment.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(comment.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+    }));
+
+    // 변환 로직 추가: boothDay의 day 숫자를 요일 문자열로 변환
+    const boothDaysWithRealDay = myBoothDays.map(boothDay => {
+        const dayIndex = boothDay.day - 1; // 배열 인덱스를 위해 1 감소
+        return {
+            ...boothDay.get({ plain: true }),
+            day: realDays[dayIndex], // 숫자를 실제 요일로 변환
+        };
+    });
+
+    const boothResponse = {
+        ...booth.get({ plain: true }),
+        boothDays: boothDaysWithRealDay,
+        boothImgs: myBoothImgs.map(img => img.get({ plain: true })),
+        boothComments: myBoothComments2,
+    };
+
+    console.log(boothResponse);
+    res.send({ booth: boothResponse });
+  } catch (err) {
+    console.error('ERROR: ', err);
+    res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
+  }
+});
+
+router.post('/detail3', upload.array('imgs', 10), async (req, res) => {
+  try{
+    const booth = await Booth.findOne({ where: { id: req.body.boothId }});
+
+    await booth.update({
+      ...req.body,
+      updatedAt: new Date(),
+    });
+    // 중복된 이미지 id 삭제
+    deleteImgs = [...new Set(req.body.deleteImgs)];
+
+    deleteImgs.map(async (imgId) => {
+      const deleteImg = await BoothImg.findOne({
+        where: { id: imgId },
+      })
+      deletePath = deleteImg.url.split('/').pop();
+      try {
+        fs.unlinkSync(`public/img/${deletePath}`);
+      } catch {
+      }
+      await deleteImg.destroy();
+    });
+
+    req.files.map(file => {
+      BoothImg.create({
+        url: myUrls+'/img/'+file.filename,
+        boothId: booth.id,
+      });
+    });
+
+    res.json({ success: true, booth: booth });
+
+  } catch(err) {
+    res.json({ success: false, message: "서버 내부 오류"  });
+  }
 });
 
 
