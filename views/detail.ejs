@@ -39,7 +39,8 @@
         </div>
           <div class="dsc_box">
             <div class="booth_dis_ask ask" >부스 소개 :</div>
-            <textarea name="description" id="booth_dis_input" type="text" cols="30" rows="10"></textarea>
+            <textarea name="description" id="booth_dis_input" oninput="checkLength()" type="text" cols="30" rows="30"></textarea>
+            <div id="textCounter">0 / 900</div>
           </div>
           
         </div>
