@@ -119,7 +119,7 @@ router.get("/logout", async (req, res) => {
                 .status(404)
                 .json({ success: false, message: "사용자를 찾을 수 없습니다." });
         }
-        if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "201500000") {
+        if (studentId == "201100000" || studentId == "201200000" || studentId == "201300000" || studentId == "201400000" || studentId == "chonghak") {
             return res.status(200).json({ success: true, message: "성공적으로 로그아웃 되었습니다." });
         }
         // 사용자를 찾았다면, 토큰을 초기화합니다.

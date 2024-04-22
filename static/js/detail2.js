@@ -28,7 +28,6 @@ const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data
 axios.post('detail2', {boothId: boothId})
   .then(response => {
     const boothData = response.data.booth; // 이렇게 수정
-    console.log(boothData);
     document.getElementById("booth_name_input").value = boothData.name;
     document.getElementById("booth_dep_input").value = boothData.department;
     document.getElementById("booth_dis_input").value = boothData.description;

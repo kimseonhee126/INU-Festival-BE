@@ -135,7 +135,6 @@ function filterBooths(selectedValue, chong) {
   booths.forEach(function(booth) {
       // 데이터 속성에서 booth의 카테고리를 확인합니다.
 
-      console.log(chong);
       if (chong === 1) { // 총학생회인 경우
         if (booth.getAttribute('data-category') === selectedValue) {
           booth.style.display = '';  // 카테고리가 일치하면
@@ -180,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => {
       })
       .then(data => {
-        console.log(data);
         window.location.href = `${myUrl}/manage`; // 서버 응답 성공 후 페이지 리다이렉트
       })
       .catch(error => {

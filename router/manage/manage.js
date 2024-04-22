@@ -203,7 +203,6 @@ router.post('/detail2', async (req, res) => {
         boothComments: myBoothComments2,
     };
 
-    console.log(boothResponse);
     res.send({ booth: boothResponse });
   } catch (err) {
     console.error('ERROR: ', err);
