@@ -82,7 +82,7 @@ function updateDOMAfterLogin(data) {
   document.getElementsByClassName('login-container')[0].classList.add("hidden");
   if(!data.rank) {
     document.getElementsByClassName("after_login")[0].classList.remove("hidden");
-    filterBooths("비주점");
+
     if(data.barcode === 1) {
       document.getElementsByClassName("choices")[0].classList.add("hidden");
       document.getElementsByClassName("warning")[0].classList.add("hidden");
@@ -105,6 +105,8 @@ function updateDOMAfterLogin(data) {
       filterBooths("비주점", 1);
 
       return;
+    } else {
+      filterBooths("비주점");
     }
   } else { // 부스 배정이 된 경우
     document.getElementsByClassName("my_booth_box")[0].classList.remove("hidden");
@@ -132,11 +134,13 @@ function filterBooths(selectedValue, chong) {
   var booths = document.querySelectorAll('.booth');
   booths.forEach(function(booth) {
       // 데이터 속성에서 booth의 카테고리를 확인합니다.
+
+      console.log(chong);
       if (chong === 1) { // 총학생회인 경우
         if (booth.getAttribute('data-category') === selectedValue) {
           booth.style.display = '';  // 카테고리가 일치하면
         } else {
-            booth.style.display = 'none';  // 그 외의 경우는 숨깁니다.
+          booth.style.display = 'none';  // 그 외의 경우는 숨깁니다.
         }
         return;
       } else { // 총학생회가 아닌 경우
