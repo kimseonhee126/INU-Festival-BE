@@ -20,8 +20,9 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
-const myUrl = "http://localhost:4000"; // -> 개발용
-// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+// const myUrl = "http://localhost:4000"; // -> 개발용
+const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+
 const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
 // 새로고침시 실행되는 함수
 axios.post('detail2', {boothId: boothId})
