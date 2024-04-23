@@ -20,8 +20,8 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
-// const myUrl = "http://localhost:4000"; // -> 개발용
-const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 // 새로고침시 실행되는 함수
 (function() {
@@ -156,4 +156,16 @@ function previewImages() {
     };
     reader.readAsDataURL(file);
   });
+}
+
+function checkLength() {
+    let textarea = document.getElementById('booth_dis_input');
+    let counter = document.getElementById('textCounter');
+    let maxLength = 900;
+    let currentLength = textarea.value.length;
+
+    if (currentLength > maxLength) {
+        textarea.value = textarea.value.substring(0, maxLength);
+    }
+    counter.innerHTML = `${currentLength} / ${maxLength}`;
 }

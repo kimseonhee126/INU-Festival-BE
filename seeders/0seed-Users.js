@@ -26,7 +26,7 @@ module.exports = {
         },
         {
           token: '123455',
-          studentId: '201500000',
+          studentId: 'chonghak',
         },
       ]
     )
