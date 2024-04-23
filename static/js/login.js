@@ -155,6 +155,7 @@ function filterBooths(selectedValue, chong) {
 
 document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
+  const boothId = urlParams.get('boothId');
   const category = urlParams.get('category');
 
   if (category) {
@@ -162,7 +163,19 @@ document.addEventListener('DOMContentLoaded', function() {
     selectElement.value = category; // URL에서 가져온 카테고리로 select 엘리먼트를 설정합니다.
     filterBooths(); // 필터링 함수를 호출하여 해당 카테고리의 부스만 표시합니다.
   }
-  
+
+  if (boothId) {
+    const boothElement = document.querySelector(`input[name="boothId"][value="${boothId}"]`);
+    if (boothElement) {
+      boothElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Optionally, highlight the booth
+      const boothContainer = boothElement.closest('.booth_box');
+      if (boothContainer) {
+        boothContainer.style.border = "2px solid red"; // Highlighting the booth
+      }
+    }
+  }
+
   const forms = document.querySelectorAll('.boothForm');
 
   forms.forEach(form => {
