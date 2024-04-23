@@ -20,8 +20,8 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
-// const myUrl = "http://localhost:4000"; // -> 개발용
-const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
 // 새로고침시 실행되는 함수
@@ -113,11 +113,21 @@ function submitForm() {
   axios.post('detail3', formData)
     .then(response => {
       // 성공 후 처리, 예를 들어 페이지 리다이렉트
-      window.location.href = '/manage';
+      const boothId = response.data.booth.id;
+      const category = response.data.booth.category;
+      window.location.href = `/manage?boothId=${boothId}&category=${category}`;    
     })
     .catch(error => {
       console.error('Upload Error:', error);
     });
+}
+
+// 수정 취소시 리다이렉트
+function redirectToManage() {
+  const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
+  // Assume 'category' is also available, you would fetch it similarly
+  const category = document.getElementsByClassName("boothCategory")[0].getAttribute("data-category");
+  location.href = `/manage?boothId=${boothId}&category=${category}`;
 }
 
 

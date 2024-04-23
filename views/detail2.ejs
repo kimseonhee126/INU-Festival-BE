@@ -46,10 +46,11 @@
         </div>
       </form>
       <div class="info_box box">
-        <button type="button" class="cancel" onclick="location.href='/manage'">수정 취소</button>
+        <button type="button" class="cancel" onclick="redirectToManage()">수정 취소</button>
         <button type="button" class="save" onclick="submitForm()">저장</button>
       </div>
       <div class="boothId" data-boothId="<%= boothId %>"></div>
+      <div class="boothCategory" data-category="<%= category %>"></div>
     </div>
   </body>
 </html>
