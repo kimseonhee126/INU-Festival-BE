@@ -20,8 +20,8 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
-// const myUrl = "http://localhost:4000"; // -> 개발용
-const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+const myUrl = "http://localhost:4000"; // -> 개발용
+// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 // 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {
@@ -154,6 +154,15 @@ function filterBooths(selectedValue, chong) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get('category');
+
+  if (category) {
+    const selectElement = document.getElementById('choices');
+    selectElement.value = category; // URL에서 가져온 카테고리로 select 엘리먼트를 설정합니다.
+    filterBooths(); // 필터링 함수를 호출하여 해당 카테고리의 부스만 표시합니다.
+  }
+  
   const forms = document.querySelectorAll('.boothForm');
 
   forms.forEach(form => {
