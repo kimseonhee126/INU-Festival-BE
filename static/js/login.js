@@ -143,7 +143,7 @@ function filterBooths(selectedValue, apple) {
         }
         return;
       } else {
-        if (booth.getAttribute('data-category') === selectedValue && booth.getAttribute('data-department') !== '총학생회') {
+        if (booth.getAttribute('data-category') === selectedValue) {
           booth.style.display = '';  
         } else {
             booth.style.display = 'none';  
