@@ -78,6 +78,7 @@ router.get('/all', async (req, res) => {
     try {
         const allBooths = await Booth.findAll({
             attributes: ['id', 'name', 'category', 'department', 'description', 'time', 'location', 'x', 'y', 'liked', 'markerImage'],
+            order: [['liked', 'DESC']],
         });
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
