@@ -30,6 +30,7 @@ axios.post('detail2', {boothId: boothId})
     const boothData = response.data.booth; // 이렇게 수정
     document.getElementById("booth_name_input").value = boothData.name;
     document.getElementById("booth_dep_input").value = boothData.department;
+    document.getElementById("booth_time_input").value = boothData.time;
     document.getElementById("booth_dis_input").value = boothData.description;
     document.getElementById("booth_loc_input").value = boothData.location;
 
