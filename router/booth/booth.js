@@ -15,7 +15,7 @@ const { BoothImg } = db;   //db.Booth
 const { Comment } = db;   //db.Comment
 const { User } = db;     //db.User
 
-// 카테고리 조회하기
+// 카테고리 조회하기ƒ
 router.get('/category', async (req, res) => {
     try {
         const categories = {
@@ -218,7 +218,7 @@ router.get('/:id/comment', async (req, res) => {
 router.put('/liked/:id', async (req, res) => {
     try {
         const boothId = req.params.id;
-        const likeCount = req.body.likeCount;
+        // const likeCount = req.body.likeCount;
         const booth = await Booth.findOne({ where: { id: boothId } });
 
         const liked = booth.liked;
@@ -226,7 +226,7 @@ router.put('/liked/:id', async (req, res) => {
         if (!booth) {
             return res.status(404).send({ message: 'Booth not found' });
         }
-        await booth.update({ liked: liked + likeCount });
+        await booth.update({ liked: liked + 1 });
         res.send({ booth: booth.get({ plain: true }) });
     } catch (err) {
         console.error('ERROR: ', err);
