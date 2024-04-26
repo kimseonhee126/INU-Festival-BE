@@ -33,21 +33,43 @@ router.get('/category', async (req, res) => {
 router.get('/ranking', async (req, res) => {
     const today = new Date();
     const month = today.getMonth();
-    const date = today.getDate();  
+    const date = today.getDate();
 
-    day = month >= 4 ? (date <= 7 ? 1 : (date === 8 ? 2 : 3)) : 1;
+    let day;
+    if (month === 4) { // 5월 (월은 0부터 시작해서 4가 5월을 의미)
+        if (date <= 6) {
+            day = null; // 5월 6일까지는 day 제한 없음
+        } else if (date === 7) {
+            day = 1;
+        } else if (date === 8) {
+            day = 2;
+        } else if (date === 9) {
+            day = 3;
+        } else {
+            day = null; // 5월 10일부터는 다시 day 제한 없음
+        }
+    } else {
+        day = null; // 5월이 아닌 경우 day 제한 없음
+    }
 
     try {
-        const allBooths = await Booth.findAll({
-            attributes: ['id', 'name', 'category', 'department', 'description','liked', 'markerImage'],
+        const boothQueryOptions = {
+            attributes: ['id', 'name', 'category', 'department', 'description', 'liked', 'markerImage'],
             include: [{
                 model: BoothDay,
-                where: { day: day }, 
+                where: {},
                 attributes: ['day'],
             }],
             order: [['liked', 'DESC']],
             limit: 5,
-        });
+        };
+
+        // day가 정의되어 있지 않은 경우 (null), where 조건을 제거
+        if (day !== null) {
+            boothQueryOptions.include[0].where.day = day;
+        }
+
+        const allBooths = await Booth.findAll(boothQueryOptions);
 
         const Booths = await Promise.all(allBooths.map(async (booth) => {
             const boothId = booth.id;
@@ -58,7 +80,7 @@ router.get('/ranking', async (req, res) => {
             });
         
             const boothPlain = booth.get({ plain: true });
-            delete boothPlain.BoothDays; // BoothDays 삭제
+            delete boothPlain.BoothDays; // BoothDays 속성 삭제
         
             return {
                 ...boothPlain,
@@ -72,6 +94,7 @@ router.get('/ranking', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
 
 // 메인페이지 - 부스 전체목록 조회하기
 router.get('/all', async (req, res) => {
