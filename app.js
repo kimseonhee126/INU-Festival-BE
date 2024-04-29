@@ -5,6 +5,8 @@ const cors = require('cors');
 const sequelize = require('sequelize');
 const db = require('./models');
 const User = require('./models').User;
+const helmet = require('helmet');             // helmet 불러오기
+
 /* 설치한 socket.io 모듈 불러오기 */
 const socket = require('socket.io');
 const http = require('http');
@@ -12,6 +14,10 @@ const http = require('http');
 // express 사용하기
 const app = express();
 app.set('view engine', 'ejs');
+
+// 보안 취약점 막기
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
 const server = http.createServer(app); // Express 앱을 http 서버에 래핑
 const io = socket(server, { // http 서버 인스턴스를 socket.io에 전달
