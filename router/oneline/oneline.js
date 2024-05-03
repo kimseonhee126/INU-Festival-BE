@@ -24,6 +24,8 @@ router.get('/', async (req, res) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
     let studentId = user.studentId;
 
+    console.log(existUser);
+
     if (!existUser) {
       return {
         ...oneline.get({ plain: true }),
