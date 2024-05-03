@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
     if (!existUser) {
       return {
         ...oneline.get({ plain: true }),
-        studentId: studentId,
+        studentId: studentId.slice(0, studentId.length - 3) + '***',
         content: oneline.content,
         emoji: oneline.emoji
       };
