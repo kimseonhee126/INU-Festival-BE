@@ -19,8 +19,8 @@ router.get('/', async (req, res) => {
   const ALLOnelines = await OneLine.findAll({
     attributes: ['id', 'content', 'emoji', 'userId'],
   });
-  
-  console.log(existUser);
+
+  console.log(token,existUser);
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
