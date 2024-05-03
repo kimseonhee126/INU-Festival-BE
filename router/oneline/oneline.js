@@ -13,19 +13,35 @@ const { User } = db;        // db.User
 
 // 채팅 메시지 불러오기
 router.get('/', async (req, res) => {
+  const token = req.headers['authorization'];
+  const tokenValue = token ? token.split(" ")[1].replace(/^"|"$/g, '') : null;
+  const existUser = await User.findOne({ where: { token: tokenValue } });
   const ALLOnelines = await OneLine.findAll({
     attributes: ['id', 'content', 'emoji', 'userId'],
   });
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
-    const user = await User.findOne({ where: { id: oneline.userId } });   // user 찾기
+    const user = await User.findOne({ where: { id: oneline.userId } });
+    let studentId = user.studentId;
 
-    return {
-      ...oneline.get({ plain: true }),
-      studentId: user.studentId,
-      content: oneline.content,
-      emoji: oneline.emoji
-    };
+    if (!existUser) {
+      return {
+        ...oneline.get({ plain: true }),
+        studentId: studentId,
+        content: oneline.content,
+        emoji: oneline.emoji
+      };
+    } else {
+      if(existUser.studentId !== studentId) {
+        studentId = studentId.slice(0, studentId.length - 3) + '***';
+      } 
+      return {
+        ...oneline.get({ plain: true }),
+        studentId: studentId,
+        content: oneline.content,
+        emoji: oneline.emoji
+      };
+    }
   }));
   res.status(200).send({shouts: Onelines});
 });
