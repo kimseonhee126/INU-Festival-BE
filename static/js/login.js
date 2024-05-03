@@ -20,8 +20,8 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
-const myUrl = "http://localhost:4000"; // -> 개발용
-// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+// const myUrl = "http://localhost:4000"; // -> 개발용
+const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 // 즉시 실행 함수 -> user/me API 호출 -> 자동로그인
 (function() {
@@ -128,25 +128,25 @@ function logout() {
     .catch((error) => console.error("Error:", error));
 }
 
-function filterBooths(selectedValue, chong) {
+function filterBooths(selectedValue, apple) {
   var selectedValue = document.getElementById('choices').value;
 
   var booths = document.querySelectorAll('.booth');
   booths.forEach(function(booth) {
       // 데이터 속성에서 booth의 카테고리를 확인합니다.
 
-      if (chong === 1) { // 총학생회인 경우
+      if (apple === 1) { 
         if (booth.getAttribute('data-category') === selectedValue) {
-          booth.style.display = '';  // 카테고리가 일치하면
+          booth.style.display = '';  
         } else {
-          booth.style.display = 'none';  // 그 외의 경우는 숨깁니다.
+          booth.style.display = 'none';  
         }
         return;
-      } else { // 총학생회가 아닌 경우
-        if (booth.getAttribute('data-category') === selectedValue && booth.getAttribute('data-department') !== '총학생회') {
-          booth.style.display = '';  // 카테고리가 일치하고, 총학생회가 아니면 보여줍니다.
+      } else {
+        if (booth.getAttribute('data-category') === selectedValue) {
+          booth.style.display = '';  
         } else {
-            booth.style.display = 'none';  // 그 외의 경우는 숨깁니다.
+            booth.style.display = 'none';  
         }
         return;
       }

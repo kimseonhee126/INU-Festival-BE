@@ -20,8 +20,8 @@ function axiosWithAuth(url, options = {}) {
     });
 }
 
-const myUrl = "http://localhost:4000"; // -> 개발용
-// const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
+// const myUrl = "http://localhost:4000"; // -> 개발용
+const myUrl = "https://13.125.142.74.nip.io"; // -> 배포용
 
 const boothId = document.getElementsByClassName("boothId")[0].getAttribute("data-boothId");
 // 새로고침시 실행되는 함수
@@ -30,6 +30,7 @@ axios.post('detail2', {boothId: boothId})
     const boothData = response.data.booth; // 이렇게 수정
     document.getElementById("booth_name_input").value = boothData.name;
     document.getElementById("booth_dep_input").value = boothData.department;
+    document.getElementById("booth_time_input").value = boothData.time;
     document.getElementById("booth_dis_input").value = boothData.description;
     document.getElementById("booth_loc_input").value = boothData.location;
 

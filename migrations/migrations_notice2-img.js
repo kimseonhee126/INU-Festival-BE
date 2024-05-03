@@ -24,6 +24,12 @@ module.exports = {
       },
       noticeId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Notices', // 참조하는 테이블 이름
+          key: 'id' // 참조하는 테이블의 컬럼
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       }
     });
   },

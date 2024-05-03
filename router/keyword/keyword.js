@@ -38,15 +38,20 @@ function extractKeyword(sentences) {
         let filteredObject = {};
         let filteredResult = sentences.map(sentence => {
             return new Promise((resolve, reject) => {
-                mecab.pos(sentence, function (err, result) {
+                mecab.nouns(sentence, function (err, result) {
                     if (err) {
                         reject(err);
                     } else {
-                        let eachResult = result
-                            .filter(([word, pos]) => pos == 'NNG')
-                            .map(([word, pos]) => word);
-                        filteredObject[sentence] = eachResult;
-                        resolve();
+                        if (result.length > 0) { // 데이터가 있는 경우에만 처리
+                            result.forEach(keyword => {
+                                if (filteredObject[keyword]) {
+                                    filteredObject[keyword]++;
+                                } else {
+                                    filteredObject[keyword] = 1;
+                                }
+                            });
+                        }
+                        resolve(); // 데이터 처리 후 resolve 호출
                     }
                 });
             });
@@ -54,7 +59,8 @@ function extractKeyword(sentences) {
 
         Promise.all(filteredResult)
             .then(() => {
-                resolve(filteredObject);
+                console.log(`filteredObject : ${filteredObject}`);
+                resolve(filteredObject); // 모든 Promise가 처리된 후에 객체 반환
             })
             .catch(err => {
                 reject(err);
@@ -66,11 +72,10 @@ function extractKeyword(sentences) {
 function rankingKeyword(filteredObject) {
     let keywordCounts = {};
 
-    for (const sentence in filteredObject) {
-        const keywords = filteredObject[sentence];
-        for (const keyword of keywords) {
-            keywordCounts[keyword] = (keywordCounts[keyword] || 0) + 1;
-        }
+    // filteredObject의 값을 이용하여 keywordCounts를 만듦
+    for (const keyword in filteredObject) {
+        const count = filteredObject[keyword];
+        keywordCounts[keyword] = count;
     }
 
     // 키워드 빈도를 기준으로 내림차순 정렬
@@ -78,6 +83,7 @@ function rankingKeyword(filteredObject) {
 
     // 상위 10개 키워드 추출
     const topKeywords = sortedKeywords.slice(0, 10);
+    console.log(`topKeywords : ${topKeywords}`);
 
     return topKeywords;
 }
