@@ -19,12 +19,12 @@ router.get('/', async (req, res) => {
   const ALLOnelines = await OneLine.findAll({
     attributes: ['id', 'content', 'emoji', 'userId'],
   });
+  
+  console.log(existUser);
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
     let studentId = user.studentId;
-
-    console.log(existUser);
 
     if (!existUser) {
       return {
