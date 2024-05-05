@@ -198,14 +198,17 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         body: `boothId=${encodeURIComponent(boothId)}`
       })
-      .then(response => {
-      })
       .then(data => {
-        window.location.href = `${myUrl}/manage`; // 서버 응답 성공 후 페이지 리다이렉트
+        console.log(data);
+        if (data.success) {
+          window.location.href = `${myUrl}/manage`; // 서버 응답 성공 후 페이지 리다이렉트
+        } else {
+          alert(data.message);
+        }
       })
       .catch(error => {
         console.error('Submission failed:', error);
-        // 오류 처리 로직 추가
+        alert('오류가 발생했습니다: ' + error.message); // 오류 메시지 표시
       });
     });
   });

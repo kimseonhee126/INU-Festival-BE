@@ -298,12 +298,18 @@ router.post('/booth_linking', async (req, res) => {
     const token = req.headers["authorization"];
     const tokenValue = token ? token.split(" ")[1] : null;
     // 해당 토큰을 가지고 있는 user 찾기
-    const findUser = await User.findOne({ where: { token: tokenValue } });
-    await findUser.update({
-      rank : boothId,
-    });
-    res.json({ success: true, message: "부스 링킹 성공" });
-
+    const findBoothOwner = await User.findAll({ where: { rank: boothId } });
+    console.log(findBoothOwner[0]);
+    if(findBoothOwner[0] !== undefined) {
+      res.json({ success: false, message: "해당 부스는 이미 다른 관리자에 의해 등록되어 있습니다." });
+      return;
+    } else {
+      const findUser = await User.findOne({ where: { token: tokenValue } });
+      await findUser.update({
+        rank : boothId,
+      });
+      res.json({ success: true, message: "부스 링킹 성공" });
+    }
   } catch(err) {
     res.json({ success: false, message: "서버 booth_linking 오류"  });
   }
