@@ -20,12 +20,12 @@ router.get('/category', async (req, res) => {
     try {
         const categories = {
             days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
-            filters: ["주점", "비주점", "푸드트럭", "플리마켓", "존"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+            filters: ["비주점", "푸드트럭", "플리마켓", "존", "주점"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
         }
         res.json({ categories });
     } catch (error) {
         console.error('ERROR:', error);
-        res.status(500).send({ message: 'An error occurred while fetching categories' });
+        res.status(500);
     }
 });
 
