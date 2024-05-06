@@ -20,11 +20,7 @@ router.get('/category', async (req, res) => {
     try {
         const categories = {
             days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
-<<<<<<< HEAD
             filters: ["비주점", "존", "푸드트럭", "플리마켓", "주점"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
-=======
-            filters: ["비주점", "푸드트럭", "플리마켓", "존", "주점"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
->>>>>>> 5d015caf13671570bc7cd17890c43dd38685d066
         }
         res.json({ categories });
     } catch (error) {
