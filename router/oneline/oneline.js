@@ -22,6 +22,9 @@ router.get('/', async (req, res) => {
     limit: 80  // 상위 50개 데이터만 가져오기
   });
 
+  // 오름차순으로 정렬
+  const sortedOnelines = ALLOnelines.sort((a, b) => a.createdAt - b.createdAt);
+
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
     let studentId = user.studentId;
