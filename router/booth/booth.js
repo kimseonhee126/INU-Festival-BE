@@ -20,12 +20,16 @@ router.get('/category', async (req, res) => {
     try {
         const categories = {
             days: realDays.slice(0, 3), // 첫 3개 요일을 가져옵니다.
+<<<<<<< HEAD
             filters: ["비주점", "존", "푸드트럭", "플리마켓", "주점"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+=======
+            filters: ["비주점", "푸드트럭", "플리마켓", "존", "주점"], // 필터 옵션을 배열로 관리하여 확장성을 높입니다.
+>>>>>>> 5d015caf13671570bc7cd17890c43dd38685d066
         }
         res.json({ categories });
     } catch (error) {
         console.error('ERROR:', error);
-        res.status(500).send({ message: 'An error occurred while fetching categories' });
+        res.status(500);
     }
 });
 
@@ -91,7 +95,7 @@ router.get('/ranking', async (req, res) => {
         res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send('Server error');
+        res.status(500);
     }
 });
 
@@ -135,7 +139,7 @@ router.get('/all', async (req, res) => {
         res.status(200).send({ booths: Booths });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send('Server error');
+        res.status(500);
     }
 });
 // 부스 하나 조회하기
@@ -148,7 +152,7 @@ router.get('/:id', async (req, res) => {
         });
 
         if (!booth) {
-            return res.status(404).send({ message: 'Booth not found' });
+            return res.status(404);
         }
 
         const myBoothDays = await BoothDay.findAll({
@@ -191,7 +195,7 @@ router.get('/:id', async (req, res) => {
         res.status(200).send({ booth: boothResponse });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' }); // 에러 응답 추가
+        res.status(500);
     }
 });
 
@@ -204,7 +208,7 @@ router.get('/:id/comment', async (req, res) => {
         });
 
         if (!booth) {
-            return res.status(404).send({ message: 'Booth not found' });
+            return res.status(404);
         }
 
         const myBoothComments = await Comment.findAll({
@@ -233,7 +237,7 @@ router.get('/:id/comment', async (req, res) => {
         res.status(200).send({ boothComments });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' });
+        res.status(500);
     }
 });
 
@@ -253,7 +257,7 @@ router.put('/liked/:id', async (req, res) => {
         res.send({ booth: booth.get({ plain: true }) });
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: 'Server error' });
+        res.status(500);
     }
 });
 
@@ -299,7 +303,7 @@ router.post('/comment/:id', async (req, res) => {
 
     } catch (err) {
         console.error('ERROR: ', err);
-        res.status(500).send({ message: '댓글 생성에 실패했습니다.' });
+        res.status(500);
     }
 });
 
