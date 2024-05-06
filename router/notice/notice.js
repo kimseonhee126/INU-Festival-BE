@@ -29,10 +29,7 @@ router.get('/', async (req, res) => {
             id: String(notice.id),
             category: notice.category,
             title: notice.title,
-            content: notice.content
-                .replace(/^[\r\n]+/, '') // 문자열 시작 부분의 줄바꿈 제거
-                .replace(/\s*[\r\n]+\s*/g, '\n') // 문자열 내의 다른 줄바꿈 양쪽 공백을 줄바꿈으로 대체
-                .replace(/\s{2,}/g, ''), // 2개 이상 연속된 공백을 제거
+            content: notice.content,
             updatedAt: moment(notice.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
             noticeImgs: notice.noticeImgs,
         }));
