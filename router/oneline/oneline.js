@@ -18,9 +18,9 @@ router.get('/', async (req, res) => {
   const existUser = await User.findOne({ where: { token: tokenValue } });
   const ALLOnelines = await OneLine.findAll({
     attributes: ['id', 'content', 'emoji', 'userId'],
+    order: [['id', 'ASC']], // id 필드를 기준으로 오름차순으로
+    limit: 100  // 상위 50개 데이터만 가져오기
   });
-
-  console.log(token,existUser);
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
