@@ -130,17 +130,25 @@ async function clearDB() {
             truncate: true // AUTO_INCREMENT를 재설정
         });
 
-        const oldestOneLines = await OneLine.findAll({
-            order: [['createdAt', 'ASC']],
-            limit: 5
-        });
+        // OneLine 데이터 개수 확인
+        const count = await OneLine.count();
 
-        const idsToDelete = oldestOneLines.map(oneline => oneline.id);
-        await OneLine.destroy({
-            where: {
-                id: idsToDelete
-            }
-        });
+        // 데이터가 80개 이상일 경우에만 가장 오래된 5개 데이터 삭제
+        if (count >= 100) {
+            const oldestOneLines = await OneLine.findAll({
+                order: [['createdAt', 'ASC']],
+                limit: 5
+            });
+
+            const idsToDelete = oldestOneLines.map(oneline => oneline.id);
+            await OneLine.destroy({
+                where: {
+                    id: idsToDelete
+                }
+            });
+        } else {
+            console.log('Not enough OneLine records to delete (less than 80).');
+        }
 
         // getAllSentences 함수 실행
         await getAllSentences();
