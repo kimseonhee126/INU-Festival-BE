@@ -27,10 +27,10 @@ router.get('/', async (req, res) => {
             img: perform.img,
         }));
 
-        res.json({ performs: performs2});
+        res.status(200).json({ performs: performs2});
     } catch (error) {
         console.error('데이터를 가져오는 중 오류 발생:', error);
-        res.status(500).json({ error: '데이터를 불러올 수 없습니다.' });
+        res.status(500);
     }
 });
 
