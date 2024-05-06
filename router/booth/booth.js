@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../models');
 const moment = require("moment");
+const cron = require('node-cron');
 moment.tz.setDefault('Asia/Seoul'); // 로컬 시간대 설정
 
 const { realDays } = require('../../app');
@@ -385,5 +386,24 @@ router.delete('/:bid/comment/:cid', async (req, res) => {
         res.status(500).send({ message: '댓글 삭제에 실패했습니다.' });
     }
 });
+
+// 아침 9시로 시간 세팅
+cron.schedule('0 0 * * *', function() {
+    console.log('(09:00 KST)에 자동으로 좋아요 0으로 세팅');
+    updateBooths();
+}, {
+    scheduled: true,
+    timezone: "Asia/Seoul"
+});
+
+// 부스 좋아요 매일 아침 9시마다 0으로 초기화하기
+async function updateBooths() {
+    try {
+        await sequelize.query("UPDATE Booths SET liked = 0", { type: Sequelize.QueryTypes.UPDATE });
+        console.log('Booths table updated successfully.');
+    } catch (error) {
+        console.error('Failed to update Booths table:', error);
+    }
+}
 
 module.exports = router;

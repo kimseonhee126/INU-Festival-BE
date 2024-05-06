@@ -59,7 +59,6 @@ function extractKeyword(sentences) {
 
         Promise.all(filteredResult)
             .then(() => {
-                console.log(`filteredObject : ${filteredObject}`);
                 resolve(filteredObject); // 모든 Promise가 처리된 후에 객체 반환
             })
             .catch(err => {
@@ -83,7 +82,6 @@ function rankingKeyword(filteredObject) {
 
     // 상위 10개 키워드 추출
     const topKeywords = sortedKeywords.slice(0, 10);
-    console.log(`topKeywords : ${topKeywords}`);
 
     return topKeywords;
 }
