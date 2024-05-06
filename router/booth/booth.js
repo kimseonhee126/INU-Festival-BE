@@ -241,23 +241,34 @@ router.get('/:id/comment', async (req, res) => {
 // 부스 좋아요 업데이트하기
 router.put('/liked/:id', async (req, res) => {
     try {
-        const userAgent = req.headers['user-agent'];
+        // const userAgent = req.headers['user-agent'];
 
-        if (/mobile/i.test(userAgent)) {
-            const boothId = req.params.id;
-            // const likeCount = req.body.likeCount;
-            const booth = await Booth.findOne({ where: { id: boothId } });
+        // if (/mobile/i.test(userAgent)) {
+        //     const boothId = req.params.id;
+        //     // const likeCount = req.body.likeCount;
+        //     const booth = await Booth.findOne({ where: { id: boothId } });
 
-            const liked = booth.liked;
+        //     const liked = booth.liked;
 
-            if (!booth) {
-                return res.status(404).send({ message: 'Booth not found' });
-            }
-            await booth.update({ liked: liked + 1 });
-            res.send({ success: true, booth: booth.get({ plain: true }) });
-        } else {
-            res.status(403).send({ success: false, message: '좋아요는 모바일에서 가능합니다!' });
-        }
+        //     if (!booth) {
+        //         return res.status(404).send({ message: 'Booth not found' });
+        //     }
+        //     await booth.update({ liked: liked + 1 });
+        //     res.send({ success: true, booth: booth.get({ plain: true }) });
+        // } else {
+        //     res.status(403).send({ success: false, message: '좋아요는 모바일에서 가능합니다!' });
+        // }
+    const boothId = req.params.id;
+    // const likeCount = req.body.likeCount;
+    const booth = await Booth.findOne({ where: { id: boothId } });
+
+    const liked = booth.liked;
+
+    if (!booth) {
+        return res.status(404).send({ message: 'Booth not found' });
+    }
+    await booth.update({ liked: liked + 1 });
+    res.send({ success: true, booth: booth.get({ plain: true }) });
     } catch (err) {
         res.status(500);
     }
