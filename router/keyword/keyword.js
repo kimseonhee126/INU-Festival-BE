@@ -130,6 +130,18 @@ async function clearDB() {
             truncate: true // AUTO_INCREMENT를 재설정
         });
 
+        const oldestOneLines = await OneLine.findAll({
+            order: [['createdAt', 'ASC']],
+            limit: 5
+        });
+
+        const idsToDelete = oldestOneLines.map(oneline => oneline.id);
+        await OneLine.destroy({
+            where: {
+                id: idsToDelete
+            }
+        });
+
         // getAllSentences 함수 실행
         await getAllSentences();
     } catch (error) {

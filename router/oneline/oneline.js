@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
   });
 
   // 오름차순으로 정렬
-  const sortedOnelines = ALLOnelines.sort((a, b) => a.createdAt - b.createdAt);
+  const sortedOnelines = ALLOnelines.sort((a, b) => a.id - b.id);
 
   const Onelines = await Promise.all(ALLOnelines.map(async (oneline) => {
     const user = await User.findOne({ where: { id: oneline.userId } });
