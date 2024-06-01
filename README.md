@@ -14,7 +14,7 @@
 # 팀원 구성
 <div align="center">
 
-| **유소정(FE)** | **이의영(FE)** | **이희주(FE)** | **김선희(FE)** | **이헌도(FE)** |
+| **유소정(FE)** | **이의영(FE)** | **이희주(FE)** | **김선희(BE)** | **이헌도(BE)** |
 | :------: |  :------: | :------: | :------: | :------: |
 | [<img src="" height=120 width=120> <br/> @kaori-killer](https://github.com/kaori-killer) | [<img src="" height=120 width=120> <br/> @snsdl0905](https://github.com/snsdl0905) | [<img src="" height=120 width=120> <br/> @hxxzxx](https://github.com/hxxzxx) | [<img src="" height=120 width=120> <br/> @kimseonhee126](https://github.com/kimseonhee126) | [<img src="" height=120 width=120> <br/> @heondolee](https://github.com/heondolee) |
 
