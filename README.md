@@ -41,3 +41,6 @@
 
 # BE Port Number
 `4000`
+
+# How to Start
+`npm start`
