@@ -5,7 +5,7 @@
 ![당신을 위한 축제 가이드 UNION](https://github.com/INU-CapstoneDesign/INU-Festival-BE/assets/108293826/4dd23c7e-8cd5-412d-b1d9-10b022ac3650)
 
 
-* 배포 URL : https://unionfestival.kr(운영기간 | 2024.04.28 - 2024.05.31)
+* 배포 URL : https://unionfestival.kr (운영기간 | 2024.04.28 - 2024.05.31)
 
 # 프로젝트 소개
 * SNS에 축제 정보가 흩어져 있어 한 눈에 보기 힘든 축제 정보를 간편하게 제공할 수 있는 서비스입니다.
@@ -25,7 +25,7 @@
 
 # 기술 스택
 ### Planning
-![기획안]()
+![기획안](https://kimseonhee126.notion.site/ver-2cd03539386d429280920e6b2dbe83bc?pvs=4)
 
 ### Design
 <img src="https://velog.velcdn.com/images/sh011226/post/dcf0ad8f-a622-4972-98cb-f3ec5d13d1d5/image.png" height=200 width=400>
