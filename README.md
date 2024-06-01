@@ -25,7 +25,7 @@
 
 # 기술 스택
 ### Planning
-![기획안](https://kimseonhee126.notion.site/ver-2cd03539386d429280920e6b2dbe83bc?pvs=4)
+[기획안](https://kimseonhee126.notion.site/ver-2cd03539386d429280920e6b2dbe83bc?pvs=4)
 
 ### Design
 <img src="https://velog.velcdn.com/images/sh011226/post/dcf0ad8f-a622-4972-98cb-f3ec5d13d1d5/image.png" height=200 width=400>
