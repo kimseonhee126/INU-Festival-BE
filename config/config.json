@@ -9,16 +9,16 @@
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "xxxx",
+    "database": "xxxx",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "root1!",
-    "database": "FESTIVAL",
-    "host": "3.35.50.94",
+    "password": "xxxx",
+    "database": "xxxx",
+    "host": "xxxx",
     "dialect": "mysql"
   }
 }
