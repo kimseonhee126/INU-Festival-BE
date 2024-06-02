@@ -43,7 +43,6 @@ package-lock.json
 node_modules/
 jspm_packages/
 config/
-!config/config.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -103,4 +102,37 @@ dist
 # vuepress build output
 .vuepress/dist
 
-# vuepress v2.x temp and c
+# vuepress v2.x temp and cache directory
+.temp
+.cache
+
+# Docusaurus cache and generated files
+.docusaurus
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Development Settings
+.prettierrc
+
+# Mysql passwd
+config/
