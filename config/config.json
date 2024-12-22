@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "root",
-    "password": "xxxx",
-    "database": "xxxx",
-    "host": "127.0.0.1",
+    "password": "root1!",
+    "database": "inu_festival_be",
+    "host": "db",
     "dialect": "mysql",
     "port": 3306
   },
@@ -11,14 +11,14 @@
     "username": "root",
     "password": "xxxx",
     "database": "xxxx",
-    "host": "127.0.0.1",
+    "host": "db",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "xxxx",
     "database": "xxxx",
-    "host": "xxxx",
+    "host": "db",
     "dialect": "mysql"
   }
 }
